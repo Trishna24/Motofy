@@ -1,0 +1,385 @@
+<!-- car-detail.html -->
+<div class="car-detail-container" ng-if="car.selectedCar">
+  <!-- Back Button -->
+  <div class="back-button">
+    <button ng-click="$location.path('/cars')" class="back-btn">
+      ← Back to Cars
+    </button>
+  </div>
+
+  <!-- Car Information -->
+  <div class="car-detail-content">
+    <div class="car-image-section">
+      <div class="car-image-large">
+        <img ng-src="{{car.selectedCar.image}}" alt="{{car.selectedCar.name}}">
+      </div>
+    </div>
+
+    <div class="car-info-section">
+      <div class="car-header">
+        <h1 class="car-title">{{car.selectedCar.name}}</h1>
+        <p class="car-brand">{{car.selectedCar.brand}}</p>
+        <div class="car-price-large">${{car.selectedCar.price}}/day</div>
+      </div>
+
+      <div class="car-specifications">
+        <h3>Specifications</h3>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Fuel Type:</span>
+            <span class="spec-value">{{car.selectedCar.fuelType}}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Seats:</span>
+            <span class="spec-value">{{car.selectedCar.seats}}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Transmission:</span>
+            <span class="spec-value">{{car.selectedCar.transmission}}</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Brand:</span>
+            <span class="spec-value">{{car.selectedCar.brand}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-description">
+        <h3>Description</h3>
+        <p>{{car.selectedCar.description}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Section -->
+  <div class="booking-section">
+    <h2>Book This Car</h2>
+    
+    <form class="booking-form" ng-submit="car.bookCar()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pickupDate">Pickup Date</label>
+          <input type="date" id="pickupDate" ng-model="car.bookingData.pickupDate" 
+                 ng-change="car.calculateTotal()" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="dropoffDate">Dropoff Date</label>
+          <input type="date" id="dropoffDate" ng-model="car.bookingData.dropoffDate" 
+                 ng-change="car.calculateTotal()" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="pickupLocation">Pickup Location</label>
+        <input type="text" id="pickupLocation" ng-model="car.bookingData.pickupLocation" 
+               placeholder="Enter pickup location" required>
+      </div>
+
+      <div class="total-section">
+        <div class="total-amount">
+          <span class="total-label">Total Amount:</span>
+          <span class="total-value">${{car.bookingData.totalAmount}}</span>
+        </div>
+        
+        <div ng-if="car.bookingData.totalAmount > 0" class="booking-details">
+          <p class="booking-info">
+            {{car.calculateDays()}} day(s) × ${{car.selectedCar.price}}/day
+          </p>
+        </div>
+      </div>
+
+      <button type="submit" class="book-now-btn" ng-disabled="!car.bookingData.totalAmount">
+        Book Now
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Error State -->
+<div ng-if="car.error" class="error-container">
+  <h2>Car Not Found</h2>
+  <p>{{car.error}}</p>
+  <button ng-click="$location.path('/cars')" class="back-btn">
+    Back to Cars
+  </button>
+</div>
+
+<!-- Loading State -->
+<div ng-if="car.loading" class="loading-container">
+  <div class="loading-spinner"></div>
+  <p>Loading car details...</p>
+</div>
+
+<style>
+  .car-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2em 1.5em;
+  }
+
+  .back-button {
+    margin-bottom: 2em;
+  }
+
+  .back-btn {
+    background: #313a49;
+    color: #f3f6fa;
+    border: 1px solid #7ed957;
+    border-radius: 6px;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .back-btn:hover {
+    background: #7ed957;
+    color: #232b36;
+  }
+
+  .car-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3em;
+    margin-bottom: 3em;
+  }
+
+  .car-image-large {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  .car-image-large img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .car-header {
+    margin-bottom: 2em;
+  }
+
+  .car-title {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #f3f6fa;
+    margin-bottom: 0.3em;
+  }
+
+  .car-brand {
+    font-size: 1.3em;
+    color: #b0b8c1;
+    margin-bottom: 1em;
+  }
+
+  .car-price-large {
+    font-size: 2em;
+    font-weight: 700;
+    color: #7ed957;
+  }
+
+  .car-specifications {
+    margin-bottom: 2em;
+  }
+
+  .car-specifications h3 {
+    font-size: 1.5em;
+    color: #f3f6fa;
+    margin-bottom: 1em;
+  }
+
+  .specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+  }
+
+  .spec-item {
+    background: #232b36;
+    padding: 1em;
+    border-radius: 8px;
+  }
+
+  .spec-label {
+    color: #b0b8c1;
+    font-size: 0.9em;
+    display: block;
+    margin-bottom: 0.3em;
+  }
+
+  .spec-value {
+    color: #f3f6fa;
+    font-weight: 600;
+    font-size: 1.1em;
+  }
+
+  .car-description h3 {
+    font-size: 1.5em;
+    color: #f3f6fa;
+    margin-bottom: 1em;
+  }
+
+  .car-description p {
+    color: #b0b8c1;
+    line-height: 1.6;
+    font-size: 1.1em;
+  }
+
+  .booking-section {
+    background: #313a49;
+    border-radius: 12px;
+    padding: 2em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .booking-section h2 {
+    font-size: 1.8em;
+    color: #f3f6fa;
+    margin-bottom: 1.5em;
+    text-align: center;
+  }
+
+  .booking-form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+    margin-bottom: 1.5em;
+  }
+
+  .form-group {
+    margin-bottom: 1.5em;
+  }
+
+  .form-group label {
+    display: block;
+    color: #f3f6fa;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.8em 1em;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    background: #232b36;
+    color: #f3f6fa;
+    box-sizing: border-box;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: #7ed957;
+  }
+
+  .total-section {
+    background: #232b36;
+    border-radius: 8px;
+    padding: 1.5em;
+    margin-bottom: 2em;
+  }
+
+  .total-amount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  .total-label {
+    font-size: 1.2em;
+    color: #f3f6fa;
+    font-weight: 600;
+  }
+
+  .total-value {
+    font-size: 1.5em;
+    color: #7ed957;
+    font-weight: 700;
+  }
+
+  .booking-info {
+    color: #b0b8c1;
+    font-size: 0.9em;
+    margin: 0;
+  }
+
+  .book-now-btn {
+    width: 100%;
+    background: #7ed957;
+    color: #232b36;
+    border: none;
+    border-radius: 8px;
+    padding: 1em 2em;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .book-now-btn:hover:not(:disabled) {
+    background: #5bbf3a;
+  }
+
+  .book-now-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+  }
+
+  .error-container, .loading-container {
+    text-align: center;
+    padding: 4em 2em;
+  }
+
+  .error-container h2 {
+    color: #ff6b6b;
+    margin-bottom: 1em;
+  }
+
+  .error-container p {
+    color: #b0b8c1;
+    margin-bottom: 2em;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #313a49;
+    border-top: 4px solid #7ed957;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1em;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @media (max-width: 768px) {
+    .car-detail-content {
+      grid-template-columns: 1fr;
+      gap: 2em;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .specs-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .car-title {
+      font-size: 2em;
+    }
+  }
+</style> 

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="motofyApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motofy</title>
+  <!-- AngularJS 1.x CDN -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app/assets/css/styles.css">
+</head>
+<body>
+  <div ng-controller="MainController as main">
+    <header ng-show="main.showNavbar">
+      <div class="header-inner container">
+        <span class="brand">Motofy</span>
+        <div class="nav-center">
+          <nav>
+            <a href="#/">Home</a>
+            <a href="#/cars" ng-click="main.goToCars()">Cars</a>
+          </nav>
+        </div>
+        <div class="header-controls">
+          <a ng-if="main.isAdmin()" href="#/admin/dashboard" class="admin-dashboard-btn" ng-click="main.goToAdminDashboard()">Admin Dashboard</a>
+          <div class="user-menu" ng-if="!main.isAdmin()" ng-click="$event.stopPropagation()">
+            <div class="user-icon" ng-click="main.toggleDropdown($event)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="8" r="4" stroke="#f3f6fa" stroke-width="2"/>
+                <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="#f3f6fa" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="dropdown" ng-show="main.dropdownOpen">
+              <a href ng-if="!main.isLoggedIn()" ng-click="main.openLoginModal(); main.closeDropdown()">Login</a>
+              <a href ng-if="!main.isLoggedIn()" ng-click="main.openSignupModal(); main.closeDropdown()">Sign Up</a>
+              <a href="#/bookings" ng-if="main.isLoggedIn()" ng-click="main.closeDropdown()">My Bookings</a>
+              <button ng-if="main.isLoggedIn()" ng-click="main.logout(); main.closeDropdown();">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- Modal Overlay for Blur -->
+    <div class="modal-overlay" ng-if="main.isModalOpen()" ng-click="main.closeModal()"></div>
+    <!-- Role Selection Modal -->
+    <div class="modal-container" ng-if="main.showRoleModal">
+      <div class="modal-content" ng-click="$event.stopPropagation()">
+        <button class="modal-close" ng-click="main.closeModal()">&times;</button>
+        <h2>Select Login Type</h2>
+        <div style="display:flex; gap:1em; justify-content:center; margin-top:1.5em;">
+          <button style="padding:1em 2em; font-size:1.1em; background:#7ed957; color:#232b36; border:none; border-radius:8px; cursor:pointer;"
+                  ng-click="main.chooseRole('user')">
+            User Login
+          </button>
+          <button style="padding:1em 2em; font-size:1.1em; background:#313a49; color:#fff; border:1px solid #7ed957; border-radius:8px; cursor:pointer;"
+                  ng-click="main.chooseRole('admin')">
+            Admin Login
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-container" ng-if="main.showLoginModal">
+      <div class="modal-content" ng-controller="AuthController as auth" ng-click="$event.stopPropagation()">
+        <button class="modal-close" ng-click="main.closeModal()">&times;</button>
+        <h2 class="model-title"> Login</h2>
+        <form class="auth-form" ng-submit="auth.login()">
+          <label>Email or Username:</label>
+          <input type="text" ng-model="auth.loginData.loginInput" required autocomplete="username">
+          <label>Password:</label>
+          <input type="password" ng-model="auth.loginData.password" required autocomplete="current-password">
+          <button type="submit">Login</button>
+          <p style="color:red;" ng-if="auth.error">{{auth.error}}</p>
+          <p style="color:green;" ng-if="auth.success">{{auth.success}}</p>
+        </form>
+        <div class="modal-switch">
+          Don't have an account? <a href ng-click="main.openSignupModal()">Sign Up</a>
+        </div>
+      </div>
+    </div>
+    <!-- Signup Modal -->
+    <div class="modal-container" ng-if="main.showSignupModal">
+      <div class="modal-content" ng-controller="AuthController as auth" ng-click="$event.stopPropagation()">
+        <button class="modal-close" ng-click="main.closeModal()">&times;</button>
+        <h2 class="model-title">Sign Up</h2>
+        <form class="auth-form" ng-submit="auth.signup()">
+          <label>Username:</label>
+          <input type="text" ng-model="auth.signupData.username" required autocomplete="username">
+          <label>Email:</label>
+          <input type="email" ng-model="auth.signupData.email" required autocomplete="email">
+          <label>Password:</label>
+          <input type="password" ng-model="auth.signupData.password" required autocomplete="new-password">
+          <button type="submit">Sign Up</button>
+          <p style="color:red;" ng-if="auth.error">{{auth.error}}</p>
+          <p style="color:green;" ng-if="auth.success">{{auth.success}}</p>
+        </form>
+        <div class="modal-switch">
+          Already have an account? <a href ng-click="main.openLoginModal()">Login</a>
+        </div>
+      </div>
+    </div>
+    <div class="container main-content" ng-class="{'blur-bg': main.isModalOpen()}">
+      <main ng-view></main>
+      <!-- Floating AI Chat Button and Popup -->
+      <div ng-controller="AIController as ai" style="z-index:9999;">
+          <!-- Floating Button -->
+          <button ng-click="ai.toggleChat()" class="ai-float-btn" title="Chat with AI">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#2c3e50" stroke-width="2"/>
+              <path d="M8 15h8M8 11h8M8 7h8" stroke="#2c3e50" stroke-width="2"/>
+            </svg>
+          </button>
+
+          <!-- Chat Popup -->
+          <div class="ai-chat-popup" ng-show="ai.chatOpen">
+            <div class="ai-chat-header">
+              <span>AI Chat</span>
+              <button class="ai-chat-close" ng-click="ai.toggleChat()">&times;</button>
+            </div>
+
+            <div class="ai-chat-messages" id="aiChatMessages">
+              <div ng-repeat="msg in ai.messages track by $index"
+                  ng-class="{'ai-user-msg': msg.sender === 'user', 'ai-bot-msg': msg.sender === 'bot'}">
+                <strong ng-if="msg.sender === 'user'">You:</strong>
+                <strong ng-if="msg.sender === 'bot'">AI:</strong>
+                <span>{{msg.text}}</span>
+              </div>
+            </div>
+
+            <form class="ai-chat-input" ng-submit="ai.sendMessage($event)" novalidate>
+              <input type="text" ng-model="ai.input" placeholder="Type your message..."
+                    ng-disabled="ai.loading" autocomplete="off" required />
+              <button type="submit" ng-disabled="ai.loading || !ai.input">{{ai.loading ? '...' : 'Send'}}</button>
+            </form>
+          </div>
+        </div>
+    </div>
+    <!-- App Scripts -->
+    <script src="app/app.module.js"></script>
+    <script src="app/app.routes.js"></script>
+    <script src="app/services/api.service.js"></script>
+    <script src="app/controllers/main.controller.js"></script>
+    <script src="app/controllers/auth.controller.js"></script>
+    <script src="app/controllers/car.controller.js"></script>
+    <script src="app/controllers/booking.controller.js"></script>
+    <script src="app/controllers/admin-login.controller.js"></script>
+    <script src="app/controllers/admin-dashboard.controller.js"></script>
+    <script src="app/controllers/admin-car.controller.js"></script>
+    <script src="app/controllers/admin-booking.controller.js"></script>
+    <script src="app/controllers/admin-user.controller.js"></script>
+    <script src="app/controllers/ai.controller.js"></script>
+      <script>
+       // Close dropdown on outside click
+       document.body.addEventListener('click', function() {
+         var scope = angular.element(document.querySelector('[ng-controller="MainController as main"]')).scope();
+         if(scope && scope.main) {
+           scope.$apply(function() { scope.main.dropdownOpen = false; });
+         }
+       });
+       
+     </script>
+  </div>
+</body>
+</html>

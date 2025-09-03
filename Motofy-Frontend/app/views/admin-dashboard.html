@@ -1,0 +1,610 @@
+<!-- app/views/admin-dashboard.html -->
+<div class="admin-dashboard">
+  <!-- Admin Header -->
+  <header class="admin-header">
+    <div class="admin-header-content">
+      <div class="admin-brand">
+        <h1>Motofy Admin</h1>
+        <span class="admin-subtitle">Car Rental Management</span>
+        <!-- Booking Details Modal -->
+  <div class="modal-overlay" ng-if="adminBooking.showDetailsModal" ng-click="adminBooking.closeDetailsModal()"></div>
+  <div class="modal-container" ng-if="adminBooking.showDetailsModal">
+    <div class="modal-content booking-details-modal" ng-click="$event.stopPropagation()">
+      <button class="modal-close" ng-click="adminBooking.closeDetailsModal()">&times;</button>
+      <h3>Booking Details</h3>
+      
+      <div class="booking-details-content" ng-if="adminBooking.selectedBooking">
+        <div class="booking-detail-row">
+          <span class="detail-label">Booking ID:</span>
+          <span class="detail-value">{{adminBooking.selectedBooking._id}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">User:</span>
+          <span class="detail-value">{{adminBooking.selectedBooking.user.username}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Car:</span>
+          <span class="detail-value">{{adminBooking.selectedBooking.car.name}} {{adminBooking.selectedBooking.car.brand}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Pickup:</span>
+          <span class="detail-value">{{adminBooking.selectedBooking.pickupDate | date:'dd MMM yyyy, h:mm a'}} - {{adminBooking.selectedBooking.pickupLocation}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Return:</span>
+          <span class="detail-value">{{adminBooking.selectedBooking.dropoffDate | date:'dd MMM yyyy, h:mm a'}} - {{adminBooking.selectedBooking.dropoffLocation || adminBooking.selectedBooking.pickupLocation}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Duration:</span>
+          <span class="detail-value">{{(adminBooking.selectedBooking.dropoffDate - adminBooking.selectedBooking.pickupDate) / (1000 * 60 * 60 * 24) | number:0}} days</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Price:</span>
+          <span class="detail-value">₹{{adminBooking.selectedBooking.totalAmount}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Payment:</span>
+          <span class="status-badge" ng-class="{
+            'status-pending': adminBooking.selectedBooking.paymentStatus === 'Pending',
+            'status-confirmed': adminBooking.selectedBooking.paymentStatus === 'Paid'
+          }">{{adminBooking.selectedBooking.paymentStatus}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Status:</span>
+          <span class="status-badge" ng-class="{
+            'status-pending': adminBooking.selectedBooking.status === 'Pending',
+            'status-confirmed': adminBooking.selectedBooking.status === 'Confirmed',
+            'status-cancelled': adminBooking.selectedBooking.status === 'Cancelled',
+            'status-ongoing': adminBooking.selectedBooking.status === 'Ongoing'
+          }">{{adminBooking.selectedBooking.status}}</span>
+        </div>
+        
+        <div class="booking-detail-actions">
+          <button class="btn-confirm" ng-click="adminBooking.confirmBooking(adminBooking.selectedBooking); adminBooking.closeDetailsModal()" ng-if="adminBooking.selectedBooking.status === 'Pending'">
+            Confirm Booking
+          </button>
+          <button class="btn-cancel" ng-click="adminBooking.cancelBooking(adminBooking.selectedBooking); adminBooking.closeDetailsModal()" ng-if="adminBooking.selectedBooking.status !== 'Cancelled'">
+            Cancel Booking
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="admin-user">
+        <span class="admin-username">{{adminDashboard.adminData.username}}</span>
+        <button class="admin-logout-btn" ng-click="adminDashboard.logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Admin Navigation -->
+  <nav class="admin-nav">
+    <div class="admin-nav-content">
+      <a href="" class="nav-item" 
+         ng-click="adminDashboard.showSection('dashboard')" 
+         ng-class="{'active': adminDashboard.activeSection === 'dashboard'}">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="" class="nav-item" 
+         ng-click="adminDashboard.showSection('cars')" 
+         ng-class="{'active': adminDashboard.activeSection === 'cars'}">
+        <span class="nav-icon">🚗</span> Cars
+      </a>
+      <a href="" class="nav-item" 
+         ng-click="adminDashboard.showSection('users')" 
+         ng-class="{'active': adminDashboard.activeSection === 'users'}">
+        <span class="nav-icon">👥</span> Users
+      </a>
+      <a href="" class="nav-item" 
+         ng-click="adminDashboard.showSection('bookings')" 
+         ng-class="{'active': adminDashboard.activeSection === 'bookings'}">
+        <span class="nav-icon">📋</span> Bookings
+      </a>
+      <a href="" class="nav-item" 
+         ng-click="adminDashboard.showSection('analytics')" 
+         ng-class="{'active': adminDashboard.activeSection === 'analytics'}">
+        <span class="nav-icon">📈</span> Analytics
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-container">
+
+      <!-- DASHBOARD SECTION -->
+      <div ng-show="adminDashboard.activeSection === 'dashboard'">
+        <div class="welcome-section">
+          <h2>Welcome back, {{adminDashboard.adminData.username}}!</h2>
+          <p>Here's what's happening with your car rental platform today.</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🚗</div>
+            <div class="stat-content">
+              <h3>{{adminDashboard.stats.totalCars}}</h3>
+              <p>Total Cars</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+              <h3>{{adminDashboard.stats.totalUsers}}</h3>
+              <p>Total Users</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-content">
+              <h3>{{adminDashboard.stats.totalBookings}}</h3>
+              <p>Total Bookings</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-content">
+              <h3>₹{{adminDashboard.stats.totalRevenue}}</h3>
+              <p>Total Revenue</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Booking Stats -->
+        <div class="booking-stats-section">
+          <h3>Booking Statistics</h3>
+          <div class="booking-stats-grid">
+            <div class="booking-stat-card pending">
+              <div class="booking-stat-icon">⏳</div>
+              <div class="booking-stat-content">
+                <h4>{{adminDashboard.stats.pendingBookings || 0}}</h4>
+                <p>Pending</p>
+              </div>
+            </div>
+            <div class="booking-stat-card confirmed">
+              <div class="booking-stat-icon">✅</div>
+              <div class="booking-stat-content">
+                <h4>{{adminDashboard.stats.confirmedBookings || 0}}</h4>
+                <p>Confirmed</p>
+              </div>
+            </div>
+            <div class="booking-stat-card cancelled">
+              <div class="booking-stat-icon">❌</div>
+              <div class="booking-stat-content">
+                <h4>{{adminDashboard.stats.cancelledBookings || 0}}</h4>
+                <p>Cancelled</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="actions-grid">
+            <button class="action-btn" ng-click="adminDashboard.showSection('cars')">
+              <span class="action-icon">➕</span> Add New Car
+            </button>
+            <button class="action-btn" ng-click="adminDashboard.showSection('bookings')">
+              <span class="action-icon">📋</span> View Bookings
+            </button>
+            <button class="action-btn" ng-click="adminDashboard.showSection('users')">
+              <span class="action-icon">👥</span> Manage Users
+            </button>
+            <button class="action-btn" ng-click="adminDashboard.showSection('analytics')">
+              <span class="action-icon">📈</span> View Analytics
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+          <h3>Recent Activity</h3>
+          <div class="activity-list">
+            <div ng-repeat="activity in adminDashboard.recentActivity" class="activity-item">
+              <div class="activity-icon">{{activity.icon}}</div>
+              <div class="activity-content">
+                <p class="activity-text">{{activity.text}}</p>
+                <span class="activity-time">{{activity.time}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARS SECTION -->
+      <div ng-show="adminDashboard.activeSection === 'cars'" ng-controller="AdminCarController as adminCar">
+        <h2>Car Management</h2>
+
+       <!-- Top actions -->
+        <div class="admin-toolbar">
+          <button class="btn primary" ng-click="adminCar.toggleView()">
+            {{adminCar.viewMode === 'list' ? '+ Add Car' : '← Back to List'}}
+          </button>
+          <button class="btn" ng-if="adminCar.viewMode === 'list'" ng-click="adminCar.loadCars()">Refresh</button>
+        </div>
+
+
+        <!-- Alerts -->
+        <p class="text-success" ng-if="adminCar.success">{{adminCar.success}}</p>
+        <p class="text-error" ng-if="adminCar.error">{{adminCar.error}}</p>
+
+        <!-- LIST VIEW -->
+        <div ng-show="adminCar.viewMode === 'list'">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Fuel</th>
+                <th>Seats</th>
+                <th>Transmission</th>
+                <th>Price</th>
+                <th style="width:140px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="car in adminCar.cars">
+                <td>
+                  <img ng-if="car.image" ng-src="{{adminCar.imageUrl(car.image)}}" alt="{{car.name}}" style="width:70px;height:48px;object-fit:cover;border-radius:6px;">
+                  <span ng-if="!car.image" class="muted">No image</span>
+                </td>
+                <td>{{car.name}}</td>
+                <td>{{car.brand}}</td>
+                <td>{{car.fuelType}}</td>
+                <td>{{car.seats}}</td>
+                <td>{{car.transmission}}</td>
+                <td>{{car.price | currency}}</td>
+                <td>
+                  <button class="btn btn-sm" ng-click="adminCar.showEditForm(car)">Edit</button>
+                  <button class="btn btn-sm btn-danger" ng-click="adminCar.deleteCar(car._id)">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div ng-if="!adminCar.cars.length" class="muted">No cars yet.</div>
+        </div>
+
+        <!-- FORM VIEW (Add/Edit) -->
+        <div ng-show="adminCar.viewMode === 'form'" class="admin-form-container">
+          <h3 ng-if="!adminCar.editingId" class="form-title">Add New Car</h3>
+          <h3 ng-if="adminCar.editingId" class="form-title">Edit Car Details</h3>
+
+          <form ng-submit="adminCar.saveCar()" novalidate class="admin-form">
+            <div class="form-grid">
+              <label>
+                <span>Car Name</span>
+                <input type="text" ng-model="adminCar.formData.name" required placeholder="Enter car name">
+              </label>
+              <label>
+                <span>Brand</span>
+                <input type="text" ng-model="adminCar.formData.brand" required placeholder="Enter car brand">
+              </label>
+              <label>
+                <span>Price (₹)</span>
+                <input type="number" ng-model="adminCar.formData.price" required placeholder="Enter price per day">
+              </label>
+              <label>
+                <span>Fuel Type</span>
+                <input type="text" ng-model="adminCar.formData.fuelType" required placeholder="Petrol/Diesel/Electric">
+              </label>
+              <label>
+                <span>Seats</span>
+                <input type="number" ng-model="adminCar.formData.seats" required placeholder="Number of seats">
+              </label>
+              <label>
+                <span>Transmission</span>
+                <input type="text" ng-model="adminCar.formData.transmission" required placeholder="Manual/Automatic">
+              </label>
+            </div>
+
+            <label>
+              <span>Description</span>
+              <textarea ng-model="adminCar.formData.description" rows="3" placeholder="Enter car description and features"></textarea>
+            </label>
+
+            <div class="form-row">
+              <label>
+                <span>Car Image (optional)</span>
+                <input type="file" file-model="adminCar.formData.imageFile" accept="image/*">
+              </label>
+              <div ng-if="adminCar.previewUrl" class="img-preview">
+                <img ng-src="{{adminCar.previewUrl}}" alt="Car preview">
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn" type="submit">{{adminCar.editingId ? 'Update' : 'Add'}} Car</button>
+              <button class="btn btn-ghost" type="button" ng-click="adminCar.cancelForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- USERS SECTION -->
+      <div ng-show="adminDashboard.activeSection === 'users'" ng-controller="AdminUserController as adminUser" ng-init="adminUser.init()">
+        <h2>User Management</h2>
+        
+        <!-- User Filters -->
+        <div class="user-filters">
+          <div class="search-filter">
+            <input type="text" ng-model="adminUser.searchQuery" placeholder="Search by username or email..." class="form-control">
+          </div>
+          <div class="status-filter">
+            <select ng-model="adminUser.statusFilter" class="form-control">
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Loading Message -->
+        <div ng-if="adminUser.loading" class="loading-message">
+          <i class="fa fa-spinner fa-spin"></i> Loading users...
+        </div>
+        
+        <!-- Error Message -->
+        <div ng-if="adminUser.error" class="error-message">
+          <i class="fa fa-exclamation-circle"></i> {{adminUser.error}}
+        </div>
+        
+        <!-- Success Message -->
+        <div ng-if="adminUser.success" class="success-message">
+          <i class="fa fa-check-circle"></i> {{adminUser.success}}
+        </div>
+        
+        <!-- Users Table -->
+        <table class="admin-table" ng-if="!adminUser.loading && adminUser.filteredUsers.length > 0">
+          <thead>
+            <tr>
+              <th ng-click="adminUser.sortBy('username')">
+                Username
+                <span ng-show="adminUser.sortKey === 'username'" ng-class="{'fa fa-caret-up': !adminUser.sortReverse, 'fa fa-caret-down': adminUser.sortReverse}"></span>
+              </th>
+              <th ng-click="adminUser.sortBy('email')">
+                Email
+                <span ng-show="adminUser.sortKey === 'email'" ng-class="{'fa fa-caret-up': !adminUser.sortReverse, 'fa fa-caret-down': adminUser.sortReverse}"></span>
+              </th>
+              <th ng-click="adminUser.sortBy('createdAt')">
+                Joined Date
+                <span ng-show="adminUser.sortKey === 'createdAt'" ng-class="{'fa fa-caret-up': !adminUser.sortReverse, 'fa fa-caret-down': adminUser.sortReverse}"></span>
+              </th>
+              <th ng-click="adminUser.sortBy('status')">
+                Status
+                <span ng-show="adminUser.sortKey === 'status'" ng-class="{'fa fa-caret-up': !adminUser.sortReverse, 'fa fa-caret-down': adminUser.sortReverse}"></span>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="user in adminUser.filteredUsers">
+              <td>{{user.username}}</td>
+              <td>{{user.email}}</td>
+              <td>{{adminUser.formatDate(user.createdAt)}}</td>
+              <td>
+                <span class="status-badge" ng-class="{
+                  'status-confirmed': user.status === 'active',
+                  'status-pending': user.status === 'inactive',
+                  'status-cancelled': user.status === 'suspended'
+                }">
+                  {{user.status}}
+                </span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn btn-sm btn-primary" ng-click="adminUser.viewUserDetails(user)">
+                    <i class="fa fa-eye"></i> View
+                  </button>
+                  <button class="btn btn-sm btn-success" ng-if="user.status !== 'active'" ng-click="adminUser.updateUserStatus(user, 'active')">
+                    <i class="fa fa-check"></i> Activate
+                  </button>
+                  <button class="btn btn-sm btn-warning" ng-if="user.status !== 'inactive'" ng-click="adminUser.updateUserStatus(user, 'inactive')">
+                    <i class="fa fa-pause"></i> Deactivate
+                  </button>
+                  <button class="btn btn-sm btn-danger" ng-if="user.status !== 'suspended'" ng-click="adminUser.updateUserStatus(user, 'suspended')">
+                    <i class="fa fa-ban"></i> Suspend
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <!-- No Users Message -->
+        <div ng-if="!adminUser.loading && adminUser.filteredUsers.length === 0" class="no-data-message">
+          No users found matching your criteria.
+        </div>
+        
+        <!-- User Details Modal -->
+        <div class="modal" ng-class="{'show-modal': adminUser.selectedUser}">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>User Details</h3>
+              <span class="close-modal" ng-click="adminUser.closeUserDetails()">&times;</span>
+            </div>
+            <div class="modal-body" ng-if="adminUser.selectedUser">
+              <div class="user-profile">
+                <div class="user-avatar">
+                  <img ng-src="{{adminUser.selectedUser.profilePic || 'app/assets/images/default-avatar.png'}}" alt="{{adminUser.selectedUser.username}}">
+                </div>
+                <div class="user-info">
+                  <h4>{{adminUser.selectedUser.username}}</h4>
+                  <p><strong>Email:</strong> {{adminUser.selectedUser.email}}</p>
+                  <p><strong>Status:</strong> 
+                    <span class="status-badge" ng-class="{
+                      'status-confirmed': adminUser.selectedUser.status === 'active',
+                      'status-pending': adminUser.selectedUser.status === 'inactive',
+                      'status-cancelled': adminUser.selectedUser.status === 'suspended'
+                    }">
+                      {{adminUser.selectedUser.status}}
+                    </span>
+                  </p>
+                  <p><strong>Joined:</strong> {{adminUser.formatDate(adminUser.selectedUser.createdAt)}}</p>
+                </div>
+              </div>
+              
+              <h4>Booking Activity</h4>
+              <div ng-if="adminUser.loadingBookings" class="loading-message">
+                <i class="fa fa-spinner fa-spin"></i> Loading booking activity...
+              </div>
+              <div ng-if="!adminUser.loadingBookings && adminUser.userBookings.length === 0" class="no-data-message">
+                No booking activity found for this user.
+              </div>
+              <table class="admin-table" ng-if="!adminUser.loadingBookings && adminUser.userBookings.length > 0">
+                <thead>
+                  <tr>
+                    <th>Car</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Booked On</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="booking in adminUser.userBookings">
+                    <td>{{booking.car.make}} {{booking.car.model}}</td>
+                    <td>{{adminUser.formatDate(booking.fromDate)}}</td>
+                    <td>{{adminUser.formatDate(booking.toDate)}}</td>
+                    <td>₹{{booking.amount}}</td>
+                    <td>
+                      <span class="status-badge" ng-class="{
+                        'status-confirmed': booking.status === 'confirmed',
+                        'status-pending': booking.status === 'pending',
+                        'status-cancelled': booking.status === 'cancelled'
+                      }">
+                        {{booking.status}}
+                      </span>
+                    </td>
+                    <td>{{adminUser.getTimeAgo(booking.createdAt)}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" ng-click="adminUser.closeUserDetails()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKINGS SECTION -->
+      <div ng-show="adminDashboard.activeSection === 'bookings'" ng-controller="AdminBookingController as adminBooking">
+        <div class="booking-management">
+          <h2>Booking Management</h2>
+          
+          <!-- Filters and Search -->
+          <div class="booking-filters">
+            <div class="filter-group">
+              <label class="filter-label">Status</label>
+              <select ng-model="adminBooking.statusFilter">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Date Range</label>
+              <input type="date" ng-model="adminBooking.dateFrom" placeholder="From">
+              <input type="date" ng-model="adminBooking.dateTo" placeholder="To">
+            </div>
+            <div class="filter-actions">
+              <button class="btn" ng-click="adminBooking.resetFilters()">Reset</button>
+              <button class="btn" ng-click="adminBooking.loadBookings()">Refresh</button>
+            </div>
+            <div class="search-box">
+              <input type="text" ng-model="adminBooking.searchTerm" placeholder="Search bookings...">
+            </div>
+          </div>
+          
+          <!-- Loading and Error Messages -->
+          <div ng-if="adminBooking.loading" class="loading-message">Loading bookings...</div>
+          <div ng-if="adminBooking.error" class="error-message">{{adminBooking.error}}</div>
+          <div ng-if="adminBooking.success" class="success-message">{{adminBooking.success}}</div>
+          
+          <!-- Bookings Table -->
+          <div class="table-container" ng-if="!adminBooking.loading && adminBooking.filteredBookings.length > 0">
+            <table class="booking-table">
+              <thead>
+                <tr>
+                  <th ng-click="adminBooking.setSortBy('_id')">Booking ID</th>
+                  <th ng-click="adminBooking.setSortBy('user.username')">User</th>
+                  <th ng-click="adminBooking.setSortBy('car.name')">Car</th>
+                  <th ng-click="adminBooking.setSortBy('pickupDate')">Pickup Date</th>
+                  <th ng-click="adminBooking.setSortBy('dropoffDate')">Return Date</th>
+                  <th ng-click="adminBooking.setSortBy('totalAmount')">Price</th>
+                  <th ng-click="adminBooking.setSortBy('paymentStatus')">Payment Status</th>
+                  <th ng-click="adminBooking.setSortBy('status')">Booking Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="booking in adminBooking.filteredBookings">
+                  <td>{{booking._id.substr(-5)}}</td>
+                  <td>{{booking.user.username || 'Unknown'}}</td>
+                  <td>{{(booking.car.name + ' ' + booking.car.brand) || 'Unknown'}}</td>
+                  <td>{{adminBooking.formatDate(booking.pickupDate)}}</td>
+                  <td>{{adminBooking.formatDate(booking.dropoffDate)}}</td>
+                  <td>₹{{booking.totalAmount}}</td>
+                  <td>
+                    <span class="status-badge" ng-class="{
+                      'status-pending': booking.paymentStatus === 'Pending',
+                      'status-confirmed': booking.paymentStatus === 'Paid'
+                    }">{{booking.paymentStatus || 'Pending'}}</span>
+                  </td>
+                  <td>
+                    <span class="status-badge" ng-class="{
+                      'status-pending': booking.status === 'Pending',
+                      'status-confirmed': booking.status === 'Confirmed',
+                      'status-cancelled': booking.status === 'Cancelled',
+                      'status-ongoing': booking.status === 'Ongoing'
+                    }">{{booking.status}}</span>
+                  </td>
+                  <td>
+                    <div class="booking-actions">
+                      <button class="booking-btn booking-btn-view" ng-click="adminBooking.viewBooking(booking)">
+                        View
+                      </button>
+                      <button class="booking-btn booking-btn-edit" ng-click="adminBooking.editBooking(booking)">
+                        Edit
+                      </button>
+                      <button class="booking-btn booking-btn-confirm" 
+                              ng-if="booking.status !== 'Confirmed'" 
+                              ng-click="adminBooking.confirmBooking(booking)"
+                              ng-disabled="booking.updating">
+                        Confirm
+                      </button>
+                      <button class="booking-btn booking-btn-cancel" 
+                              ng-if="booking.status !== 'Cancelled'" 
+                              ng-click="adminBooking.cancelBooking(booking)"
+                              ng-disabled="booking.updating">
+                        Cancel
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- No Bookings Message -->
+          <div ng-if="!adminBooking.loading && adminBooking.filteredBookings.length === 0" class="no-data-message">
+            No bookings found matching your criteria.
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS SECTION -->
+      <div ng-show="adminDashboard.activeSection === 'analytics'">
+        <h2>Analytics</h2>
+        <!-- Analytics charts HTML -->
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,108 @@
+<!-- app/views/booking.html -->
+<div class="my-bookings-container">
+  <h2>My Bookings</h2>
+  
+  <div class="booking-search">
+    <input type="text" ng-model="booking.searchTerm" placeholder="Search bookings...">
+    <!-- Booking Details Modal -->
+  <div class="modal-overlay" ng-if="booking.showDetailsModal" ng-click="booking.closeDetailsModal()"></div>
+  <div class="modal-container" ng-if="booking.showDetailsModal">
+    <div class="modal-content booking-details-modal" ng-click="$event.stopPropagation()">
+      <button class="modal-close" ng-click="booking.closeDetailsModal()">&times;</button>
+      <h3>Booking Details</h3>
+      
+      <div class="booking-details-content" ng-if="booking.selectedBooking">
+        <div class="booking-detail-row">
+          <span class="detail-label">Booking ID:</span>
+          <span class="detail-value">{{booking.selectedBooking._id}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Car:</span>
+          <span class="detail-value">{{booking.selectedBooking.car.name}} {{booking.selectedBooking.car.brand}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Pickup:</span>
+          <span class="detail-value">{{booking.selectedBooking.pickupDate | date:'dd MMM yyyy, h:mm a'}} - {{booking.selectedBooking.pickupLocation}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Return:</span>
+          <span class="detail-value">{{booking.selectedBooking.dropoffDate | date:'dd MMM yyyy, h:mm a'}} - {{booking.selectedBooking.dropoffLocation || booking.selectedBooking.pickupLocation}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Duration:</span>
+          <span class="detail-value">{{(booking.selectedBooking.dropoffDate - booking.selectedBooking.pickupDate) / (1000 * 60 * 60 * 24) | number:0}} days</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Price:</span>
+          <span class="detail-value">₹{{booking.selectedBooking.totalAmount}}</span>
+        </div>
+        <div class="booking-detail-row">
+          <span class="detail-label">Status:</span>
+          <span class="status-badge" ng-class="{
+            'status-pending': booking.selectedBooking.status === 'Pending',
+            'status-confirmed': booking.selectedBooking.status === 'Confirmed',
+            'status-cancelled': booking.selectedBooking.status === 'Cancelled',
+            'status-ongoing': booking.selectedBooking.status === 'Ongoing'
+          }">{{booking.selectedBooking.status}}</span>
+        </div>
+        
+        <div class="booking-detail-actions" ng-if="booking.selectedBooking.status !== 'Cancelled'">
+          <button class="btn-outline" ng-click="booking.cancel(booking.selectedBooking); booking.closeDetailsModal()" ng-disabled="booking.selectedBooking.cancelling">
+            {{booking.selectedBooking.cancelling ? 'Cancelling...' : 'Cancel Booking'}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <div ng-if="booking.loading" class="loading-message">Loading your bookings...</div>
+  <div ng-if="booking.error" class="error-message">{{booking.error}}</div>
+  <div ng-if="booking.success" class="success-message">{{booking.success}}</div>
+  
+  <div class="booking-cards" ng-if="!booking.loading && booking.bookings.length">
+    <div class="booking-card" ng-repeat="b in booking.bookings | filter:booking.searchTerm">
+      <div class="booking-card-image">
+        <img ng-src="{{b.car.imageUrl || 'assets/images/car-placeholder.jpg'}}" alt="{{b.car.name}}">
+      </div>
+      <div class="booking-card-details">
+        <h3 class="car-name">{{b.car.name}} {{b.car.brand}}</h3>
+        <div class="booking-info">
+          <div class="booking-info-item">
+            <span class="info-label">Pickup:</span>
+            <span class="info-value">{{b.pickupDate | date:'dd MMM yyyy'}}, {{b.pickupLocation}}</span>
+          </div>
+          <div class="booking-info-item">
+            <span class="info-label">Return:</span>
+            <span class="info-value">{{b.dropoffDate | date:'dd MMM yyyy'}}, {{b.dropoffLocation || b.pickupLocation}}</span>
+          </div>
+          <div class="booking-info-item">
+            <span class="info-label">Price:</span>
+            <span class="info-value">₹{{b.totalAmount}}</span>
+          </div>
+          <div class="booking-info-item">
+            <span class="status-badge" ng-class="{
+              'status-pending': b.status === 'Pending',
+              'status-confirmed': b.status === 'Confirmed',
+              'status-cancelled': b.status === 'Cancelled',
+              'status-ongoing': b.status === 'Ongoing'
+            }">{{b.status}}</span>
+          </div>
+        </div>
+        <div class="booking-actions">
+          <button class="btn-outline" ng-if="b.status !== 'Cancelled'" ng-click="booking.cancel(b)" ng-disabled="b.cancelling">
+            {{b.cancelling ? 'Cancelling...' : 'Cancel Booking'}}
+          </button>
+          <button class="btn-filled" ng-click="booking.viewDetails(b)">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div ng-if="!booking.loading && !booking.bookings.length && !booking.error" class="no-bookings">
+    <p>You have no bookings yet.</p>
+    <a href="#!/cars" class="btn-filled">Browse Cars</a>
+  </div>
+</div>

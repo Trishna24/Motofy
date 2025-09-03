@@ -1,0 +1,310 @@
+<!-- app/views/admin-login.html -->
+<div class="admin-login-container">
+  <!-- Test message to verify page loads -->
+  <div style="position: fixed; top: 10px; right: 10px; background: #4CAF50; color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; z-index: 9999;">
+    ✅ Admin Login Page Loaded
+  </div>
+  
+  <div class="admin-login-card">
+    <div class="admin-login-header">
+      <div class="admin-logo">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#667eea" stroke-width="2"/>
+          <path d="M2 17L12 22L22 17" stroke="#667eea" stroke-width="2"/>
+          <path d="M2 12L12 17L22 12" stroke="#667eea" stroke-width="2"/>
+        </svg>
+      </div>
+      <h1>Motofy Admin</h1>
+      <p>Sign in to manage your car rental platform</p>
+    </div>
+
+    <form class="admin-login-form" ng-submit="adminLogin.login()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          ng-model="adminLogin.credentials.username" 
+          placeholder="Enter your username"
+          required
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          ng-model="adminLogin.credentials.password" 
+          placeholder="Enter your password"
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit" class="admin-login-btn" ng-disabled="adminLogin.loading">
+        <span ng-if="!adminLogin.loading">Sign In</span>
+        <span ng-if="adminLogin.loading">Signing In...</span>
+      </button>
+    </form>
+
+    <div class="admin-login-footer">
+      <a href="#/" class="back-to-site">← Back to Main Site</a>
+    </div>
+
+    <!-- Error/Success Messages -->
+    <div ng-if="adminLogin.error" class="error-message">
+      {{adminLogin.error}}
+    </div>
+    <div ng-if="adminLogin.success" class="success-message">
+      {{adminLogin.success}}
+    </div>
+  </div>
+</div>
+
+<style>
+  .admin-login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .admin-login-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .admin-login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .admin-login-header {
+    text-align: center;
+    margin-bottom: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .admin-logo {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .admin-login-header h1 {
+    color: #2c3e50;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .admin-login-header p {
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+    max-width: 280px;
+  }
+
+  .admin-login-form {
+    margin-bottom: 24px;
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e1e8ed;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background: #fafbfc;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .form-group input::placeholder {
+    color: #a0aec0;
+  }
+
+  .admin-login-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .admin-login-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .admin-login-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .admin-login-btn:hover:not(:disabled)::before {
+    left: 100%;
+  }
+
+  .admin-login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .admin-login-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f3f4;
+  }
+
+  .back-to-site {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .back-to-site:hover {
+    color: #764ba2;
+    transform: translateX(-2px);
+  }
+
+  .error-message {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    border: 1px solid #fecaca;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .error-message::before {
+    content: '⚠️';
+    font-size: 1rem;
+  }
+
+  .success-message {
+    background: #f0fdf4;
+    color: #16a34a;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    border: 1px solid #bbf7d0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .success-message::before {
+    content: '✅';
+    font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    .admin-login-container {
+      padding: 16px;
+    }
+    
+    .admin-login-card {
+      padding: 32px 24px;
+      border-radius: 12px;
+    }
+    
+    .admin-login-header h1 {
+      font-size: 1.9rem;
+    }
+
+    .admin-login-header p {
+      font-size: 0.95rem;
+    }
+
+    .form-group input {
+      padding: 12px 14px;
+    }
+
+    .admin-login-btn {
+      padding: 14px;
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .admin-login-card {
+      padding: 24px 20px;
+    }
+    
+    .admin-login-header h1 {
+      font-size: 1.7rem;
+    }
+  }
+</style> 

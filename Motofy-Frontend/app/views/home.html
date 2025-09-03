@@ -1,0 +1,76 @@
+<!-- app/views/home.html -->
+<div class="hero-section">
+  <div class="hero-title">Find Your Perfect Ride with Motofy</div>
+  <div class="hero-tagline">Browse, book, and drive the best cars in town.</div>
+  <button class="hero-btn" type="button" ng-click="main.goToCars()">Browse Cars</button>
+</div>
+
+<!-- Quick Search Section -->
+<section class="quick-search-section">
+  <div class="quick-search-title">Quick Search</div>
+  <div class="quick-search-subtitle">Find cars by popular categories</div>
+  <div class="quick-search-buttons">
+    <button class="quick-search-btn popular" ng-click="main.quickSearch('popular')">
+      <span class="quick-search-icon">🏎️</span>
+      <span class="quick-search-text">Popular Cars</span>
+    </button>
+    <button class="quick-search-btn suv" ng-click="main.quickSearch('suv')">
+      <span class="quick-search-icon">🚗</span>
+      <span class="quick-search-text">SUVs & Crossovers</span>
+    </button>
+    <button class="quick-search-btn electric" ng-click="main.quickSearch('electric')">
+      <span class="quick-search-icon">⚡</span>
+      <span class="quick-search-text">Electric Vehicles</span>
+    </button>
+    <button class="quick-search-btn budget" ng-click="main.quickSearch('budget')">
+      <span class="quick-search-icon">💰</span>
+      <span class="quick-search-text">Budget-Friendly</span>
+    </button>
+    <button class="quick-search-btn luxury" ng-click="main.quickSearch('luxury')">
+      <span class="quick-search-icon">👑</span>
+      <span class="quick-search-text">Luxury Cars</span>
+    </button>
+    <button class="quick-search-btn family" ng-click="main.quickSearch('family')">
+      <span class="quick-search-icon">👨‍👩‍👧‍👦</span>
+      <span class="quick-search-text">Family Cars</span>
+    </button>
+  </div>
+</section>
+
+<section class="featured-cars-section">
+  <div class="featured-cars-title">Featured Cars</div>
+  <div class="featured-cars-grid">
+    <div class="featured-car-card" ng-repeat="carItem in main.filteredCars | limitTo:3">
+      <img ng-src="{{carItem.image}}" alt="{{carItem.name}}">
+      <div class="car-title">{{carItem.name}}</div>
+      <div class="car-brand">{{carItem.brand}}</div>
+      <div class="car-price">₹{{carItem.price * 50}}/day</div>
+      <button class="view-details-btn" ng-click="main.viewCarDetail(carItem._id)">View Details</button>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Bookings (visible only if user is logged in) -->
+<section class="recent-bookings-section" ng-if="main.isLoggedIn()">
+  <div class="recent-bookings-title">Your Recent Bookings</div>
+  <div class="recent-bookings-grid">
+    <div class="recent-booking-card">
+      <div class="booking-car">Car: (coming soon)</div>
+      <div class="booking-date">Date: (coming soon)</div>
+      <div class="booking-status">Status: (coming soon)</div>
+    </div>
+    <div class="recent-booking-card">
+      <div class="booking-car">Car: (coming soon)</div>
+      <div class="booking-date">Date: (coming soon)</div>
+      <div class="booking-status">Status: (coming soon)</div>
+    </div>
+  </div>
+</section>
+
+<!-- AI Chat Teaser Banner -->
+<section class="ai-chat-teaser-section">
+  <div class="ai-chat-teaser-banner">
+    <span>Need help choosing a car? </span>
+    <button class="ai-chat-teaser-btn" onclick="document.querySelector('.ai-float-btn').click()">Ask our AI!</button>
+  </div>
+</section> 

@@ -1,0 +1,304 @@
+<!-- car-list.html -->
+<div class="car-list-container">
+  <!-- Header -->
+  <div class="car-list-header">
+    <h1>Available Cars</h1>
+    <p>Find your perfect ride from our selection of vehicles</p>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="search-filters-section">
+    <div class="search-bar">
+      <input type="text" ng-model="car.searchTerm" placeholder="Search cars by name or brand..." ng-model-options="{debounce: 300}" ng-change="car.filterCars()">
+    </div>
+    
+    <div class="filters-row">
+      <select ng-model="car.selectedBrand" ng-change="car.filterCars()">
+        <option value="">All Brands</option>
+        <option ng-repeat="brand in car.getBrands()" value="{{brand}}">{{brand}}</option>
+      </select>
+      
+      <select ng-model="car.selectedFuelType" ng-change="car.filterCars()">
+        <option value="">All Fuel Types</option>
+        <option ng-repeat="fuel in car.getFuelTypes()" value="{{fuel}}">{{fuel}}</option>
+      </select>
+      
+      <select ng-model="car.selectedTransmission" ng-change="car.filterCars()">
+        <option value="">All Transmissions</option>
+        <option ng-repeat="trans in car.getTransmissions()" value="{{trans}}">{{trans}}</option>
+      </select>
+      
+      <select ng-model="car.sortBy" ng-change="car.filterCars()">
+        <option value="name">Sort by Name</option>
+        <option value="brand">Sort by Brand</option>
+        <option value="price">Sort by Price</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div ng-if="car.loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading cars...</p>
+  </div>
+
+  <!-- Error State -->
+  <div ng-if="car.error" class="error-state">
+    <p>{{car.error}}</p>
+  </div>
+
+  <!-- Cars Grid -->
+  <div ng-if="!car.loading && !car.error" class="cars-grid">
+    <div ng-repeat="carItem in car.filteredCars" class="car-card">
+      <div class="car-image">
+        <img ng-src="{{carItem.image}}" alt="{{carItem.name}}" loading="lazy">
+      </div>
+      
+      <div class="car-info">
+        <h3 class="car-name">{{carItem.name}}</h3>
+        <p class="car-brand">{{carItem.brand}}</p>
+        <p class="car-price">${{carItem.price}}/day</p>
+        
+        <div class="car-specs">
+          <span class="spec">{{carItem.fuelType}}</span>
+          <span class="spec">{{carItem.seats}} seats</span>
+          <span class="spec">{{carItem.transmission}}</span>
+        </div>
+        
+        <button class="view-details-btn" ng-click="car.viewCarDetail(carItem._id)">
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div ng-if="!car.loading && !car.error && car.filteredCars.length === 0" class="no-results">
+    <p>No cars found matching your criteria.</p>
+    <button ng-click="car.searchTerm = ''; car.selectedBrand = ''; car.selectedFuelType = ''; car.selectedTransmission = ''; car.filterCars()">
+      Clear Filters
+    </button>
+  </div>
+</div>
+
+<style>
+  .car-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2em 1.5em;
+  }
+
+  .car-list-header {
+    text-align: center;
+    margin-bottom: 2em;
+  }
+
+  .car-list-header h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #f3f6fa;
+    margin-bottom: 0.5em;
+  }
+
+  .car-list-header p {
+    font-size: 1.2em;
+    color: #b0b8c1;
+  }
+
+  .search-filters-section {
+    background: #313a49;
+    border-radius: 12px;
+    padding: 1.5em;
+    margin-bottom: 2em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .search-bar {
+    margin-bottom: 1em;
+  }
+
+  .search-bar input {
+    width: 97%;
+    padding: 0.8em 1em;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    background: #232b36;
+    color: #f3f6fa;
+  }
+
+  .search-bar input:focus {
+    outline: none;
+    border-color: #7ed957;
+  }
+
+  .filters-row {
+    display: flex;
+    gap: 2em;
+    flex-wrap: wrap;
+  }
+
+  .filters-row select {
+    padding: 0.6em 1em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #232b36;
+    color: #f3f6fa;
+    font-size: 0.9em;
+    min-width: 120px;
+  }
+
+  .filters-row select:focus {
+    outline: none;
+    border-color: #7ed957;
+  }
+
+  .cars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2em;
+  }
+
+  .car-card {
+    background: #313a49;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .car-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  .car-image {
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .car-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .car-card:hover .car-image img {
+    transform: scale(1.05);
+  }
+
+  .car-info {
+    padding: 1.5em;
+  }
+
+  .car-name {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #f3f6fa;
+    margin-bottom: 0.3em;
+  }
+
+  .car-brand {
+    font-size: 1em;
+    color: #b0b8c1;
+    margin-bottom: 0.5em;
+  }
+
+  .car-price {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #7ed957;
+    margin-bottom: 1em;
+  }
+
+  .car-specs {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1.5em;
+    flex-wrap: wrap;
+  }
+
+  .spec {
+    background: #232b36;
+    color: #b0b8c1;
+    padding: 0.3em 0.6em;
+    border-radius: 4px;
+    font-size: 0.8em;
+  }
+
+  .view-details-btn {
+    width: 100%;
+    background: #7ed957;
+    color: #232b36;
+    border: none;
+    border-radius: 6px;
+    padding: 0.8em 1em;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .view-details-btn:hover {
+    background: #5bbf3a;
+  }
+
+  .loading-state {
+    text-align: center;
+    padding: 3em;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #313a49;
+    border-top: 4px solid #7ed957;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1em;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .error-state {
+    text-align: center;
+    padding: 2em;
+    color: #ff6b6b;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3em;
+    color: #b0b8c1;
+  }
+
+  .no-results button {
+    background: #7ed957;
+    color: #232b36;
+    border: none;
+    border-radius: 6px;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1em;
+  }
+
+  @media (max-width: 768px) {
+    .cars-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .filters-row {
+      flex-direction: column;
+    }
+    
+    .filters-row select {
+      min-width: auto;
+    }
+  }
+</style> 
