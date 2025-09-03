@@ -10,7 +10,7 @@ const {
 } = require('../controllers/bookingController');
 const { body, validationResult } = require('express-validator');
 
-const { protect, adminProtect } = require('../middleware/authmiddleware');
+const { protect, adminProtect } = require('../middleware/authMiddleware');
 
 // Validation middleware for booking creation
 const bookingValidation = [
