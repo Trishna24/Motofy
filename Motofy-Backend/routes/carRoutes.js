@@ -9,7 +9,7 @@ const {
 } = require('../controllers/carController');
 const upload = require('../middleware/upload');
 const { body, validationResult } = require('express-validator');
-const { adminProtect } = require('../middleware/authmiddleware');
+const { adminProtect } = require('../middleware/authMiddleware');
 
 // Validation middleware for car creation/update
 const carValidation = [
