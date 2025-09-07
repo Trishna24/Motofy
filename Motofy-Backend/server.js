@@ -19,6 +19,7 @@ const app = express();
 // Allow all origins for development only
 app.use(cors({
   origin: "http://localhost:3000",
+  origin:"https://motofy-tau.vercel.app/#/",
   credentials: true,
 }));
 app.use(express.json());
