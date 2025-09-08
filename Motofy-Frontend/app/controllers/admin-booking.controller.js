@@ -1,6 +1,7 @@
 // app/controllers/admin-booking.controller.js
 angular.module('motofyApp')
   .controller('AdminBookingController', ['ApiService', '$window', '$scope', function(ApiService, $window, $scope) {
+    console.log('📋 AdminBookingController loaded successfully!');
     var vm = this;
     
     // Booking data
@@ -9,6 +10,10 @@ angular.module('motofyApp')
     vm.loading = true;
     vm.error = '';
     vm.success = '';
+    
+    // View modes
+    vm.viewMode = 'list';
+    vm.editMode = false;
     
     // Filters
     vm.searchTerm = '';
@@ -45,18 +50,91 @@ angular.module('motofyApp')
         });
     };
     
-    // View booking details
+    // Booking details
     vm.selectedBooking = null;
-    vm.showDetailsModal = false;
-    
-    vm.viewBooking = function(booking) {
-      vm.selectedBooking = booking;
-      vm.showDetailsModal = true;
+
+    // Toggle between list and detail view
+    vm.toggleView = function() {
+        if (vm.viewMode === 'list') {
+            vm.viewMode = 'detail';
+        } else {
+            vm.backToList();
+        }
     };
-    
-    vm.closeDetailsModal = function() {
-      vm.showDetailsModal = false;
+
+    // Show detail view for a specific booking
+    vm.showDetailView = function(booking) {
+        console.log('📋 ShowDetailView called with:', booking);
+        vm.loading = true;
+        vm.error = '';
+        
+        if (!booking || !booking._id) {
+            console.error('❌ Invalid booking object:', booking);
+            vm.error = 'Invalid booking data';
+            vm.loading = false;
+            return;
+        }
+        
+        console.log('🔍 Fetching booking details for ID:', booking._id);
+        ApiService.getBookingById(booking._id)
+          .then(function(response) {
+            console.log('✅ Booking details received:', response.data);
+            vm.selectedBooking = response.data;
+            vm.viewMode = 'detail';
+            vm.loading = false;
+          })
+          .catch(function(error) {
+            console.error('❌ Error fetching booking:', error);
+            vm.error = 'Failed to load booking details: ' + (error.data?.message || error.message || 'Unknown error');
+            vm.loading = false;
+          });
     };
+
+    // Back to list view
+    vm.backToList = function() {
+        vm.viewMode = 'list';
+        vm.selectedBooking = null;
+        vm.editMode = false;
+    };
+
+    vm.editMode = false; // false = view only, true = editing
+
+    // Enable edit mode
+    vm.enableEdit = function() {
+        vm.editMode = true;
+    };
+
+    // Cancel edit
+    vm.cancelEdit = function() {
+        vm.editMode = false;
+        // Optionally, reload booking details from backend to discard changes
+        vm.viewBooking(vm.selectedBooking);
+    };
+
+    // Save changes
+    vm.saveBooking = function() {
+            vm.loading = true;
+            vm.error = '';
+        
+        ApiService.updateBooking(vm.selectedBooking._id, vm.selectedBooking)
+            .then(function(response) {
+                vm.selectedBooking = response.data.booking;
+                vm.success = 'Booking updated successfully';
+                vm.editMode = false;
+                vm.loading = false;
+
+                // Clear success message after 3 seconds
+                setTimeout(function() {
+                    $scope.$apply(function() { vm.success = ''; });
+                }, 3000);
+            })
+            .catch(function(error) {
+                console.error('Error updating booking:', error);
+                vm.error = 'Failed to update booking';
+                vm.loading = false;
+            });
+    };
+
     
     // Confirm booking
     vm.confirmBooking = function(booking) {

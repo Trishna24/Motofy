@@ -64,7 +64,15 @@ angular.module('motofyApp')
         });
       },
       
+
       // Admin booking management
+      getBookingById: function(bookingId) {
+          var adminToken = window.localStorage.getItem('adminToken');
+          return $http.get(BASE_URL + '/bookings/' + bookingId, {
+              headers: { 'Authorization': 'Bearer ' + adminToken }
+          });
+      },
+
       getAllBookings: function() {
         var adminToken = window.localStorage.getItem('adminToken');
         return $http.get(BASE_URL + '/bookings/admin/all', {
@@ -72,6 +80,13 @@ angular.module('motofyApp')
         });
       },
       
+      updateBooking: function(bookingId, bookingData) {
+          var adminToken = window.localStorage.getItem('adminToken');
+          return $http.put(BASE_URL + '/bookings/' + bookingId, bookingData, {
+              headers: { 'Authorization': 'Bearer ' + adminToken }
+          });
+      },
+
       updateBookingStatus: function(bookingId, status) {
         var adminToken = window.localStorage.getItem('adminToken');
         return $http.put(BASE_URL + '/bookings/admin/status/' + bookingId, { status }, {

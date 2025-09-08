@@ -8,11 +8,56 @@ angular.module('motofyApp')
     vm.messages = [];
     vm.loading = false;
 
+    // Array of dynamic welcome messages
+    var welcomeMessages = [
+      'Hey there! 👋 Welcome to Motofy AI! Ready to find your perfect ride? 🚗✨',
+      'Hello! 🌟 I\'m your Motofy AI Assistant! Let\'s get you rolling with the best car deals! 🚙💨',
+      'Welcome aboard! 🎉 Your personal car rental expert is here! What adventure are we planning today? 🗺️🚗',
+      'Hi! 🤖 Motofy AI at your service! From budget cars to luxury rides - I\'ve got you covered! 💎🚘',
+      'Greetings! 🌈 Ready to explore amazing cars? Let\'s make your journey unforgettable! 🛣️✨'
+    ];
+
     vm.toggleChat = function() {
       vm.chatOpen = !vm.chatOpen;
       if (vm.chatOpen) {
+        // Send dynamic welcome message if this is the first time opening chat
+        if (vm.messages.length === 0) {
+          vm.sendDynamicWelcome();
+        }
         $timeout(scrollToBottom, 100);
       }
+    };
+
+    // Function to send dynamic welcome messages with typing effect
+    vm.sendDynamicWelcome = function() {
+      var randomMessage = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+      
+      // Add typing indicator first
+      vm.messages.push({ 
+        sender: 'bot', 
+        text: '🤖 AI is typing...', 
+        isTyping: true 
+      });
+      scrollToBottom();
+      
+      // Replace typing indicator with actual message after delay
+      $timeout(function() {
+        vm.messages[vm.messages.length - 1] = {
+          sender: 'bot',
+          text: randomMessage,
+          isTyping: false
+        };
+        scrollToBottom();
+        
+        // Add a follow-up message after another delay
+        $timeout(function() {
+          vm.messages.push({
+            sender: 'bot',
+            text: 'Type your question below and I\'ll help you instantly! 💬⚡'
+          });
+          scrollToBottom();
+        }, 1500);
+      }, 2000);
     };
 
     vm.sendMessage = function($event) {

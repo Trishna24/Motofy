@@ -50,4 +50,4 @@ angular.module('motofyApp')
       
       
     console.log('✅ Routes configured successfully');
-  }]); 
+  }]);

@@ -54,6 +54,19 @@ const getUserBookings = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error fetching your bookings. Please try again later.' });
   }
 };
+// Add this in your booking controller file
+const getBookingById = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id).populate('car').populate('user');
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+    res.json(booking);
+  } catch (error) {
+    console.error('Error fetching booking:', error);
+    res.status(500).json({ message: 'Error fetching booking. Please try again later.' });
+  }
+};
 
 // @desc   Cancel a booking
 const cancelBooking = async (req, res) => {
@@ -115,6 +128,33 @@ const updateBookingStatus = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error updating booking status. Please try again later.' });
   }
 };
+// @desc   Update a booking
+const updateBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    // Update allowed fields
+    const { pickupDate, dropoffDate, pickupLocation, dropoffLocation, totalAmount, status } = req.body;
+
+    if (pickupDate) booking.pickupDate = pickupDate;
+    if (dropoffDate) booking.dropoffDate = dropoffDate;
+    if (pickupLocation) booking.pickupLocation = pickupLocation;
+    if (dropoffLocation) booking.dropoffLocation = dropoffLocation;
+    if (totalAmount) booking.totalAmount = totalAmount;
+    if (status && ['Pending', 'Confirmed', 'Cancelled'].includes(status)) booking.status = status;
+
+    await booking.save();
+    res.json({ message: 'Booking updated successfully', booking });
+  } catch (error) {
+    console.error('Error updating booking:', error);
+    res.status(500).json({ message: 'Error updating booking. Please try again later.' });
+  }
+};
+
+
 
 // @desc   Get booking statistics for admin dashboard
 const getBookingStats = async (req, res) => {
@@ -154,8 +194,10 @@ const getBookingStats = async (req, res) => {
 module.exports = {
   createBooking,
   getUserBookings,
+  getBookingById,
   cancelBooking,
   getAllBookings,
+  updateBooking,
   updateBookingStatus,
   getBookingStats
 };

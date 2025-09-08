@@ -15,6 +15,9 @@ angular.module('motofyApp')
     vm.selectedUser = null;
     vm.userBookings = [];
     vm.loadingBookings = false;
+    vm.viewMode = 'list'; // 'list' | 'detail'
+    vm.editMode = false;
+    vm.originalUser = null;
     
     // Initialize controller
     vm.init = function() {
@@ -89,13 +92,54 @@ angular.module('motofyApp')
     // View user details
     vm.viewUserDetails = function(user) {
       vm.selectedUser = user;
+      vm.viewMode = 'detail';
       vm.loadUserBookings(user._id);
     };
-    
-    // Close user details modal
-    vm.closeUserDetails = function() {
+
+    // Back to user list
+    vm.backToList = function() {
+      vm.viewMode = 'list';
       vm.selectedUser = null;
       vm.userBookings = [];
+      vm.editMode = false;
+      vm.originalUser = null;
+    };
+
+    // Enable edit mode
+    vm.enableEdit = function() {
+      vm.editMode = true;
+      vm.originalUser = angular.copy(vm.selectedUser);
+    };
+
+    // Cancel edit mode
+    vm.cancelEdit = function() {
+      vm.editMode = false;
+      vm.selectedUser = angular.copy(vm.originalUser);
+      vm.originalUser = null;
+    };
+
+    // Save user changes
+    vm.saveUser = function() {
+      ApiService.updateUser(vm.selectedUser._id, vm.selectedUser)
+        .then(function(response) {
+          vm.selectedUser = response.data;
+          vm.editMode = false;
+          vm.originalUser = null;
+          
+          // Update user in the list
+          var index = vm.users.findIndex(function(u) { return u._id === vm.selectedUser._id; });
+          if (index !== -1) {
+            vm.users[index] = angular.copy(vm.selectedUser);
+          }
+          
+          vm.success = 'User updated successfully';
+          $timeout(function() { vm.success = null; }, 3000);
+          vm.applyFilters();
+        })
+        .catch(function(error) {
+          vm.error = 'Failed to update user: ' + (error.data?.message || error.message || 'Unknown error');
+          $timeout(function() { vm.error = null; }, 3000);
+        });
     };
     
     // Load user bookings

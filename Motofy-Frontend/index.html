@@ -121,7 +121,7 @@
 
             <div class="ai-chat-messages" id="aiChatMessages">
               <div ng-repeat="msg in ai.messages track by $index"
-                  ng-class="{'ai-user-msg': msg.sender === 'user', 'ai-bot-msg': msg.sender === 'bot'}">
+                  ng-class="{'ai-user-msg': msg.sender === 'user', 'ai-bot-msg': msg.sender === 'bot', 'typing': msg.isTyping}">
                 <strong ng-if="msg.sender === 'user'">You:</strong>
                 <strong ng-if="msg.sender === 'bot'">AI:</strong>
                 <span>{{msg.text}}</span>

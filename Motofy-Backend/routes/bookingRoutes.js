@@ -3,8 +3,10 @@ const router = express.Router();
 const {
   createBooking,
   getUserBookings,
+  getBookingById,
   cancelBooking,
   getAllBookings,
+  updateBooking,
   updateBookingStatus,
   getBookingStats
 } = require('../controllers/bookingController');
@@ -38,6 +40,7 @@ router.post('/', protect, bookingValidation, createBooking);
 
 // Get current user's bookings
 router.get('/my-bookings', protect, getUserBookings);
+router.get('/:id', adminProtect, getBookingById);
 
 // Cancel a booking
 router.put('/cancel/:id', protect, cancelBooking);
@@ -46,7 +49,9 @@ router.put('/cancel/:id', protect, cancelBooking);
 // Get all bookings (admin only)
 router.get('/admin/all', adminProtect, getAllBookings);
 
+
 // Update booking status (admin only)
+router.put('/:id', adminProtect, updateBooking);
 router.put('/admin/status/:id', adminProtect, updateBookingStatus);
 
 // Get booking statistics for admin dashboard

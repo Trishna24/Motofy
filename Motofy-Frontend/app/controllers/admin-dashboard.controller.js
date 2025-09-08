@@ -21,6 +21,7 @@ angular.module('motofyApp')
 
     // Function to change section
     vm.showSection = function(section) {
+      console.log('🔄 Switching to section:', section);
       vm.activeSection = section;
     };
 
