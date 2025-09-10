@@ -131,10 +131,245 @@ const deleteCar = async (req, res) => {
 };
 
 
+// @desc   Get car analytics for admin dashboard
+const getCarAnalytics = async (req, res) => {
+  try {
+    const { timeFilter = 'all' } = req.query;
+    const Booking = require('../models/Booking');
+    
+    // Define date ranges based on filter
+    const now = new Date();
+    let dateFilter = {};
+    
+    switch (timeFilter) {
+      case 'today':
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        dateFilter = { createdAt: { $gte: startOfDay, $lt: endOfDay } };
+        break;
+      case 'week':
+        const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        dateFilter = { createdAt: { $gte: startOfWeek } };
+        break;
+      case 'month':
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        dateFilter = { createdAt: { $gte: startOfMonth } };
+        break;
+      case 'all':
+      default:
+        dateFilter = {};
+        break;
+    }
+    
+    // Get basic car stats
+    const totalCars = await Car.countDocuments();
+    const availableCars = await Car.countDocuments({ availability: true });
+    const unavailableCars = totalCars - availableCars;
+    
+    // Get car bookings data
+    const totalBookings = await Booking.countDocuments(dateFilter);
+    const carsWithBookings = await Booking.distinct('car', dateFilter);
+    const bookedCarsCount = carsWithBookings.length;
+    const utilizationRate = totalCars > 0 ? (bookedCarsCount / totalCars * 100).toFixed(1) : 0;
+    
+    // Get most popular cars by booking count
+    const popularCars = await Booking.aggregate([
+      {
+        $match: dateFilter
+      },
+      {
+        $group: {
+          _id: '$car',
+          bookingCount: { $sum: 1 },
+          totalRevenue: { $sum: '$totalAmount' }
+        }
+      },
+      {
+        $lookup: {
+          from: 'cars',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'carDetails'
+        }
+      },
+      {
+        $unwind: '$carDetails'
+      },
+      {
+        $project: {
+          name: '$carDetails.name',
+          brand: '$carDetails.brand',
+          image: '$carDetails.image',
+          bookingCount: 1,
+          totalRevenue: 1
+        }
+      },
+      {
+        $sort: { bookingCount: -1 }
+      },
+      {
+        $limit: 5
+      }
+    ]);
+    
+    // Get highest revenue generating cars
+    const topRevenueCars = await Booking.aggregate([
+      {
+        $match: {
+          ...dateFilter,
+          status: { $ne: 'Cancelled' }
+        }
+      },
+      {
+        $group: {
+          _id: '$car',
+          totalRevenue: { $sum: '$totalAmount' },
+          bookingCount: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'cars',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'carDetails'
+        }
+      },
+      {
+        $unwind: '$carDetails'
+      },
+      {
+        $project: {
+          name: '$carDetails.name',
+          brand: '$carDetails.brand',
+          price: '$carDetails.price',
+          totalRevenue: 1,
+          bookingCount: 1,
+          avgRevenuePerBooking: { $divide: ['$totalRevenue', '$bookingCount'] }
+        }
+      },
+      {
+        $sort: { totalRevenue: -1 }
+      },
+      {
+        $limit: 5
+      }
+    ]);
+    
+    // Get car distribution by brand
+    const carsByBrand = await Car.aggregate([
+      {
+        $group: {
+          _id: '$brand',
+          count: { $sum: 1 },
+          availableCount: {
+            $sum: {
+              $cond: [{ $eq: ['$availability', true] }, 1, 0]
+            }
+          }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+    
+    // Get car distribution by fuel type
+    const carsByFuelType = await Car.aggregate([
+      {
+        $group: {
+          _id: '$fuelType',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+    
+    // Get car distribution by transmission
+    const carsByTransmission = await Car.aggregate([
+      {
+        $group: {
+          _id: '$transmission',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+    
+    // Get booking trends by car for the last 12 months
+    const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+    const bookingTrends = await Booking.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: twelveMonthsAgo }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' }
+          },
+          bookingCount: { $sum: 1 },
+          revenue: { $sum: '$totalAmount' }
+        }
+      },
+      {
+        $sort: { '_id.year': 1, '_id.month': 1 }
+      }
+    ]);
+    
+    // Format booking trends
+    const bookingsByMonth = bookingTrends.map(item => ({
+      month: `${item._id.year}-${String(item._id.month).padStart(2, '0')}`,
+      bookings: item.bookingCount,
+      revenue: item.revenue
+    }));
+    
+    // Get underperforming cars (cars with no bookings in the time period)
+    const carsWithNoBookings = await Car.find({
+      _id: { $nin: carsWithBookings }
+    }).select('name brand price availability').limit(10);
+    
+    // Car availability distribution for pie chart
+    const availabilityDistribution = [
+      { status: 'Available', count: availableCars, color: '#28a745' },
+      { status: 'Unavailable', count: unavailableCars, color: '#dc3545' }
+    ];
+    
+    const carAnalytics = {
+      totalCars,
+      availableCars,
+      unavailableCars,
+      bookedCarsCount,
+      utilizationRate,
+      popularCars,
+      topRevenueCars,
+      carsByBrand,
+      carsByFuelType,
+      carsByTransmission,
+      bookingsByMonth,
+      carsWithNoBookings,
+      availabilityDistribution,
+      timeFilter
+    };
+    
+    res.json(carAnalytics);
+  } catch (error) {
+    console.error('Error fetching car analytics:', error);
+    res.status(500).json({ success: false, message: 'Error fetching car analytics. Please try again later.' });
+  }
+};
+
 module.exports = {
   getAllCars,
   getCarById,
   addCar,
   updateCar,
   deleteCar,
+  getCarAnalytics
 };

@@ -7,6 +7,766 @@ body {
       font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
 }
 
+/* ===== BOOKING ANALYTICS MODULE STYLES ===== */
+
+.booking-analytics {
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.booking-analytics::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat;
+  pointer-events: none;
+}
+
+/* Module Header */
+.module-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.module-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.module-title i {
+  font-size: 2.5rem;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+}
+
+.module-title h2 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.module-subtitle p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Enhanced Analytics Navigation */
+.analytics-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  padding: 0 1rem;
+}
+
+.analytics-nav .nav-btn {
+  padding: 1.2rem 2.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  color: #ffffff;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(15px);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.analytics-nav .nav-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.analytics-nav .nav-btn:hover::before {
+  left: 100%;
+}
+
+.analytics-nav .nav-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.analytics-nav .nav-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border-color: #667eea;
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.analytics-nav .nav-btn.active::before {
+  display: none;
+}
+
+/* Analytics Navigation Icons */
+.analytics-nav .nav-btn[ng-click*="booking"] {
+  position: relative;
+}
+
+.analytics-nav .nav-btn[ng-click*="booking"]::after {
+  content: '📊';
+  margin-right: 0.5rem;
+  font-size: 1.2em;
+}
+
+.analytics-nav .nav-btn[ng-click*="revenue"]::after {
+  content: '💰';
+  margin-right: 0.5rem;
+  font-size: 1.2em;
+}
+
+.analytics-nav .nav-btn[ng-click*="user"]::after {
+  content: '👥';
+  margin-right: 0.5rem;
+  font-size: 1.2em;
+}
+
+.analytics-nav .nav-btn[ng-click*="car"]::after {
+  content: '🚗';
+  margin-right: 0.5rem;
+  font-size: 1.2em;
+}
+
+/* Stats Grid */
+.booking-analytics .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.booking-analytics .stat-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.booking-analytics .stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.booking-analytics .stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.total-bookings::before {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.confirmed-bookings::before {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.pending-bookings::before {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.cancelled-bookings::before {
+  background: linear-gradient(135deg, #ff9a9e, #fecfef);
+}
+
+.booking-analytics .stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.total-bookings .stat-icon {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.confirmed-bookings .stat-icon {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.pending-bookings .stat-icon {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.cancelled-bookings .stat-icon {
+  background: linear-gradient(135deg, #ff9a9e, #fecfef);
+}
+
+.booking-analytics .stat-content {
+  flex: 1;
+}
+
+.booking-analytics .stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.booking-analytics .stat-label {
+  font-size: 1rem;
+  color: #718096;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.booking-analytics .stat-change {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+.booking-analytics .stat-change.positive {
+  background: rgba(56, 239, 125, 0.1);
+  color: #38ef7d;
+}
+
+.booking-analytics .stat-percentage {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+/* Charts Container */
+.booking-analytics .charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.booking-analytics .chart-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.booking-analytics .chart-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.booking-analytics .chart-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+}
+
+.booking-analytics .chart-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.booking-analytics .chart-title i {
+  font-size: 1.25rem;
+  color: #667eea;
+}
+
+.booking-analytics .chart-title h4 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.booking-analytics .chart-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.booking-analytics .btn-chart-action {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.booking-analytics .btn-chart-action:hover {
+  background: #667eea;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.booking-analytics .chart-body {
+  padding: 2rem;
+  height: 350px;
+  position: relative;
+}
+
+.booking-analytics .chart-body canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.booking-analytics .chart-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: #f8fafc;
+}
+
+.booking-analytics .chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.booking-analytics .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.booking-analytics .legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.booking-analytics .legend-color.confirmed {
+  background: #38ef7d;
+}
+
+.booking-analytics .legend-color.pending {
+  background: #f5576c;
+}
+
+.booking-analytics .legend-color.cancelled {
+  background: #ff9a9e;
+}
+
+.booking-analytics .trend-summary {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.booking-analytics .trend-item {
+  text-align: center;
+}
+
+.booking-analytics .trend-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #718096;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.booking-analytics .trend-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+/* Insights Section */
+.booking-analytics .insights-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.booking-analytics .insight-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.booking-analytics .insight-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.booking-analytics .insight-header i {
+  font-size: 1.5rem;
+  color: #f6ad55;
+}
+
+.booking-analytics .insight-header h4 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.booking-analytics .insight-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.booking-analytics .insight-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.booking-analytics .insight-list li i {
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.booking-analytics .quick-actions {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.booking-analytics .quick-actions h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.booking-analytics .quick-actions h4 i {
+  color: #667eea;
+}
+
+.booking-analytics .action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.booking-analytics .btn-action {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.booking-analytics .btn-action.primary {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #ffffff;
+}
+
+.booking-analytics .btn-action.secondary {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  color: #ffffff;
+}
+
+.booking-analytics .btn-action.tertiary {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.booking-analytics .btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .booking-analytics .insights-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .booking-analytics .charts-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-analytics {
+    padding: 1.5rem;
+  }
+  
+  .booking-analytics .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .booking-analytics .module-title {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .booking-analytics .module-title h2 {
+    font-size: 2rem;
+  }
+  
+  .booking-analytics .chart-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .booking-analytics .chart-legend {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .booking-analytics .trend-summary {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .analytics-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .analytics-nav .nav-btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+}
+
+/* Animation Classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.booking-analytics .stat-card {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.booking-analytics .stat-card:nth-child(1) { animation-delay: 0.1s; }
+.booking-analytics .stat-card:nth-child(2) { animation-delay: 0.2s; }
+.booking-analytics .stat-card:nth-child(3) { animation-delay: 0.3s; }
+.booking-analytics .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+.booking-analytics .chart-card {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.booking-analytics .chart-card:nth-child(1) { animation-delay: 0.5s; }
+.booking-analytics .chart-card:nth-child(2) { animation-delay: 0.6s; }
+
+/* Fix for scrolling issues */
+.analytics-section {
+  position: relative;
+  overflow: visible;
+}
+
+.analytics-module {
+  position: relative;
+  overflow: visible;
+}
+
+.chart-body {
+  position: relative;
+  overflow: visible;
+}
+
+/* General Analytics Styling */
+.analytics-section {
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.analytics-header h2 {
+  color: #2d3748;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.analytics-filters {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.time-filter {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #4a5568;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.time-filter:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Analytics Module Styling */
+.analytics-module {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.analytics-module h3 {
+  color: #2d3748;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.analytics-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.analytics-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.chart-container {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container h4 {
+  color: #4a5568;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.chart-container canvas {
+  max-width: 100%;
+  height: auto;
+}
+
 /* Hide main navbar on admin routes */
 body > header {
   display: none !important;
@@ -1276,7 +2036,9 @@ user-select: none;
   border-radius: 5px;
   cursor: pointer;
   border: none;
+
 }
+
 
 .btn-sm:hover {
   opacity: 0.9;
@@ -2721,4 +3483,763 @@ footer {
 /* White text for no booking activity message */
 .user-detail-container .no-data-message {
   color: white;
+}
+
+/* Analytics Dashboard Styles */
+.analytics-section {
+  padding: 20px;
+  background: #1a1f2a;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.analytics-section h2 {
+  color: #f3f6fa;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Analytics Filters */
+.analytics-filters {
+  background: #232b36;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border: 1px solid #3a4553;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.filter-group label {
+  color: #f3f6fa;
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.filter-group select {
+  background: #1a1f2a;
+  color: #f3f6fa;
+  border: 1px solid #3a4553;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.filter-group select:focus {
+  border-color: #007bff;
+}
+
+/* Analytics Stats Grid */
+.analytics-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #232b36 0%, #1a1f2a 100%);
+  border: 1px solid #3a4553;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+}
+
+.stat-card.confirmed::before {
+  background: linear-gradient(90deg, #28a745, #1e7e34);
+}
+
+.stat-card.pending::before {
+  background: linear-gradient(90deg, #ffc107, #e0a800);
+}
+
+.stat-card.cancelled::before {
+  background: linear-gradient(90deg, #dc3545, #c82333);
+}
+
+.stat-card.revenue::before {
+  background: linear-gradient(90deg, #17a2b8, #138496);
+}
+
+.stat-icon {
+  font-size: 32px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(0, 123, 255, 0.1);
+}
+
+.confirmed .stat-icon {
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.pending .stat-icon {
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.cancelled .stat-icon {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.revenue .stat-icon {
+  background: rgba(23, 162, 184, 0.1);
+}
+
+.stat-content h3 {
+  color: #f3f6fa;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  line-height: 1;
+}
+
+.stat-content p {
+  color: #8b95a5;
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Charts Section */
+.analytics-charts {
+  margin-bottom: 40px;
+}
+
+.chart-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.chart-container {
+  background: #232b36;
+  border: 1px solid #3a4553;
+  border-radius: 12px;
+  padding: 24px;
+  min-height: 400px;
+}
+
+.chart-container h3 {
+  color: #f3f6fa;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+.chart-wrapper canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Recent Activity Analytics */
+.recent-activity-analytics {
+  background: #232b36;
+  border: 1px solid #3a4553;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.recent-activity-analytics h3 {
+  color: #f3f6fa;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+
+.activity-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #3a4553;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  flex-shrink: 0;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.confirmed {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.status-badge.pending {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid #ffc107;
+}
+
+.status-badge.cancelled {
+  background: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-content p {
+  color: #f3f6fa;
+  margin: 0 0 4px 0;
+  font-size: 14px;
+}
+
+.activity-content small {
+  color: #8b95a5;
+  font-size: 12px;
+}
+
+.no-activity {
+  text-align: center;
+  padding: 40px 20px;
+  color: #8b95a5;
+}
+
+/* Responsive Design for Analytics */
+@media (max-width: 1200px) {
+  .chart-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .analytics-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .analytics-section {
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .analytics-filters {
+    padding: 15px;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .filter-group label {
+    min-width: auto;
+  }
+  
+  .chart-container {
+    padding: 16px;
+    min-height: 300px;
+  }
+  
+  .chart-wrapper {
+    height: 250px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+  
+  .stat-content h3 {
+    font-size: 24px;
+  }
+}
+
+/* Fix Analytics Scrolling Issues */
+.analytics-section {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  max-height: calc(100vh - 150px);
+  padding-right: 10px;
+}
+
+.analytics-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.analytics-section::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.analytics-section::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.analytics-section::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Prevent chart container scrolling issues */
+.analytics-module {
+  position: relative;
+  overflow: visible;
+}
+
+.booking-analytics .chart-body {
+  overflow: visible !important;
+  position: relative;
+  scroll-behavior: auto;
+}
+
+.booking-analytics .chart-body canvas {
+  position: relative;
+  z-index: 1;
+}
+
+/* Enhanced Visual Styling for Analytics */
+.analytics-header {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.analytics-header h2 {
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.time-filter {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.time-filter select {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  color: #ffffff;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.time-filter select:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.time-filter select option {
+  background: #2d3748;
+  color: #ffffff;
+}
+
+/* Enhanced Module Headers */
+.module-header {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.module-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
+}
+
+.module-title {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.5px;
+}
+
+/* Additional Responsive Design Improvements */
+@media (max-width: 768px) {
+  .analytics-nav {
+    gap: 0.8rem;
+    padding: 0 0.5rem;
+  }
+  
+  .analytics-nav .nav-btn {
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .analytics-header h2 {
+    font-size: 2rem;
+  }
+  
+  .module-title {
+    font-size: 1.5rem;
+  }
+  
+  .booking-analytics .charts-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Fullscreen Chart Styles */
+.fullscreen-chart {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.fullscreen-chart .chart-header {
+  padding: 20px 30px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.fullscreen-chart .chart-title {
+  color: white !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+}
+
+.fullscreen-chart .chart-body {
+  flex: 1 !important;
+  padding: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.fullscreen-chart .chart-body canvas {
+  max-width: 90% !important;
+  max-height: 90% !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-radius: 15px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+.fullscreen-chart .btn-chart-action {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.fullscreen-chart .btn-chart-action:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Chart Container Scrolling Fix */
+.charts-container {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.chart-card {
+  scroll-margin-top: 20px;
+  position: relative;
+}
+
+.chart-body {
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-body canvas {
+  max-width: 100%;
+  height: auto !important;
+  display: block;
+}
+
+/* Custom Scrollbar for Chart Containers */
+.charts-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.charts-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.charts-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.charts-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+/* Apply Booking Analytics Styling to All Analytics Modules */
+.revenue-analytics .chart-card,
+.user-analytics .chart-card,
+.car-analytics .chart-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.revenue-analytics .chart-card:hover,
+.user-analytics .chart-card:hover,
+.car-analytics .chart-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.revenue-analytics .chart-header,
+.user-analytics .chart-header,
+.car-analytics .chart-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+}
+
+.revenue-analytics .chart-title,
+.user-analytics .chart-title,
+.car-analytics .chart-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.revenue-analytics .chart-title i,
+.user-analytics .chart-title i,
+.car-analytics .chart-title i {
+  font-size: 1.25rem;
+  color: #667eea;
+}
+
+.revenue-analytics .chart-title span,
+.user-analytics .chart-title span,
+.car-analytics .chart-title span {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.revenue-analytics .chart-actions,
+.user-analytics .chart-actions,
+.car-analytics .chart-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.revenue-analytics .btn-chart-action,
+.user-analytics .btn-chart-action,
+.car-analytics .btn-chart-action {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.revenue-analytics .btn-chart-action:hover,
+.user-analytics .btn-chart-action:hover,
+.car-analytics .btn-chart-action:hover {
+  background: #667eea;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.revenue-analytics .chart-body,
+.user-analytics .chart-body,
+.car-analytics .chart-body {
+  padding: 2rem;
+  height: 350px;
+  position: relative;
+  overflow: visible !important;
+  scroll-behavior: auto;
+}
+
+.revenue-analytics .chart-body canvas,
+.user-analytics .chart-body canvas,
+.car-analytics .chart-body canvas {
+  max-width: 100%;
+  max-height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.revenue-analytics .chart-footer,
+.user-analytics .chart-footer,
+.car-analytics .chart-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: #f8fafc;
+}
+
+.revenue-analytics .chart-legends,
+.user-analytics .chart-legends,
+.car-analytics .chart-legends {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.revenue-analytics .legend-item,
+.user-analytics .legend-item,
+.car-analytics .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.revenue-analytics .legend-color,
+.user-analytics .legend-color,
+.car-analytics .legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.revenue-analytics .trend-summary,
+.user-analytics .trend-summary,
+.car-analytics .trend-summary {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+/* Mobile Responsive for Fullscreen */
+@media (max-width: 768px) {
+  .fullscreen-chart .chart-header {
+    padding: 15px 20px !important;
+  }
+  
+  .fullscreen-chart .chart-title {
+    font-size: 20px !important;
+  }
+  
+  .fullscreen-chart .chart-body {
+    padding: 20px !important;
+  }
+  
+  .revenue-analytics .chart-body,
+  .user-analytics .chart-body,
+  .car-analytics .chart-body {
+    padding: 1.5rem;
+    height: 300px;
+  }
+  
+  .revenue-analytics .chart-header,
+  .user-analytics .chart-header,
+  .car-analytics .chart-header {
+    padding: 1rem 1.5rem;
+  }
 }

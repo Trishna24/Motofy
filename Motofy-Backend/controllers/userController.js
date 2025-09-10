@@ -103,10 +103,195 @@ const getUserStats = async (req, res) => {
   }
 };
 
+// @desc   Get user analytics for admin dashboard
+const getUserAnalytics = async (req, res) => {
+  try {
+    const { timeFilter = 'all' } = req.query;
+    
+    // Define date ranges based on filter
+    const now = new Date();
+    let dateFilter = {};
+    
+    switch (timeFilter) {
+      case 'today':
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        dateFilter = { createdAt: { $gte: startOfDay, $lt: endOfDay } };
+        break;
+      case 'week':
+        const startOfWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        dateFilter = { createdAt: { $gte: startOfWeek } };
+        break;
+      case 'month':
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        dateFilter = { createdAt: { $gte: startOfMonth } };
+        break;
+      case 'all':
+      default:
+        dateFilter = {};
+        break;
+    }
+    
+    // Get basic user stats
+    const totalUsers = await User.countDocuments(dateFilter);
+    const activeUsers = await User.countDocuments({ ...dateFilter, status: 'active' });
+    const inactiveUsers = await User.countDocuments({ ...dateFilter, status: 'inactive' });
+    const suspendedUsers = await User.countDocuments({ ...dateFilter, status: 'suspended' });
+    
+    // Get user registration trends for the last 12 months
+    const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+    const userRegistrationTrends = await User.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: twelveMonthsAgo }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id.year': 1, '_id.month': 1 }
+      }
+    ]);
+    
+    // Format registration trends
+    const registrationsByMonth = userRegistrationTrends.map(item => ({
+      month: `${item._id.year}-${String(item._id.month).padStart(2, '0')}`,
+      count: item.count
+    }));
+    
+    // Get user activity (users with bookings)
+    const usersWithBookings = await Booking.distinct('user', dateFilter);
+    const activeBookingUsers = usersWithBookings.length;
+    const userActivityRate = totalUsers > 0 ? (activeBookingUsers / totalUsers * 100).toFixed(1) : 0;
+    
+    // Get top users by booking count
+    const topUsersByBookings = await Booking.aggregate([
+      {
+        $match: dateFilter
+      },
+      {
+        $group: {
+          _id: '$user',
+          bookingCount: { $sum: 1 },
+          totalSpent: { $sum: '$totalAmount' }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'userDetails'
+        }
+      },
+      {
+        $unwind: '$userDetails'
+      },
+      {
+        $project: {
+          username: '$userDetails.username',
+          email: '$userDetails.email',
+          bookingCount: 1,
+          totalSpent: 1
+        }
+      },
+      {
+        $sort: { bookingCount: -1 }
+      },
+      {
+        $limit: 5
+      }
+    ]);
+    
+    // Get top users by revenue
+    const topUsersByRevenue = await Booking.aggregate([
+      {
+        $match: {
+          ...dateFilter,
+          status: { $ne: 'Cancelled' }
+        }
+      },
+      {
+        $group: {
+          _id: '$user',
+          totalSpent: { $sum: '$totalAmount' },
+          bookingCount: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'userDetails'
+        }
+      },
+      {
+        $unwind: '$userDetails'
+      },
+      {
+        $project: {
+          username: '$userDetails.username',
+          email: '$userDetails.email',
+          totalSpent: 1,
+          bookingCount: 1
+        }
+      },
+      {
+        $sort: { totalSpent: -1 }
+      },
+      {
+        $limit: 5
+      }
+    ]);
+    
+    // Get recent user registrations
+    const recentUsers = await User.find(dateFilter)
+      .select('username email createdAt status')
+      .sort({ createdAt: -1 })
+      .limit(10);
+    
+    // User status distribution for pie chart
+    const statusDistribution = [
+      { status: 'Active', count: activeUsers, color: '#28a745' },
+      { status: 'Inactive', count: inactiveUsers, color: '#6c757d' },
+      { status: 'Suspended', count: suspendedUsers, color: '#dc3545' }
+    ];
+    
+    const userAnalytics = {
+      totalUsers,
+      activeUsers,
+      inactiveUsers,
+      suspendedUsers,
+      activeBookingUsers,
+      userActivityRate,
+      registrationsByMonth,
+      topUsersByBookings,
+      topUsersByRevenue,
+      recentUsers,
+      statusDistribution,
+      timeFilter
+    };
+    
+    res.json(userAnalytics);
+  } catch (error) {
+    console.error('Error fetching user analytics:', error);
+    res.status(500).json({ success: false, message: 'Error fetching user analytics. Please try again later.' });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   updateUserStatus,
   getUserBookingsByAdmin,
-  getUserStats
+  getUserStats,
+  getUserAnalytics
 };

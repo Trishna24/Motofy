@@ -94,10 +94,12 @@ angular.module('motofyApp')
         });
       },
       
-      getBookingStats: function() {
+      getBookingStats: function(timeFilter) {
         var adminToken = window.localStorage.getItem('adminToken');
+        var params = timeFilter ? { timeFilter: timeFilter } : {};
         return $http.get(BASE_URL + '/bookings/admin/stats', {
-          headers: { 'Authorization': 'Bearer ' + adminToken }
+          headers: { 'Authorization': 'Bearer ' + adminToken },
+          params: params
         });
       },
       
@@ -134,6 +136,45 @@ angular.module('motofyApp')
         var adminToken = window.localStorage.getItem('adminToken');
         return $http.get(BASE_URL + '/admin/users/stats', {
           headers: { 'Authorization': 'Bearer ' + adminToken }
+        });
+      },
+      
+      // Revenue Analytics API calls
+      getRevenueAnalytics: function(timeFilter) {
+        var adminToken = window.localStorage.getItem('adminToken');
+        var params = {};
+        if (timeFilter) {
+          params.timeFilter = timeFilter;
+        }
+        return $http.get(BASE_URL + '/bookings/admin/revenue', {
+          headers: { 'Authorization': 'Bearer ' + adminToken },
+          params: params
+        });
+      },
+      
+      // User Analytics API calls
+      getUserAnalytics: function(timeFilter) {
+        var adminToken = window.localStorage.getItem('adminToken');
+        var params = {};
+        if (timeFilter) {
+          params.timeFilter = timeFilter;
+        }
+        return $http.get(BASE_URL + '/admin/users/analytics', {
+          headers: { 'Authorization': 'Bearer ' + adminToken },
+          params: params
+        });
+      },
+      
+      // Car Analytics API calls
+      getCarAnalytics: function(timeFilter) {
+        var adminToken = window.localStorage.getItem('adminToken');
+        var params = {};
+        if (timeFilter) {
+          params.timeFilter = timeFilter;
+        }
+        return $http.get(BASE_URL + '/cars/admin/analytics', {
+          headers: { 'Authorization': 'Bearer ' + adminToken },
+          params: params
         });
       }
     };

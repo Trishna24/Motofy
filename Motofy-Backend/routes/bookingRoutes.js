@@ -6,9 +6,10 @@ const {
   getBookingById,
   cancelBooking,
   getAllBookings,
-  updateBooking,
   updateBookingStatus,
-  getBookingStats
+  updateBooking,
+  getBookingStats,
+  getRevenueAnalytics
 } = require('../controllers/bookingController');
 const { body, validationResult } = require('express-validator');
 
@@ -56,5 +57,8 @@ router.put('/admin/status/:id', adminProtect, updateBookingStatus);
 
 // Get booking statistics for admin dashboard
 router.get('/admin/stats', adminProtect, getBookingStats);
+
+// Admin: Get revenue analytics
+router.get('/admin/revenue', adminProtect, getRevenueAnalytics);
 
 module.exports = router;

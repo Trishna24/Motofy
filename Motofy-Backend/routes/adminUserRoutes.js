@@ -6,7 +6,8 @@ const {
   getUserById,
   updateUserStatus,
   getUserBookingsByAdmin,
-  getUserStats
+  getUserStats,
+  getUserAnalytics
 } = require('../controllers/userController');
 
 // All routes in this file are protected by adminProtect middleware
@@ -14,6 +15,7 @@ router.use(protect, adminProtect);
 
 router.route('/users').get(getAllUsers);
 router.route('/users/stats').get(getUserStats);
+router.route('/users/analytics').get(getUserAnalytics);
 router.route('/users/:id').get(getUserById);
 router.route('/users/:id/status').patch(updateUserStatus);
 router.route('/users/:id/bookings').get(getUserBookingsByAdmin);
