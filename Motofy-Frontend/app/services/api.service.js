@@ -64,6 +64,13 @@ angular.module('motofyApp')
         });
       },
       
+      toggleCarAvailability: function(id) {
+        var adminToken = window.localStorage.getItem('adminToken');
+        return $http.patch(BASE_URL + '/cars/' + id + '/toggle-availability', {}, {
+          headers: { 'Authorization': 'Bearer ' + adminToken }
+        });
+      },
+      
 
       // Admin booking management
       getBookingById: function(bookingId) {

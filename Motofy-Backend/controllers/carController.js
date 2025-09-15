@@ -365,11 +365,34 @@ const getCarAnalytics = async (req, res) => {
   }
 };
 
+// @desc Toggle car availability
+const toggleCarAvailability = async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) {
+      return res.status(404).json({ message: 'Car not found' });
+    }
+
+    // Toggle the availability status
+    car.availability = !car.availability;
+    await car.save();
+
+    res.json({ 
+      message: `Car ${car.availability ? 'made available' : 'made unavailable'} successfully`,
+      availability: car.availability 
+    });
+  } catch (error) {
+    console.error('Error toggling car availability:', error);
+    res.status(500).json({ success: false, message: 'Error updating car availability. Please try again later.' });
+  }
+};
+
 module.exports = {
   getAllCars,
   getCarById,
   addCar,
   updateCar,
   deleteCar,
-  getCarAnalytics
+  getCarAnalytics,
+  toggleCarAvailability
 };

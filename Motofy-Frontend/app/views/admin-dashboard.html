@@ -10,6 +10,10 @@
       
       <!-- Admin User -->
       <div class="admin-user">
+        <button class="admin-visit-user-btn" ng-click="adminDashboard.visitUserPage()">
+          <span class="btn-icon">🌐</span>
+          Visit User Page
+        </button>
         <button class="admin-logout-btn" ng-click="adminDashboard.logout()">Logout</button>
       </div>
     </div>
@@ -180,7 +184,8 @@
                 <th>Seats</th>
                 <th>Transmission</th>
                 <th>Price</th>
-                <th style="width:140px;">Actions</th>
+                <th>Status</th>
+                <th style="width:180px;">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -196,6 +201,17 @@
                 <td>{{car.transmission}}</td>
                 <td>{{car.price | currency}}</td>
                 <td>
+                  <span class="status-badge" ng-class="{'status-available': car.availability, 'status-unavailable': !car.availability}">
+                    {{car.availability ? 'Available' : 'Unavailable'}}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-toggle" 
+                          ng-class="{'btn-success': !car.availability, 'btn-warning': car.availability}"
+                          ng-click="adminCar.toggleAvailability(car)"
+                          title="{{car.availability ? 'Make Unavailable' : 'Make Available'}}">
+                    {{car.availability ? 'Make Unavailable' : 'Make Available'}}
+                  </button>
                   <button class="btn btn-sm" ng-click="adminCar.showEditForm(car)">Edit</button>
                   <button class="btn btn-sm btn-danger" ng-click="adminCar.deleteCar(car._id)">Delete</button>
                 </td>

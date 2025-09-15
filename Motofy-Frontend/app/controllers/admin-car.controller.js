@@ -107,6 +107,22 @@ angular.module('motofyApp')
         .catch(function() { vm.error = 'Failed to delete car.'; });
     };
 
+    vm.toggleAvailability = function(car) {
+      vm.resetAlerts();
+      ApiService.toggleCarAvailability(car._id)
+        .then(function(response) {
+          car.availability = response.data.availability;
+          vm.success = response.data.message;
+          // Refresh analytics if parent controller exists
+          if ($scope.$parent.adminDashboard && $scope.$parent.adminDashboard.loadCarAnalytics) {
+            $scope.$parent.adminDashboard.loadCarAnalytics();
+          }
+        })
+        .catch(function() { 
+          vm.error = 'Failed to update car availability.'; 
+        });
+    };
+
     // Refresh whenever admin switches to Cars tab
     $scope.$watch(
       function() {

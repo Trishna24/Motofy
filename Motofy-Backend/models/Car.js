@@ -35,6 +35,10 @@ const carSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    availability: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields

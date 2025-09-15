@@ -148,6 +148,11 @@ angular.module('motofyApp')
       return Math.floor(seconds) + ' second' + (seconds === 1 ? '' : 's') + ' ago';
     }
 
+    // Visit User Page
+    vm.visitUserPage = function() {
+      $location.path('/');
+    };
+
     // Logout
     vm.logout = function() {
       $window.localStorage.removeItem('adminToken');

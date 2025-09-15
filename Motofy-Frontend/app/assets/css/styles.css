@@ -1681,6 +1681,51 @@ user-select: none;
   letter-spacing: 0.5px;
 }
 
+.admin-visit-user-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.6em 1.5em;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-visit-user-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.admin-visit-user-btn:hover::before {
+  left: 100%;
+}
+
+.admin-visit-user-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.admin-visit-user-btn .btn-icon {
+  font-size: 1.1em;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
 .admin-logout-btn {
   background: #313a49;
   color: #f3f6fa;
@@ -3043,6 +3088,51 @@ footer {
   font-size: 12px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+/* Car availability status badges */
+.status-available {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #7ed957;
+}
+
+.status-unavailable {
+  background-color: #ffebee;
+  color: #b71c1c;
+  border: 1px solid #ef9a9a;
+}
+
+/* Toggle availability button */
+.btn-toggle {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.btn-toggle-available {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  color: white;
+}
+
+.btn-toggle-available:hover {
+  background: linear-gradient(135deg, #ee5a52, #dc4c41);
+  transform: translateY(-1px);
+}
+
+.btn-toggle-unavailable {
+  background: linear-gradient(135deg, #7ed957, #5bbf3a);
+  color: white;
+}
+
+.btn-toggle-unavailable:hover {
+  background: linear-gradient(135deg, #5bbf3a, #4ca32e);
+  transform: translateY(-1px);
   border: none;
   font-weight: 600;
   transition: all 0.2s ease;
