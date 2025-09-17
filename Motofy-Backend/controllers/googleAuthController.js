@@ -33,7 +33,7 @@ const googleLogin = async (req, res) => {
 
     // Generate your app's JWT token
     const appToken = jwt.sign(
-      { userId: user._id, email: user.email },
+      { id: user._id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );

@@ -2,7 +2,7 @@
 <div class="car-detail-container" ng-if="car.selectedCar">
   <!-- Back Button -->
   <div class="back-button">
-    <button ng-click="$location.path('/cars')" class="back-btn">
+    <button ng-click="car.$location.path('/cars')" class="back-btn">
       ← Back to Cars
     </button>
   </div>
@@ -11,7 +11,7 @@
   <div class="car-detail-content">
     <div class="car-image-section">
       <div class="car-image-large">
-        <img ng-src="{{car.selectedCar.image}}" alt="{{car.selectedCar.name}}">
+        <img ng-src="{{car.imageUrl(car.selectedCar.image)}}" alt="{{car.selectedCar.name}}">
       </div>
     </div>
 
@@ -19,7 +19,7 @@
       <div class="car-header">
         <h1 class="car-title">{{car.selectedCar.name}}</h1>
         <p class="car-brand">{{car.selectedCar.brand}}</p>
-        <div class="car-price-large">${{car.selectedCar.price}}/day</div>
+        <div class="car-price-large">₹{{car.selectedCar.price}}/day</div>
       </div>
 
       <div class="car-specifications">
@@ -79,12 +79,12 @@
       <div class="total-section">
         <div class="total-amount">
           <span class="total-label">Total Amount:</span>
-          <span class="total-value">${{car.bookingData.totalAmount}}</span>
+          <span class="total-value">₹{{car.bookingData.totalAmount}}</span>
         </div>
         
         <div ng-if="car.bookingData.totalAmount > 0" class="booking-details">
           <p class="booking-info">
-            {{car.calculateDays()}} day(s) × ${{car.selectedCar.price}}/day
+            {{car.calculateDays()}} day(s) × ₹{{car.selectedCar.price}}/day
           </p>
         </div>
       </div>
@@ -100,7 +100,7 @@
 <div ng-if="car.error" class="error-container">
   <h2>Car Not Found</h2>
   <p>{{car.error}}</p>
-  <button ng-click="$location.path('/cars')" class="back-btn">
+  <button ng-click="car.$location.path('/cars')" class="back-btn">
     Back to Cars
   </button>
 </div>
@@ -382,4 +382,4 @@
       font-size: 2em;
     }
   }
-</style> 
+</style>

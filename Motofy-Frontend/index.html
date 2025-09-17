@@ -7,6 +7,8 @@
   <!-- AngularJS 1.x CDN -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+  <!-- ng-file-upload for file handling -->
+  <script src="https://cdn.jsdelivr.net/npm/ng-file-upload@12.2.13/dist/ng-file-upload.min.js"></script>
   <!-- Chart.js for data visualization -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
@@ -37,6 +39,7 @@
             <div class="dropdown" ng-show="main.dropdownOpen">
               <a href ng-if="!main.isLoggedIn()" ng-click="main.openLoginModal(); main.closeDropdown()">Login</a>
               <a href ng-if="!main.isLoggedIn()" ng-click="main.openSignupModal(); main.closeDropdown()">Sign Up</a>
+              <a href="#/profile" ng-if="main.isLoggedIn()" ng-click="main.closeDropdown()">My Profile</a>
               <a href="#/bookings" ng-if="main.isLoggedIn()" ng-click="main.closeDropdown()">My Bookings</a>
               <button ng-if="main.isLoggedIn()" ng-click="main.logout(); main.closeDropdown();">Logout</button>
             </div>
@@ -93,6 +96,8 @@
           <input type="text" ng-model="auth.signupData.username" required autocomplete="username">
           <label>Email:</label>
           <input type="email" ng-model="auth.signupData.email" required autocomplete="email">
+          <label>Phone Number:</label>
+          <input type="tel" ng-model="auth.signupData.phone" placeholder="Enter your phone number" required>
           <label>Password:</label>
           <input type="password" ng-model="auth.signupData.password" required autocomplete="new-password">
           <button type="submit">Sign Up</button>
@@ -154,6 +159,7 @@
     <script src="app/controllers/admin-booking.controller.js"></script>
     <script src="app/controllers/admin-user.controller.js"></script>
     <script src="app/controllers/ai.controller.js"></script>
+    <script src="app/controllers/profile.controller.js"></script>
       <script>
        // Close dropdown on outside click
        document.body.addEventListener('click', function() {

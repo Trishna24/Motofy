@@ -31,6 +31,12 @@ angular.module('motofyApp')
           headers: { Authorization: 'Bearer ' + token }
         });
       },
+      // Create a new booking
+      createBooking: function(bookingData, token) {
+        return $http.post(BASE_URL + '/bookings', bookingData, {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+      },
       // Send a message to the AI chat endpoint
       askAI: function(data) {
         return $http.post(BASE_URL + '/ai-chat', data);

@@ -51,13 +51,13 @@
   <div ng-if="!car.loading && !car.error" class="cars-grid">
     <div ng-repeat="carItem in car.filteredCars" class="car-card">
       <div class="car-image">
-        <img ng-src="{{carItem.image}}" alt="{{carItem.name}}" loading="lazy">
+        <img ng-src="{{car.imageUrl(carItem.image)}}" alt="{{carItem.name}}" loading="lazy">
       </div>
       
       <div class="car-info">
         <h3 class="car-name">{{carItem.name}}</h3>
         <p class="car-brand">{{carItem.brand}}</p>
-        <p class="car-price">${{carItem.price}}/day</p>
+        <p class="car-price">₹{{carItem.price}}/day</p>
         
         <div class="car-specs">
           <span class="spec">{{carItem.fuelType}}</span>
@@ -301,4 +301,4 @@
       min-width: auto;
     }
   }
-</style> 
+</style>

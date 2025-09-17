@@ -1,7 +1,7 @@
 // app/app.module.js
 // Main AngularJS module for Motofy
  
-angular.module('motofyApp', ['ngRoute'])
+angular.module('motofyApp', ['ngRoute', 'ngFileUpload'])
   .run(['$rootScope', function($rootScope) {
     console.log('🚀 MotofyApp module loaded successfully!');
     
@@ -17,4 +17,4 @@ angular.module('motofyApp', ['ngRoute'])
     $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
       console.log('❌ Route change error:', rejection);
     });
-  }]); 
+  }]);

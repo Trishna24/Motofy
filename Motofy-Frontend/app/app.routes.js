@@ -44,6 +44,10 @@ angular.module('motofyApp')
         controller: 'AIController',
         controllerAs: 'ai'
       })
+      .when('/profile', {
+        templateUrl: 'app/views/profile.html',
+        controller: 'ProfileController'
+      })
       .otherwise({
         redirectTo: '/'
       });

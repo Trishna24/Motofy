@@ -1,44 +1,50 @@
-// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const Admin = require('../models/Admin');
 
-const protect = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+const protect = async (req, res, next) => {
+    let token;
 
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.split(' ')[1];
-
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      req.user = decoded; // Stores user data inside request object
-      next();
-    } catch (error) {
-      return res.status(401).json({ message: 'Invalid or expired token' });
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        try {
+            token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            
+            req.user = await User.findById(decoded.id).select('-password');
+            next();
+        } catch (error) {
+            return res.status(401).json({ message: 'Not authorized, token failed' });
+        }
     }
-  } else {
-    return res.status(401).json({ message: 'No token provided' });
-  }
+
+    if (!token) {
+        return res.status(401).json({ message: 'Not authorized, no token' });
+    }
 };
 
-const adminProtect = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+const adminProtect = async (req, res, next) => {
+    let token;
 
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.split(' ')[1];
-
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      if (!decoded.adminId) {
-        return res.status(401).json({ message: 'Not authorized as admin' });
-      }
-      req.admin = decoded; // Stores admin data inside request object
-      next();
-    } catch (error) {
-      return res.status(401).json({ message: 'Invalid or expired token' });
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        try {
+            token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            
+            req.admin = await Admin.findById(decoded.adminId).select('-password');
+            
+            if (!req.admin) {
+                return res.status(401).json({ message: 'Not authorized as admin' });
+            }
+            
+            next();
+        } catch (error) {
+            return res.status(401).json({ message: 'Not authorized, token failed' });
+        }
     }
-  } else {
-    return res.status(401).json({ message: 'No token provided' });
-  }
+
+    if (!token) {
+        return res.status(401).json({ message: 'Not authorized, no token' });
+    }
 };
 
 module.exports = { protect, adminProtect };

@@ -199,7 +199,7 @@
                 <td>{{car.fuelType}}</td>
                 <td>{{car.seats}}</td>
                 <td>{{car.transmission}}</td>
-                <td>{{car.price | currency}}</td>
+                <td>₹{{car.price | number}}</td>
                 <td>
                   <span class="status-badge" ng-class="{'status-available': car.availability, 'status-unavailable': !car.availability}">
                     {{car.availability ? 'Available' : 'Unavailable'}}
@@ -958,7 +958,7 @@
         <div ng-show="adminDashboard.activeAnalyticsModule === 'revenue'" class="analytics-module revenue-analytics">
           <div class="module-header">
             <div class="module-title">
-              <i class="fas fa-dollar-sign"></i>
+              <i class="fas fa-rupee-sign"></i>
               <h2>Revenue Analytics</h2>
             </div>
             <div class="module-subtitle">
@@ -970,7 +970,7 @@
           <div class="stats-grid">
             <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
               <div class="stat-icon">
-                <i class="fas fa-dollar-sign"></i>
+                <i class="fas fa-rupee-sign"></i>
               </div>
               <div class="stat-content">
                 <div class="stat-number">₹{{adminDashboard.revenueAnalytics.totalRevenue || 0 | number}}</div>
@@ -1130,7 +1130,7 @@
               </div>
               <div class="action-buttons">
                 <button class="btn-action primary">
-                  <i class="fas fa-file-invoice-dollar"></i>
+                  <i class="fas fa-file-invoice"></i>
                   Generate Revenue Report
                 </button>
                 <button class="btn-action secondary">

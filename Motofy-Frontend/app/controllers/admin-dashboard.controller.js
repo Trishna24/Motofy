@@ -112,6 +112,14 @@ angular.module('motofyApp')
             vm.stats.activeUsers = response.data.activeUsers || 0;
             vm.stats.inactiveUsers = response.data.inactiveUsers || 0;
           }
+          
+          // Get car statistics for dashboard
+          return ApiService.getCarAnalytics();
+        })
+        .then(function(response) {
+          if (response && response.data) {
+            vm.stats.totalCars = response.data.totalCars || 0;
+          }
           vm.loading = false;
         })
         .catch(function(error) {

@@ -12,6 +12,17 @@ angular.module('motofyApp')
     vm.selectedBooking = null;
     vm.showDetailsModal = false;
 
+    // Image URL helper function
+    vm.imageUrl = function(imagePath) {
+      if (!imagePath) {
+        return 'assets/images/car-placeholder.jpg';
+      }
+      if (imagePath.startsWith('http')) {
+        return imagePath;
+      }
+      return 'http://localhost:5000/uploads/' + imagePath;
+    };
+
     // Fetch user bookings on load
     function loadBookings() {
       var token = $window.localStorage.getItem('appToken');
@@ -26,7 +37,7 @@ angular.module('motofyApp')
           // Ensure each booking has an image URL
           vm.bookings.forEach(function(booking) {
             if (booking.car && !booking.car.imageUrl) {
-              booking.car.imageUrl = 'assets/images/car-placeholder.jpg';
+              booking.car.imageUrl = vm.imageUrl(booking.car.image);
             }
           });
           vm.loading = false;

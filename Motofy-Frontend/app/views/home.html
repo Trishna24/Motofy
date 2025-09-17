@@ -41,10 +41,10 @@
   <div class="featured-cars-title">Featured Cars</div>
   <div class="featured-cars-grid">
     <div class="featured-car-card" ng-repeat="carItem in main.filteredCars | limitTo:3">
-      <img ng-src="{{carItem.image}}" alt="{{carItem.name}}">
+      <img ng-src="{{main.imageUrl(carItem.image)}}" alt="{{carItem.name}}">
       <div class="car-title">{{carItem.name}}</div>
       <div class="car-brand">{{carItem.brand}}</div>
-      <div class="car-price">₹{{carItem.price * 50}}/day</div>
+      <div class="car-price">₹{{carItem.price}}/day</div>
       <button class="view-details-btn" ng-click="main.viewCarDetail(carItem._id)">View Details</button>
     </div>
   </div>
@@ -53,17 +53,15 @@
 <!-- Recent Bookings (visible only if user is logged in) -->
 <section class="recent-bookings-section" ng-if="main.isLoggedIn()">
   <div class="recent-bookings-title">Your Recent Bookings</div>
-  <div class="recent-bookings-grid">
-    <div class="recent-booking-card">
-      <div class="booking-car">Car: (coming soon)</div>
-      <div class="booking-date">Date: (coming soon)</div>
-      <div class="booking-status">Status: (coming soon)</div>
+  <div class="recent-bookings-grid" ng-if="main.userBookings && main.userBookings.length > 0">
+    <div class="recent-booking-card" ng-repeat="booking in main.userBookings | limitTo:2">
+      <div class="booking-car">Car: {{booking.carName || booking.car.name}}</div>
+      <div class="booking-date">Date: {{main.formatDate(booking.startDate)}} - {{main.formatDate(booking.endDate)}}</div>
+      <div class="booking-status">Status: {{booking.status}}</div>
     </div>
-    <div class="recent-booking-card">
-      <div class="booking-car">Car: (coming soon)</div>
-      <div class="booking-date">Date: (coming soon)</div>
-      <div class="booking-status">Status: (coming soon)</div>
-    </div>
+  </div>
+  <div ng-if="!main.userBookings || main.userBookings.length === 0" class="no-bookings-message">
+    <p>No recent bookings found. <a href="#/cars">Browse cars</a> to make your first booking!</p>
   </div>
 </section>
 
@@ -73,4 +71,4 @@
     <span>Need help choosing a car? </span>
     <button class="ai-chat-teaser-btn" onclick="document.querySelector('.ai-float-btn').click()">Ask our AI!</button>
   </div>
-</section> 
+</section>

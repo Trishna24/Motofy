@@ -4,10 +4,10 @@ const User = require('../models/User');
 
 // REGISTER user
 const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, phone } = req.body;
 
   if (!username || !email || !password) {
-    return res.status(400).json({ message: 'All fields are required' });
+    return res.status(400).json({ message: 'Username, email, and password are required' });
   }
 
   try {
@@ -22,6 +22,7 @@ const registerUser = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      phone: phone || undefined, // Only set if provided
     });
 
     await newUser.save();
@@ -62,7 +63,7 @@ const loginUser = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user._id },
+      { id: user._id },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );

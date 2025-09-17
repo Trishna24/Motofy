@@ -2,7 +2,7 @@
 // MainController: Handles global app logic
 
 angular.module('motofyApp')
-  .controller('MainController', ['$window', '$location', '$timeout', '$scope', '$rootScope', function($window, $location, $timeout, $scope, $rootScope) {
+  .controller('MainController', ['$window', '$location', '$timeout', '$scope', '$rootScope', 'ApiService', function($window, $location, $timeout, $scope, $rootScope, ApiService) {
     var vm = this;
 
     // Dropdown state
@@ -95,122 +95,17 @@ angular.module('motofyApp')
 
     // Load cars for homepage
     vm.loadCars = function() {
-      vm.cars = [
-        {
-          _id: '1',
-          name: 'Honda Civic',
-          brand: 'Honda',
-          price: 50,
-          fuelType: 'Petrol',
-          seats: 5,
-          transmission: 'Automatic',
-          image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400',
-          description: 'Comfortable and fuel-efficient sedan perfect for city driving.'
-        },
-        {
-          _id: '2',
-          name: 'Toyota Camry',
-          brand: 'Toyota',
-          price: 60,
-          fuelType: 'Petrol',
-          seats: 5,
-          transmission: 'Automatic',
-          image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400',
-          description: 'Reliable and spacious sedan with excellent safety features.'
-        },
-        {
-          _id: '3',
-          name: 'BMW X5',
-          brand: 'BMW',
-          price: 120,
-          fuelType: 'Petrol',
-          seats: 7,
-          transmission: 'Automatic',
-          image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400',
-          description: 'Luxury SUV with premium features and powerful performance.'
-        },
-        {
-          _id: '4',
-          name: 'Mercedes C-Class',
-          brand: 'Mercedes',
-          price: 80,
-          fuelType: 'Petrol',
-          seats: 5,
-          transmission: 'Automatic',
-          image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=400',
-          description: 'Elegant luxury sedan with sophisticated design and comfort.'
-        },
-        {
-          _id: '5',
-          name: 'Audi A4',
-          brand: 'Audi',
-          price: 70,
-          fuelType: 'Petrol',
-          seats: 5,
-          transmission: 'Automatic',
-          image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=400',
-          description: 'Sporty sedan with advanced technology and premium interior.'
-        },
-        {
-          _id: '6',
-          name: 'Tesla Model 3',
-          brand: 'Tesla',
-          price: 100,
-          fuelType: 'Electric',
-          seats: 5,
-          transmission: 'Automatic',
-          image: 'https://images.unsplash.com/photo-1536700503339-1e4b06520771?w=400',
-          description: 'Electric vehicle with cutting-edge technology and instant acceleration.'
-        },
-        {
-          _id: '7',
-          name: 'Maruti Swift',
-          brand: 'Maruti',
-          price: 35,
-          fuelType: 'CNG',
-          seats: 5,
-          transmission: 'Manual',
-          image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400',
-          description: 'Fuel-efficient hatchback perfect for city commuting with CNG option.'
-        },
-        {
-          _id: '8',
-          name: 'Hyundai i20',
-          brand: 'Hyundai',
-          price: 40,
-          fuelType: 'CNG',
-          seats: 5,
-          transmission: 'Manual',
-          image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400',
-          description: 'Compact hatchback with dual fuel option and great mileage.'
-        },
-        {
-          _id: '9',
-          name: 'Mahindra Scorpio',
-          brand: 'Mahindra',
-          price: 75,
-          fuelType: 'Diesel',
-          seats: 7,
-          transmission: 'Manual',
-          image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400',
-          description: 'Rugged SUV with powerful diesel engine and off-road capability.'
-        },
-        {
-          _id: '10',
-          name: 'Tata Nexon',
-          brand: 'Tata',
-          price: 55,
-          fuelType: 'Diesel',
-          seats: 5,
-          transmission: 'Manual',
-          image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=400',
-          description: 'Compact SUV with diesel engine and excellent safety ratings.'
-        }
-      ];
-
-      // Randomly select 3-4 cars for featured section
-      vm.featuredCars = vm.getRandomCars(vm.cars, 3);
-      vm.filteredCars = vm.featuredCars;
+      ApiService.getAllCars()
+        .then(function(response) {
+          vm.cars = response.data || [];
+          vm.filteredCars = vm.cars;
+        })
+        .catch(function(error) {
+          console.error('Error loading cars:', error);
+          // Fallback to empty array if API fails
+          vm.cars = [];
+          vm.filteredCars = [];
+        });
     };
 
     // Get random cars for featured section
@@ -313,8 +208,46 @@ angular.module('motofyApp')
       $location.url('/cars' + (queryString ? '?' + queryString : ''));
     };
 
+    // Make $location available in template
+    vm.$location = $location;
+    
+    // Image URL helper function
+    vm.imageUrl = function(filename) {
+      if (!filename) return 'app/assets/images/car-placeholder.jpg';
+      // Ensure we're using the correct backend URL
+      if (filename.startsWith('http')) {
+        return filename; // Already a full URL
+      }
+      return 'http://localhost:5000/uploads/' + filename;
+    };
+    
     // Initialize cars
     vm.loadCars();
+
+    // Load user bookings for homepage
+    vm.loadUserBookings = function() {
+      if (vm.isLoggedIn()) {
+        var token = $window.localStorage.getItem('appToken');
+        ApiService.getUserBookings(token)
+          .then(function(response) {
+            vm.userBookings = response.data || [];
+          })
+          .catch(function(error) {
+            console.error('Error loading user bookings:', error);
+            vm.userBookings = [];
+          });
+      }
+    };
+
+    // Format date for display
+    vm.formatDate = function(dateString) {
+      if (!dateString) return '';
+      var date = new Date(dateString);
+      return date.toLocaleDateString();
+    };
+
+    // Load user bookings on initialization
+    vm.loadUserBookings();
 
     vm.goToCars = function() {
       $location.path('/cars');

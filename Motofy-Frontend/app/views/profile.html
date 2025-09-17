@@ -1,0 +1,843 @@
+<!-- app/views/profile.html -->
+<div class="profile-container">
+  <div class="profile-header">
+    <h2>My Profile</h2>
+    <div class="profile-actions">
+      <button class="btn-edit" ng-if="!profile.editMode" ng-click="profile.toggleEditMode()">
+        <i class="fa fa-edit"></i> Edit Profile
+      </button>
+      <button class="btn-save" ng-if="profile.editMode" ng-click="profile.saveProfile()">
+        <i class="fa fa-save"></i> Save Changes
+      </button>
+      <button class="btn-cancel" ng-if="profile.editMode" ng-click="profile.cancelEdit()">
+        <i class="fa fa-times"></i> Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div ng-if="profile.loading" class="loading-message">
+    <i class="fa fa-spinner fa-spin"></i> Loading profile...
+  </div>
+
+  <!-- Error/Success Messages -->
+  <div ng-if="profile.error" class="error-message">
+    <i class="fa fa-exclamation-circle"></i> {{profile.error}}
+  </div>
+  <div ng-if="profile.success" class="success-message">
+    <i class="fa fa-check-circle"></i> {{profile.success}}
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-content" ng-if="!profile.loading && profile.user">
+    <div class="profile-layout">
+      <!-- Profile Picture Section -->
+      <div class="profile-picture-section">
+        <div class="profile-picture-container">
+          <img ng-src="{{profile.getProfilePictureUrl(profile.user.profilePicture)}}" 
+               alt="Profile Picture" 
+               class="profile-picture">
+          <div class="profile-picture-overlay" ng-if="profile.editMode">
+            <label for="profilePictureInput" class="upload-btn">
+              <i class="fa fa-camera"></i>
+              <span>Change Photo</span>
+            </label>
+            <input type="file" 
+                   id="profilePictureInput" 
+                   accept="image/*" 
+                   ng-file-select="profile.onProfilePictureSelect($files)"
+                   style="display: none;">
+          </div>
+        </div>
+        
+        <!-- Profile Picture Preview -->
+        <div ng-if="profile.profilePicturePreview" class="picture-preview">
+          <img ng-src="{{profile.profilePicturePreview}}" alt="Preview" class="preview-image">
+          <button class="btn-remove-preview" ng-click="profile.removeProfilePicturePreview()">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Details Section -->
+      <div class="profile-details-section">
+        <div class="profile-form">
+          <!-- Basic Information -->
+          <div class="form-section">
+            <h3>Basic Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Username</label>
+                <input type="text" 
+                       ng-model="profile.user.username" 
+                       ng-readonly="!profile.editMode"
+                       class="form-control"
+                       ng-class="{'readonly': !profile.editMode}">
+              </div>
+              
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" 
+                       ng-model="profile.user.email" 
+                       ng-readonly="true"
+                       class="form-control readonly"
+                       title="Email cannot be changed">
+              </div>
+              
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" 
+                       ng-model="profile.user.phone" 
+                       ng-readonly="!profile.editMode"
+                       class="form-control"
+                       ng-class="{'readonly': !profile.editMode}"
+                       placeholder="Enter your phone number">
+              </div>
+            </div>
+          </div>
+
+          <!-- Address Information -->
+          <div class="form-section">
+            <h3>Address Information</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Street Address</label>
+                <input type="text" 
+                       ng-model="profile.user.address.street" 
+                       ng-readonly="!profile.editMode"
+                       class="form-control"
+                       ng-class="{'readonly': !profile.editMode}"
+                       placeholder="Enter street address">
+              </div>
+              
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" 
+                       ng-model="profile.user.address.city" 
+                       ng-readonly="!profile.editMode"
+                       class="form-control"
+                       ng-class="{'readonly': !profile.editMode}"
+                       placeholder="Enter city">
+              </div>
+              
+              <div class="form-group">
+                <label>State</label>
+                <input type="text" 
+                       ng-model="profile.user.address.state" 
+                       ng-readonly="!profile.editMode"
+                       class="form-control"
+                       ng-class="{'readonly': !profile.editMode}"
+                       placeholder="Enter state">
+              </div>
+              
+              <div class="form-group">
+                <label>ZIP Code</label>
+                <input type="text" 
+                       ng-model="profile.user.address.zipCode" 
+                       ng-readonly="!profile.editMode"
+                       class="form-control"
+                       ng-class="{'readonly': !profile.editMode}"
+                       placeholder="Enter ZIP code">
+              </div>
+              
+              <div class="form-group">
+                <label>Country</label>
+                <input type="text" 
+                       ng-model="profile.user.address.country" 
+                       ng-readonly="!profile.editMode"
+                       class="form-control"
+                       ng-class="{'readonly': !profile.editMode}"
+                       placeholder="Enter country">
+              </div>
+            </div>
+          </div>
+
+          <!-- Driving License -->
+          <div class="form-section">
+            <h3>Driving License</h3>
+            <div class="license-section">
+              <div ng-if="profile.user.drivingLicense" class="current-license">
+                <p>Current License: 
+                  <a ng-href="{{profile.getDrivingLicenseUrl(profile.user.drivingLicense)}}" 
+                     target="_blank" 
+                     class="license-link">
+                    View License Document
+                  </a>
+                </p>
+              </div>
+              <div ng-if="!profile.user.drivingLicense" class="no-license">
+                <p class="text-muted">No driving license uploaded</p>
+              </div>
+              
+              <div ng-if="profile.editMode" class="license-upload">
+                <label for="licenseInput" class="upload-btn">
+                  <i class="fa fa-upload"></i>
+                  <span>{{profile.user.drivingLicense ? 'Update License' : 'Upload License'}}</span>
+                </label>
+                <input type="file" 
+                       id="licenseInput" 
+                       accept="image/*,.pdf" 
+                       ng-file-select="profile.onLicenseSelect($files)"
+                       style="display: none;">
+                <small class="help-text">Accepted formats: JPG, PNG, PDF (Max 5MB)</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification Preferences -->
+          <div class="form-section">
+            <h3>Notification Preferences</h3>
+            <div class="preferences-grid">
+              <div class="preference-item">
+                <label class="checkbox-label">
+                  <input type="checkbox" 
+                         ng-model="profile.user.preferences.emailNotifications" 
+                         ng-disabled="!profile.editMode">
+                  <span class="checkmark"></span>
+                  Email Notifications
+                </label>
+                <small class="help-text">Receive booking confirmations and updates via email</small>
+              </div>
+              
+              <div class="preference-item">
+                <label class="checkbox-label">
+                  <input type="checkbox" 
+                         ng-model="profile.user.preferences.smsNotifications" 
+                         ng-disabled="!profile.editMode">
+                  <span class="checkmark"></span>
+                  SMS Notifications
+                </label>
+                <small class="help-text">Receive important updates via SMS</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+      <h3>Quick Actions</h3>
+      <div class="actions-grid">
+        <button class="action-btn" ng-click="profile.showPasswordModal()">
+          <i class="fa fa-key"></i>
+          <span>Change Password</span>
+        </button>
+        
+        <a href="#/bookings" class="action-btn">
+          <i class="fa fa-calendar"></i>
+          <span>My Bookings</span>
+        </a>
+        
+        <button class="action-btn danger" ng-click="profile.showDeactivateAccountModal()">
+          <i class="fa fa-user-times"></i>
+          <span>Deactivate Account</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal-overlay" ng-if="profile.showPasswordModalVisible" ng-click="profile.closePasswordModal()"></div>
+  <div class="modal-container" ng-if="profile.showPasswordModalVisible">
+    <div class="modal-content" ng-click="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Change Password</h3>
+        <button class="modal-close" ng-click="profile.closePasswordModal()">&times;</button>
+      </div>
+      <form class="password-form" ng-submit="profile.changePassword()">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" 
+                 ng-model="profile.passwordData.currentPassword" 
+                 required 
+                 class="form-control">
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" 
+                 ng-model="profile.passwordData.newPassword" 
+                 required 
+                 minlength="6"
+                 class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" 
+                 ng-model="profile.passwordData.confirmPassword" 
+                 required 
+                 class="form-control">
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-save" ng-disabled="profile.passwordLoading">
+            <span ng-if="!profile.passwordLoading">Change Password</span>
+            <span ng-if="profile.passwordLoading">Changing...</span>
+          </button>
+          <button type="button" class="btn-cancel" ng-click="profile.closePasswordModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Deactivate Account Modal -->
+  <div class="modal-overlay" ng-if="profile.showDeactivateAccountModalVisible" ng-click="profile.closeDeactivateAccountModal()"></div>
+  <div class="modal-container" ng-if="profile.showDeactivateAccountModalVisible">
+    <div class="modal-content" ng-click="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Deactivate Account</h3>
+        <button class="modal-close" ng-click="profile.closeDeactivateAccountModal()">&times;</button>
+      </div>
+      <div class="deactivate-content">
+        <div class="warning-message">
+          <div class="warning-icon">
+            <i class="fa fa-exclamation-triangle" style="color: #ff6b6b; font-size: 48px;"></i>
+          </div>
+          <h4 style="color: #333; margin: 20px 0 15px 0; font-weight: 600;">Are you sure you want to deactivate your account?</h4>
+          <p style="color: #666; margin-bottom: 20px; font-size: 16px;">This action will have the following consequences:</p>
+          <div class="consequences-list">
+            <div class="consequence-item">
+              <i class="fa fa-times-circle" style="color: #ff6b6b; margin-right: 10px;"></i>
+              <span>Your ability to make new bookings will be disabled</span>
+            </div>
+            <div class="consequence-item">
+              <i class="fa fa-times-circle" style="color: #ff6b6b; margin-right: 10px;"></i>
+              <span>All pending bookings will be automatically cancelled</span>
+            </div>
+            <div class="consequence-item">
+              <i class="fa fa-times-circle" style="color: #ff6b6b; margin-right: 10px;"></i>
+              <span>Your profile will be hidden from the system</span>
+            </div>
+            <div class="consequence-item">
+              <i class="fa fa-times-circle" style="color: #ff6b6b; margin-right: 10px;"></i>
+              <span>You will lose access to your account dashboard</span>
+            </div>
+          </div>
+          <div class="reactivation-note">
+            <i class="fa fa-info-circle" style="color: #4CAF50; margin-right: 8px;"></i>
+            <strong style="color: #4CAF50;">Good news:</strong> 
+            <span style="color: #666;">You can reactivate your account anytime by contacting our support team.</span>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-danger" ng-click="profile.deactivateAccount()" ng-disabled="profile.deactivateLoading">
+            <span ng-if="!profile.deactivateLoading">Deactivate Account</span>
+            <span ng-if="profile.deactivateLoading">Deactivating...</span>
+          </button>
+          <button class="btn-cancel" ng-click="profile.closeDeactivateAccountModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.profile-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-edit, .btn-save, .btn-cancel {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-edit {
+  background: #7ed957;
+  color: white;
+}
+
+.btn-save {
+  background: #28a745;
+  color: white;
+}
+
+.btn-cancel {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-edit:hover, .btn-save:hover, .btn-cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.loading-message, .error-message, .success-message {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.loading-message {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.success-message {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.profile-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 0;
+}
+
+.profile-picture-section {
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-picture-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.profile-picture-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(0,0,0,0.7);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.upload-btn {
+  background: #7ed957;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.upload-btn:hover {
+  background: #5bbf3a;
+  transform: translateY(-1px);
+}
+
+.picture-preview {
+  position: relative;
+  margin-top: 15px;
+}
+
+.preview-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.btn-remove-preview {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-details-section {
+  padding: 30px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-section h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 2px solid #7ed957;
+  padding-bottom: 8px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.form-control {
+  padding: 12px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #7ed957;
+  box-shadow: 0 0 0 3px rgba(126, 217, 87, 0.1);
+}
+
+.form-control.readonly {
+  background: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.license-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.current-license, .no-license {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.license-link {
+  color: #7ed957;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.license-link:hover {
+  text-decoration: underline;
+}
+
+.text-muted {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.help-text {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.preferences-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.preference-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #7ed957;
+}
+
+.quick-actions-section {
+  margin-top: 30px;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.quick-actions-section h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.action-btn {
+  padding: 15px 20px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  background: white;
+  color: #2c3e50;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.action-btn:hover {
+  border-color: #7ed957;
+  background: #f8fff8;
+  transform: translateY(-2px);
+}
+
+.action-btn.danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.action-btn.danger:hover {
+  border-color: #dc3545;
+  background: #fff5f5;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.4rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-form, .deactivate-content {
+  padding: 30px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.warning-message {
+  background: #fff;
+  border: 2px solid #ff6b6b;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.warning-icon {
+  margin-bottom: 20px;
+}
+
+.consequences-list {
+  text-align: left;
+  margin: 20px 0;
+}
+
+.consequence-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  font-size: 15px;
+}
+
+.reactivation-note {
+  background: #f0f9ff;
+  border: 1px solid #4CAF50;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 20px;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-picture-section {
+    padding: 20px;
+  }
+  
+  .profile-picture {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 10px;
+  }
+  
+  .profile-details-section {
+    padding: 20px;
+  }
+  
+  .modal-content {
+    margin: 20px;
+    width: calc(100% - 40px);
+  }
+}
+</style>
