@@ -63,8 +63,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             // Initialize preferences if not exists
             if (!$scope.profile.user.preferences) {
                 $scope.profile.user.preferences = {
-                    emailNotifications: true,
-                    smsNotifications: false
+                    emailNotifications: true
                 };
             }
             
@@ -85,6 +84,11 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         $scope.profile.editMode = !$scope.profile.editMode;
         $scope.profile.error = null;
         $scope.profile.success = null;
+        
+        // Save original user data when entering edit mode
+        if ($scope.profile.editMode) {
+            $scope.profile.originalUser = angular.copy($scope.profile.user);
+        }
     };
 
     // Cancel edit mode
@@ -124,16 +128,19 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         // Add preferences
         if ($scope.profile.user.preferences) {
             formData.append('preferences[emailNotifications]', $scope.profile.user.preferences.emailNotifications);
-            formData.append('preferences[smsNotifications]', $scope.profile.user.preferences.smsNotifications);
         }
 
         // Add files if selected
         if ($scope.profile.selectedProfilePicture) {
+            console.log('💾 Adding profile picture to FormData:', $scope.profile.selectedProfilePicture.name);
             formData.append('profilePicture', $scope.profile.selectedProfilePicture);
         }
         if ($scope.profile.selectedLicense) {
+            console.log('💾 Adding license to FormData:', $scope.profile.selectedLicense.name);
             formData.append('drivingLicense', $scope.profile.selectedLicense);
         }
+
+        console.log('🚀 Sending profile update request to backend...');
 
         $http({
             method: 'PUT',
@@ -144,6 +151,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
                 'Content-Type': undefined
             }
         }).then(function(response) {
+            console.log('✅ Profile update successful:', response.data);
             $scope.profile.user = response.data.user;
             $scope.profile.editMode = false;
             $scope.profile.loading = false;
@@ -158,7 +166,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             }, 3000);
             
         }).catch(function(error) {
-            console.error('Profile update failed:', error);
+            console.error('❌ Profile update failed:', error);
             
             let errorMessage = 'Failed to update profile';
             if (error.status === 401) {
@@ -182,7 +190,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         }
 
         if ($scope.profile.user.phone && !isValidPhone($scope.profile.user.phone)) {
-            $scope.profile.error = 'Please enter a valid phone number';
+            $scope.profile.error = 'Please enter exactly 10 digits for phone number';
             return false;
         }
 
@@ -191,14 +199,17 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
 
     // Validate phone number
     function isValidPhone(phone) {
-        const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-        return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
+        // Phone should be exactly 10 digits
+        const phoneRegex = /^[0-9]{10}$/;
+        return phoneRegex.test(phone);
     }
 
     // Handle profile picture selection
     $scope.profile.onProfilePictureSelect = function(files) {
+        console.log('📸 Profile picture selection triggered:', files);
         if (files && files.length > 0) {
             const file = files[0];
+            console.log('📸 Selected file:', file.name, 'Type:', file.type, 'Size:', file.size);
             
             // Validate file type
             if (!file.type.startsWith('image/')) {
@@ -213,6 +224,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             }
             
             $scope.profile.selectedProfilePicture = file;
+            console.log('📸 Profile picture stored successfully');
             
             // Create preview
             const reader = new FileReader();
@@ -233,8 +245,10 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
 
     // Handle driving license selection
     $scope.profile.onLicenseSelect = function(files) {
+        console.log('📄 License selection triggered:', files);
         if (files && files.length > 0) {
             const file = files[0];
+            console.log('📄 Selected license file:', file.name, 'Type:', file.type, 'Size:', file.size);
             
             // Validate file type
             const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
@@ -250,6 +264,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             }
             
             $scope.profile.selectedLicense = file;
+            console.log('📄 License file stored successfully');
             $scope.profile.success = 'License file selected: ' + file.name;
             
             // Clear success message after 3 seconds
@@ -259,13 +274,18 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         }
     };
 
+    // Remove license preview
+    $scope.profile.removeLicensePreview = function() {
+        $scope.profile.selectedLicense = null;
+    };
+
     // Get profile picture URL
     $scope.profile.getProfilePictureUrl = function(profilePicture) {
         if ($scope.profile.profilePicturePreview) {
             return $scope.profile.profilePicturePreview;
         }
         if (profilePicture) {
-            return '/uploads/profile-pictures/' + profilePicture;
+            return 'http://localhost:5000/uploads/profile-pictures/' + profilePicture;
         }
         return '/assets/images/default-avatar.svg';
     };
@@ -273,7 +293,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
     // Get driving license URL
     $scope.profile.getDrivingLicenseUrl = function(drivingLicense) {
         if (drivingLicense) {
-            return '/uploads/driving-licenses/' + drivingLicense;
+            return 'http://localhost:5000/uploads/driving-licenses/' + drivingLicense;
         }
         return null;
     };

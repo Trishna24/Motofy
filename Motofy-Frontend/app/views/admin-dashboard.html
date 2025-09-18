@@ -281,7 +281,7 @@
       <div ng-show="adminDashboard.activeSection === 'users'" ng-controller="AdminUserController as adminUser" ng-init="adminUser.init()">
           
           <!-- Back Button for Detail View -->
-          <div ng-if="adminUser.viewMode === 'detail'" class="detail-nav">
+          <div ng-if="adminUser.viewMode === 'detail' && !adminUser.editMode" class="detail-nav">
             <button class="btn btn-outline" ng-click="adminUser.backToList()">
               <i class="fa fa-arrow-left"></i> Back to User List
             </button>
@@ -390,6 +390,9 @@
               <button class="btn-outline" ng-if="!adminUser.editMode" ng-click="adminUser.enableEdit()">Edit User</button>
               <button class="btn-confirm" ng-if="adminUser.editMode" ng-click="adminUser.saveUser()">Save Changes</button>
               <button class="btn-outline" ng-if="adminUser.editMode" ng-click="adminUser.cancelEdit()">Cancel</button>
+              <button class="btn btn-outline" ng-if="adminUser.editMode" ng-click="adminUser.backToList()">
+                <i class="fa fa-arrow-left"></i> Back to User List
+              </button>
             </div>
           </div>
 
@@ -400,9 +403,12 @@
                 <h4>User Information</h4>
                 <div class="user-profile">
                   <div class="user-avatar">
-                    <img ng-src="{{adminUser.selectedUser.profilePic || 'app/assets/images/default-avatar.png'}}" alt="{{adminUser.selectedUser.username}}">
+                    <img ng-src="{{adminUser.getProfilePictureUrl(adminUser.selectedUser.profilePicture)}}" 
+                         alt="{{adminUser.selectedUser.username}}" 
+                         onerror="this.src='assets/images/default-avatar.svg'">
                   </div>
                   <div class="user-info">
+                    <!-- Basic Information -->
                     <div class="detail-row">
                       <span class="detail-label">Username:</span>
                       <span class="detail-value">{{adminUser.selectedUser.username}}</span>
@@ -410,6 +416,10 @@
                     <div class="detail-row">
                       <span class="detail-label">Email:</span>
                       <span class="detail-value">{{adminUser.selectedUser.email}}</span>
+                    </div>
+                    <div class="detail-row" ng-if="adminUser.selectedUser.phone">
+                      <span class="detail-label">Phone:</span>
+                      <span class="detail-value">{{adminUser.selectedUser.phone}}</span>
                     </div>
                     <div class="detail-row">
                       <span class="detail-label">Status:</span>
@@ -424,6 +434,91 @@
                     <div class="detail-row">
                       <span class="detail-label">Joined:</span>
                       <span class="detail-value">{{adminUser.formatDate(adminUser.selectedUser.createdAt)}}</span>
+                    </div>
+                    <div class="detail-row" ng-if="adminUser.selectedUser.googleId">
+                      <span class="detail-label">Google Account:</span>
+                      <span class="detail-value">
+                        <i class="fab fa-google"></i> Connected
+                      </span>
+                    </div>
+                    
+                    <!-- Address Information -->
+                    <div ng-if="adminUser.selectedUser.address && (adminUser.selectedUser.address.street || adminUser.selectedUser.address.city || adminUser.selectedUser.address.state)">
+                      <h5 style="margin-top: 20px; margin-bottom: 10px; color: #333;">Address Information</h5>
+                      <div class="detail-row" ng-if="adminUser.selectedUser.address.street">
+                        <span class="detail-label">Street:</span>
+                        <span class="detail-value">{{adminUser.selectedUser.address.street}}</span>
+                      </div>
+                      <div class="detail-row" ng-if="adminUser.selectedUser.address.city">
+                        <span class="detail-label">City:</span>
+                        <span class="detail-value">{{adminUser.selectedUser.address.city}}</span>
+                      </div>
+                      <div class="detail-row" ng-if="adminUser.selectedUser.address.state">
+                        <span class="detail-label">State:</span>
+                        <span class="detail-value">{{adminUser.selectedUser.address.state}}</span>
+                      </div>
+                      <div class="detail-row" ng-if="adminUser.selectedUser.address.zipCode">
+                        <span class="detail-label">ZIP Code:</span>
+                        <span class="detail-value">{{adminUser.selectedUser.address.zipCode}}</span>
+                      </div>
+                      <div class="detail-row" ng-if="adminUser.selectedUser.address.country">
+                        <span class="detail-label">Country:</span>
+                        <span class="detail-value">{{adminUser.selectedUser.address.country}}</span>
+                      </div>
+                    </div>
+                    
+                    <!-- Additional Information -->
+                    <div ng-if="adminUser.selectedUser.drivingLicense || adminUser.selectedUser.preferences">
+                      <h5 style="margin-top: 20px; margin-bottom: 10px; color: #333;">Additional Information</h5>
+                      
+                      <!-- License Preview Section for Admin -->
+                      <div class="detail-row" ng-if="adminUser.selectedUser.drivingLicense">
+                        <span class="detail-label">Driving License:</span>
+                        <div class="admin-license-preview">
+                          <div class="license-status">
+                            <i class="fas fa-id-card"></i> 
+                            <span class="license-uploaded">Document Uploaded</span>
+                          </div>
+                          
+                          <!-- License Preview Container -->
+                          <div class="admin-license-document" ng-if="adminUser.selectedUser.drivingLicense">
+                            <div class="license-preview-header">
+                              <h6><i class="fas fa-file-alt"></i> License Document Preview</h6>
+                              <button class="btn-download" ng-click="adminUser.downloadLicense(adminUser.selectedUser)" title="Download License">
+                                <i class="fas fa-download"></i>
+                              </button>
+                            </div>
+                            
+                            <!-- License Image/Document Display -->
+                            <div class="license-display">
+                              <img ng-src="{{adminUser.getLicenseUrl(adminUser.selectedUser.drivingLicense)}}" 
+                                   alt="Driving License Document" 
+                                   class="license-image"
+                                   ng-if="adminUser.isImageFile(adminUser.selectedUser.drivingLicense)"
+                                   onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                              
+                              <!-- Fallback for non-image files -->
+                              <div class="license-file-info" ng-if="!adminUser.isImageFile(adminUser.selectedUser.drivingLicense)" style="display: none;">
+                                <i class="fas fa-file-pdf fa-3x"></i>
+                                <p>{{adminUser.selectedUser.drivingLicense}}</p>
+                                <small>Click download to view document</small>
+                              </div>
+                            </div>
+                            
+                            <!-- License Details -->
+                            <div class="license-details">
+                              <div class="license-info-row">
+                                <span class="info-label">File Name:</span>
+                                <span class="info-value">{{adminUser.getLicenseFileName(adminUser.selectedUser.drivingLicense)}}</span>
+                              </div>
+                              <div class="license-info-row">
+                                <span class="info-label">Upload Date:</span>
+                                <span class="info-value">{{adminUser.formatDate(adminUser.selectedUser.licenseUploadDate || adminUser.selectedUser.updatedAt)}}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -442,12 +537,41 @@
                   <input type="email" ng-model="adminUser.selectedUser.email">
                 </label>
                 <label>
+                  <span>Phone</span>
+                  <input type="tel" ng-model="adminUser.selectedUser.phone" placeholder="10-digit phone number">
+                </label>
+                <label>
                   <span>Status</span>
                   <select ng-model="adminUser.selectedUser.status">
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                     <option value="suspended">Suspended</option>
                   </select>
+                </label>
+              </div>
+              
+              <!-- Address Section -->
+              <h5 style="margin-top: 20px; margin-bottom: 10px; color: #333;">Address Information</h5>
+              <div class="form-grid">
+                <label>
+                  <span>Street</span>
+                  <input type="text" ng-model="adminUser.selectedUser.address.street" placeholder="Street address">
+                </label>
+                <label>
+                  <span>City</span>
+                  <input type="text" ng-model="adminUser.selectedUser.address.city" placeholder="City">
+                </label>
+                <label>
+                  <span>State</span>
+                  <input type="text" ng-model="adminUser.selectedUser.address.state" placeholder="State">
+                </label>
+                <label>
+                  <span>ZIP Code</span>
+                  <input type="text" ng-model="adminUser.selectedUser.address.zipCode" placeholder="ZIP Code">
+                </label>
+                <label>
+                  <span>Country</span>
+                  <input type="text" ng-model="adminUser.selectedUser.address.country" placeholder="Country">
                 </label>
               </div>
             </div>
@@ -1473,3 +1597,140 @@
     </div>
   </main>
 </div>
+
+<style>
+/* Admin License Preview Styles */
+.admin-license-preview {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.license-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.license-uploaded {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.admin-license-document {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+.license-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.license-preview-header h6 {
+  margin: 0;
+  color: #495057;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-download {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s;
+}
+
+.btn-download:hover {
+  background: #0056b3;
+}
+
+.license-display {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.license-image {
+  max-width: 100%;
+  max-height: 400px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.license-file-info {
+  padding: 40px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.license-file-info i {
+  color: #dc3545;
+  margin-bottom: 10px;
+}
+
+.license-details {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.license-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.license-info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.info-value {
+  color: #6c757d;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .license-preview-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .license-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .license-image {
+    max-height: 250px;
+  }
+}
+</style>

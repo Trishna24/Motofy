@@ -1,6 +1,6 @@
 // app/controllers/admin-dashboard.controller.js
 angular.module('motofyApp')
-  .controller('AdminDashboardController', ['ApiService', '$window', '$location', function(ApiService, $window, $location) {
+  .controller('AdminDashboardController', ['$scope', 'ApiService', '$window', '$location', function($scope, ApiService, $window, $location) {
     console.log('📊 AdminDashboardController loaded successfully!');
     var vm = this;
 
@@ -44,6 +44,34 @@ angular.module('motofyApp')
     vm.showSection = function(section) {
       console.log('🔄 Switching to section:', section);
       vm.activeSection = section;
+      
+      // Auto-refresh data based on section
+      switch(section) {
+        case 'dashboard':
+          vm.loadDashboardData();
+          break;
+        case 'users':
+          // Trigger user controller refresh
+          if ($scope.adminUser && $scope.adminUser.loadUsers) {
+            $scope.adminUser.loadUsers();
+          }
+          break;
+        case 'bookings':
+          // Trigger booking controller refresh
+          if ($scope.adminBooking && $scope.adminBooking.loadBookings) {
+            $scope.adminBooking.loadBookings();
+          }
+          break;
+        case 'cars':
+          // Trigger car controller refresh
+          if ($scope.adminCar && $scope.adminCar.loadCars) {
+            $scope.adminCar.loadCars();
+          }
+          break;
+        case 'analytics':
+          vm.loadAllAnalytics();
+          break;
+      }
     };
 
     // Check admin authentication

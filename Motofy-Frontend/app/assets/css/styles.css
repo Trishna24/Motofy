@@ -1000,8 +1000,8 @@ nav a:hover {
 .dropdown a, .dropdown button {
   display: flex;
   align-items: center;
-  width: 100%;
-  padding: 12px 16px;
+  width: 86%;
+  padding: 17px 11px;
   background: none;
   border: none;
   text-align: left;
@@ -2629,13 +2629,15 @@ footer {
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid #f0f2f5;
+  border: 2px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .user-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .user-info {
@@ -4172,11 +4174,12 @@ footer {
 }
 
 .user-avatar img {
-  width: 120px;
-  height: 120px;
+  width: 94px;
+  height: 94px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #e9ecef;
+  border: 4px solid #dee2e6;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .user-info {
@@ -4410,7 +4413,7 @@ footer {
 
 /* Enhanced Status Badges */
 .status-badge {
-  display: inline-flex;
+  display: block;
   align-items: center;
   gap: 5px;
   padding: 6px 12px;

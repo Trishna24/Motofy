@@ -293,6 +293,11 @@ angular.module('motofyApp')
       $location.path('/cars/' + carId);
     };
     
+    // Go back to previous page
+    vm.goBack = function() {
+      $window.history.back();
+    };
+    
     // Initialize
     vm.loadCars();
     

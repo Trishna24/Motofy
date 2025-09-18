@@ -10,6 +10,12 @@ const registerUser = async (req, res) => {
     return res.status(400).json({ message: 'Username, email, and password are required' });
   }
 
+  // Gmail validation regex
+  const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  if (!gmailRegex.test(email)) {
+    return res.status(400).json({ message: 'Only valid Gmail addresses are allowed.' });
+  }
+
   try {
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
@@ -42,6 +48,15 @@ const loginUser = async (req, res) => {
     return res.status(400).json({ message: 'Login input and password are required' });
   }
 
+  // Gmail validation regex - only validate if loginInput looks like an email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (emailRegex.test(loginInput)) {
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailRegex.test(loginInput)) {
+      return res.status(400).json({ message: 'Invalid Email. Please use a Gmail ID.' });
+    }
+  }
+
   try {
     const user = await User.findOne({
       $or: [{ email: loginInput }, { username: loginInput }],
@@ -49,6 +64,14 @@ const loginUser = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if user account is deactivated
+    if (user.status === 'inactive' || user.status === 'suspended') {
+      return res.status(403).json({ 
+        message: 'Your account has been deactivated. Please contact us to activate your account.',
+        accountStatus: user.status
+      });
     }
 
     if (!user.password) {

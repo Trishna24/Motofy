@@ -287,10 +287,47 @@ const getUserAnalytics = async (req, res) => {
   }
 };
 
+// @desc    Update user
+// @route   PUT /api/admin/users/:id
+// @access  Admin
+const updateUser = async (req, res) => {
+  try {
+    const { username, email, phone, address, status } = req.body;
+    
+    const user = await User.findById(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Update user fields (excluding notification preferences)
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+    if (address) user.address = address;
+    // Note: preferences (notification settings) are excluded from admin updates
+    if (status && ['active', 'inactive', 'suspended'].includes(status)) {
+      user.status = status;
+    }
+    
+    const updatedUser = await user.save();
+    
+    // Return user without password
+    const userResponse = updatedUser.toObject();
+    delete userResponse.password;
+    
+    res.json(userResponse);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   updateUserStatus,
+  updateUser,
   getUserBookingsByAdmin,
   getUserStats,
   getUserAnalytics

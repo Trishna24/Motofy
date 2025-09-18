@@ -13,6 +13,17 @@ angular.module('motofyApp')
     vm.login = function() {
       vm.error = '';
       vm.success = '';
+      
+      // Gmail validation - only validate if loginInput is an email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailRegex.test(vm.loginData.loginInput)) {
+        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        if (!gmailRegex.test(vm.loginData.loginInput)) {
+          vm.error = 'Invalid Email. Please use a Gmail ID.';
+          return;
+        }
+      }
+      
       ApiService.login(vm.loginData)
         .then(function(response) {
           // Store token and update UI
@@ -34,6 +45,14 @@ angular.module('motofyApp')
     vm.signup = function() {
       vm.error = '';
       vm.success = '';
+      
+      // Gmail validation
+      const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      if (!gmailRegex.test(vm.signupData.email)) {
+        vm.error = 'Only valid Gmail addresses are allowed.';
+        return;
+      }
+      
       ApiService.signup(vm.signupData)
         .then(function(response) {
           // After signup, automatically log in the user
@@ -56,4 +75,4 @@ angular.module('motofyApp')
           vm.error = (err.data && err.data.message) ? err.data.message : 'Signup failed. Please try again.';
         });
     };
-  }]); 
+  }]);

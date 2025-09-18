@@ -17,6 +17,12 @@ const googleLogin = async (req, res) => {
     const payload = ticket.getPayload();
     const { sub, email, name, picture } = payload; // sub is Google user ID
 
+    // Gmail validation - Google Auth should only allow Gmail accounts
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailRegex.test(email)) {
+      return res.status(400).json({ message: 'Only valid Gmail addresses are allowed.' });
+    }
+
     // Find or create user
     let user = await User.findOne({ googleId: sub });
 
@@ -29,6 +35,14 @@ const googleLogin = async (req, res) => {
       });
 
       await user.save();
+    } else {
+      // Check if existing user account is deactivated
+      if (user.status === 'inactive' || user.status === 'suspended') {
+        return res.status(403).json({ 
+          message: 'Your account has been deactivated. Please contact us to activate your account.',
+          accountStatus: user.status
+        });
+      }
     }
 
     // Generate your app's JWT token

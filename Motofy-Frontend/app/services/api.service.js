@@ -138,6 +138,13 @@ angular.module('motofyApp')
         });
       },
       
+      updateUser: function(userId, userData) {
+        var adminToken = window.localStorage.getItem('adminToken');
+        return $http.put(BASE_URL + '/admin/users/' + userId, userData, {
+          headers: { 'Authorization': 'Bearer ' + adminToken }
+        });
+      },
+      
       getUserBookingsByAdmin: function(userId) {
         var adminToken = window.localStorage.getItem('adminToken');
         return $http.get(BASE_URL + '/admin/users/' + userId + '/bookings', {

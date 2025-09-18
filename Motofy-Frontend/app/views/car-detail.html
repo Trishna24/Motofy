@@ -2,8 +2,8 @@
 <div class="car-detail-container" ng-if="car.selectedCar">
   <!-- Back Button -->
   <div class="back-button">
-    <button ng-click="car.$location.path('/cars')" class="back-btn">
-      ← Back to Cars
+    <button ng-click="car.goBack()" class="back-btn">
+      ← Back
     </button>
   </div>
 
@@ -100,8 +100,8 @@
 <div ng-if="car.error" class="error-container">
   <h2>Car Not Found</h2>
   <p>{{car.error}}</p>
-  <button ng-click="car.$location.path('/cars')" class="back-btn">
-    Back to Cars
+  <button ng-click="car.goBack()" class="back-btn">
+    Back
   </button>
 </div>
 
