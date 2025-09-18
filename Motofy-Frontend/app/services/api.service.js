@@ -43,7 +43,12 @@ angular.module('motofyApp')
       },
       // cars crud
       getAllCars: function() {
-        return $http.get(BASE_URL + '/cars');
+        var token = window.localStorage.getItem('userToken') || window.localStorage.getItem('adminToken');
+        var headers = {};
+        if (token) {
+          headers['Authorization'] = 'Bearer ' + token;
+        }
+        return $http.get(BASE_URL + '/cars', { headers: headers });
       },
       addCar: function(formData) {
         var adminToken = window.localStorage.getItem('adminToken');

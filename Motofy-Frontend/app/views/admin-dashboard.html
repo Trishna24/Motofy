@@ -180,6 +180,7 @@
                 <th>Image</th>
                 <th>Name</th>
                 <th>Brand</th>
+                <th>Car Number</th>
                 <th>Fuel</th>
                 <th>Seats</th>
                 <th>Transmission</th>
@@ -196,6 +197,7 @@
                 </td>
                 <td>{{car.name}}</td>
                 <td>{{car.brand}}</td>
+                <td>{{car.carNumber || 'N/A'}}</td>
                 <td>{{car.fuelType}}</td>
                 <td>{{car.seats}}</td>
                 <td>{{car.transmission}}</td>
@@ -235,6 +237,10 @@
               <label>
                 <span>Brand</span>
                 <input type="text" ng-model="adminCar.formData.brand" required placeholder="Enter car brand">
+              </label>
+              <label>
+                <span>Car Number</span>
+                <input type="text" ng-model="adminCar.formData.carNumber" required placeholder="Enter car number (e.g., MH01AB1234)">
               </label>
               <label>
                 <span>Price (₹)</span>
@@ -589,8 +595,10 @@
                 <thead>
                   <tr>
                     <th>Car</th>
-                    <th>From</th>
-                    <th>To</th>
+                    <th>Pickup Date</th>
+                    <th>Return Date</th>
+                    <th>Pickup Location</th>
+                    <th>Duration</th>
                     <th>Amount</th>
                     <th>Status</th>
                     <th>Booked On</th>
@@ -598,15 +606,17 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="booking in adminUser.userBookings">
-                    <td>{{booking.car.make}} {{booking.car.model}}</td>
-                    <td>{{adminUser.formatDate(booking.fromDate)}}</td>
-                    <td>{{adminUser.formatDate(booking.toDate)}}</td>
-                    <td>₹{{booking.amount}}</td>
+                    <td>{{booking.car.name || booking.car.make}} {{booking.car.brand || booking.car.model}}</td>
+                    <td>{{booking.pickupDate | date:'dd MMM yyyy, h:mm a'}}</td>
+                    <td>{{booking.dropoffDate | date:'dd MMM yyyy, h:mm a'}}</td>
+                    <td>{{booking.pickupLocation}}</td>
+                    <td>{{adminUser.calculateDuration(booking.pickupDate, booking.dropoffDate)}} days</td>
+                    <td>₹{{booking.totalAmount}}</td>
                     <td>
                       <span class="status-badge" ng-class="{
-                        'status-confirmed': booking.status === 'confirmed',
-                        'status-pending': booking.status === 'pending',
-                        'status-cancelled': booking.status === 'cancelled'
+                        'status-confirmed': booking.status === 'Confirmed',
+                        'status-pending': booking.status === 'Pending',
+                        'status-cancelled': booking.status === 'Cancelled'
                       }">
                         {{booking.status}}
                       </span>

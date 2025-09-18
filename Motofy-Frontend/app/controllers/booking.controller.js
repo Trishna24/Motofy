@@ -26,14 +26,18 @@ angular.module('motofyApp')
     // Fetch user bookings on load
     function loadBookings() {
       var token = $window.localStorage.getItem('appToken');
+      console.log('🔑 Token found:', token ? 'Yes' : 'No');
       if (!token) {
         vm.loading = false;
         vm.error = 'You must be logged in to view your bookings.';
         return;
       }
+      console.log('📞 Calling getUserBookings API...');
       ApiService.getUserBookings(token)
         .then(function(response) {
+          console.log('✅ API Response:', response.data);
           vm.bookings = response.data;
+          console.log('📋 Total bookings loaded:', vm.bookings.length);
           // Ensure each booking has an image URL
           vm.bookings.forEach(function(booking) {
             if (booking.car && !booking.car.imageUrl) {
@@ -43,6 +47,7 @@ angular.module('motofyApp')
           vm.loading = false;
         })
         .catch(function(err) {
+          console.error('❌ API Error:', err);
           vm.error = err.data && err.data.message ? err.data.message : 'Failed to load bookings.';
           vm.loading = false;
         });

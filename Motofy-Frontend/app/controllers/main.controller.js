@@ -253,6 +253,11 @@ angular.module('motofyApp')
       $location.path('/cars');
     };
 
+    // Navigate to booking details
+    vm.viewBookingDetails = function(bookingId) {
+      $location.path('/bookings');
+    };
+
     // Show/hide navbar based on route
     vm.showNavbar = true;
     $rootScope.$on('$routeChangeSuccess', function() {

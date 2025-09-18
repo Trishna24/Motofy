@@ -39,7 +39,7 @@ angular.module('motofyApp')
       vm.resetAlerts();
       vm.viewMode = 'form';
       vm.editingId = null;
-      vm.formData = { name:'', brand:'', price:null, fuelType:'', seats:null, transmission:'', description:'' };
+      vm.formData = { name:'', brand:'', carNumber:'', price:null, fuelType:'', seats:null, transmission:'', description:'' };
       vm.previewUrl = '';
     };
 
@@ -50,6 +50,7 @@ angular.module('motofyApp')
       vm.formData = {
         name: car.name,
         brand: car.brand,
+        carNumber: car.carNumber || '',
         price: car.price,
         fuelType: car.fuelType,
         seats: car.seats,
@@ -73,6 +74,7 @@ angular.module('motofyApp')
       var fd = new FormData();
       fd.append('name', vm.formData.name || '');
       fd.append('brand', vm.formData.brand || '');
+      fd.append('carNumber', vm.formData.carNumber || '');
       fd.append('price', vm.formData.price || 0);
       fd.append('fuelType', vm.formData.fuelType || '');
       fd.append('seats', vm.formData.seats || 0);

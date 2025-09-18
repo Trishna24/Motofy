@@ -242,6 +242,15 @@ angular.module('motofyApp')
       return years + ' years ago';
     };
     
+    // Calculate booking duration in days
+    vm.calculateDuration = function(pickupDate, dropoffDate) {
+      if (!pickupDate || !dropoffDate) return 0;
+      var pickup = new Date(pickupDate);
+      var dropoff = new Date(dropoffDate);
+      var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
+      return days > 0 ? days : 0;
+    };
+    
     // Watch for filter changes
     $scope.$watch('adminUser.searchQuery', function() {
       vm.applyFilters();

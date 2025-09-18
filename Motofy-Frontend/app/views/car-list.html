@@ -59,6 +59,11 @@
         <p class="car-brand">{{carItem.brand}}</p>
         <p class="car-price">₹{{carItem.price}}/day</p>
         
+        <!-- Booking Status Message -->
+        <div ng-if="carItem.userBookedThis" class="booking-status-message">
+          <span class="booked-by-user">You have booked this car</span>
+        </div>
+        
         <div class="car-specs">
           <span class="spec">{{carItem.fuelType}}</span>
           <span class="spec">{{carItem.seats}} seats</span>
@@ -286,6 +291,20 @@
     font-weight: 600;
     cursor: pointer;
     margin-top: 1em;
+  }
+
+  .booking-status-message {
+    margin: 0.5em 0;
+    padding: 0.4em 0.8em;
+    background: #28a745;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .booked-by-user {
+    color: #ffffff;
+    font-size: 0.85em;
+    font-weight: 600;
   }
 
   @media (max-width: 768px) {

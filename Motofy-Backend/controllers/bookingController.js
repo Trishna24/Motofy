@@ -27,7 +27,7 @@ const createBooking = async (req, res) => {
     }
 
     const booking = new Booking({
-      user: req.user.userId, // Fetched from JWT token after login
+      user: req.user._id, // Fetched from JWT token after login
       car,
       pickupDate,
       dropoffDate,
@@ -47,7 +47,12 @@ const createBooking = async (req, res) => {
 // @desc   Get current user's bookings
 const getUserBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find({ user: req.user.userId }).populate('car');
+    console.log('🔍 getUserBookings called for user:', req.user._id);
+    const bookings = await Booking.find({ user: req.user._id })
+      .populate('car', 'name brand make model year dailyRate image carNumber')
+      .sort({ createdAt: -1 });
+    console.log('📋 Found bookings for user:', bookings.length);
+    console.log('📋 Booking details:', bookings.map(b => ({ id: b._id, status: b.status, car: b.car?.name })));
     res.json(bookings);
   } catch (error) {
     console.error('Error fetching user bookings:', error);
@@ -77,7 +82,7 @@ const cancelBooking = async (req, res) => {
       return res.status(404).json({ message: 'Booking not found' });
     }
 
-    if (booking.user.toString() !== req.user.userId) {
+    if (booking.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
@@ -96,7 +101,7 @@ const getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()
       .populate('user', 'username email')
-      .populate('car', 'name brand');
+      .populate('car', 'name brand carNumber');
     res.json(bookings);
   } catch (error) {
     console.error('Error fetching all bookings:', error);

@@ -67,7 +67,7 @@ const updateUserStatus = async (req, res) => {
 const getUserBookingsByAdmin = async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.params.id })
-      .populate('car', 'make model year dailyRate')
+      .populate('car', 'make model year dailyRate carNumber')
       .sort({ createdAt: -1 });
     
     res.json(bookings);

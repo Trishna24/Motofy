@@ -28,12 +28,21 @@ const carSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    carNumber: {
+      type: String,
+      required: true,
+    },
     image: {
       type: String, // Stores filename of the uploaded image
       default: '',
     },
     description: {
       type: String,
+    },
+    carNumber: {
+      type: String,
+      required: true,
+      unique: true,
     },
     availability: {
       type: Boolean,

@@ -19,20 +19,22 @@
   </div>
   
   <div class="booking-controls" ng-if="!booking.loading && booking.bookings.length">
-    <div class="booking-search">
-      <div class="search-input-wrapper">
-        <i class="search-icon">🔍</i>
-        <input type="text" ng-model="booking.searchTerm" placeholder="Search by car name, location, or booking ID...">
+    <div class="search-filter-container">
+      <div class="booking-search">
+        <div class="search-input-wrapper">
+          <i class="search-icon">🔍</i>
+          <input type="text" ng-model="booking.searchTerm" placeholder="Search by car name, location, or booking ID...">
+        </div>
       </div>
-    </div>
-    <div class="booking-filters">
-      <select ng-model="booking.statusFilter" class="filter-select">
-        <option value="">All Status</option>
-        <option value="Pending">Pending</option>
-        <option value="Confirmed">Confirmed</option>
-        <option value="Ongoing">Ongoing</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
+      <div class="booking-filters">
+        <select ng-model="booking.statusFilter" class="filter-select">
+          <option value="">All Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Ongoing">Ongoing</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
     </div>
   </div>
   
@@ -184,6 +186,10 @@
               <div class="booking-detail-row">
                 <span class="detail-label">Car:</span>
                 <span class="detail-value">{{booking.selectedBooking.car.name}} {{booking.selectedBooking.car.brand}}</span>
+              </div>
+              <div class="booking-detail-row" ng-if="booking.selectedBooking.car.carNumber">
+                <span class="detail-label">Car Number:</span>
+                <span class="detail-value">{{booking.selectedBooking.car.carNumber}}</span>
               </div>
             </div>
           </div>

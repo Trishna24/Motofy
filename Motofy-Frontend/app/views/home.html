@@ -54,10 +54,42 @@
 <section class="recent-bookings-section" ng-if="main.isLoggedIn()">
   <div class="recent-bookings-title">Your Recent Bookings</div>
   <div class="recent-bookings-grid" ng-if="main.userBookings && main.userBookings.length > 0">
-    <div class="recent-booking-card" ng-repeat="booking in main.userBookings | limitTo:2">
-      <div class="booking-car">Car: {{booking.carName || booking.car.name}}</div>
-      <div class="booking-date">Date: {{main.formatDate(booking.startDate)}} - {{main.formatDate(booking.endDate)}}</div>
-      <div class="booking-status">Status: {{booking.status}}</div>
+    <div class="recent-booking-card enhanced" ng-repeat="booking in main.userBookings | limitTo:2">
+      <div class="booking-card-header">
+        <div class="booking-id">#{{booking._id.slice(-6)}}</div>
+        <div class="booking-status-badge" ng-class="{
+          'status-pending': booking.status === 'Pending',
+          'status-confirmed': booking.status === 'Confirmed',
+          'status-cancelled': booking.status === 'Cancelled'
+        }">{{booking.status}}</div>
+      </div>
+      <div class="booking-car-info">
+        <div class="car-name">{{booking.carName || booking.car.name}}</div>
+        <div class="car-brand">{{booking.car.brand}}</div>
+      </div>
+      <div class="booking-dates">
+        <div class="date-item">
+          <span class="date-icon">📅</span>
+          <div class="date-details">
+            <span class="date-label">Pickup</span>
+            <span class="date-value">{{main.formatDate(booking.startDate || booking.pickupDate)}}</span>
+          </div>
+        </div>
+        <div class="date-item">
+          <span class="date-icon">🔄</span>
+          <div class="date-details">
+            <span class="date-label">Return</span>
+            <span class="date-value">{{main.formatDate(booking.endDate || booking.dropoffDate)}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="booking-amount">
+        <span class="amount-label">Total</span>
+        <span class="amount-value">₹{{booking.totalAmount | number:0}}</span>
+      </div>
+      <div class="booking-actions">
+        <button class="view-booking-btn" ng-click="main.viewBookingDetails(booking._id)">View Details</button>
+      </div>
     </div>
   </div>
   <div ng-if="!main.userBookings || main.userBookings.length === 0" class="no-bookings-message">
