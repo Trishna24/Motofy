@@ -47,12 +47,9 @@ const createBooking = async (req, res) => {
 // @desc   Get current user's bookings
 const getUserBookings = async (req, res) => {
   try {
-    console.log('🔍 getUserBookings called for user:', req.user._id);
     const bookings = await Booking.find({ user: req.user._id })
       .populate('car', 'name brand make model year dailyRate image carNumber')
       .sort({ createdAt: -1 });
-    console.log('📋 Found bookings for user:', bookings.length);
-    console.log('📋 Booking details:', bookings.map(b => ({ id: b._id, status: b.status, car: b.car?.name })));
     res.json(bookings);
   } catch (error) {
     console.error('Error fetching user bookings:', error);

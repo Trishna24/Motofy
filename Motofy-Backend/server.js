@@ -10,6 +10,7 @@ const profileRoutes = require('./routes/profileRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const aiChatRoutes = require('./routes/aiChatRoutes');
+const webhookRoutes = require('./routes/webhookRoutes');
 // Load environment variables
 dotenv.config();
 
@@ -22,6 +23,9 @@ app.use(cors({
   origin: "http://localhost:3000",
   credentials: true,
 }));
+
+// Webhook routes MUST come before JSON body parser
+app.use('/api/webhook', webhookRoutes);
 
 // Increase payload size limits for file uploads
 app.use(express.json({ limit: '10mb' }));

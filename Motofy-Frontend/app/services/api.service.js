@@ -201,6 +201,18 @@ angular.module('motofyApp')
           headers: { 'Authorization': 'Bearer ' + adminToken },
           params: params
         });
+      },
+      
+      // Payment API calls
+      createPaymentSession: function(paymentData, token) {
+        return $http.post(BASE_URL + '/payment/create-checkout-session', paymentData, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+      },
+      
+      // Verify payment session and get booking details
+      verifyPaymentSession: function(sessionId) {
+        return $http.get(BASE_URL + '/payment/verify-session/' + sessionId);
       }
     };
   }]);

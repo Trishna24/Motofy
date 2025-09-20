@@ -1000,8 +1000,8 @@ nav a:hover {
 .dropdown a, .dropdown button {
   display: flex;
   align-items: center;
-  width: 86%;
-  padding: 17px 11px;
+  width: 100%;
+  padding: 12px 16px;
   background: none;
   border: none;
   text-align: left;
@@ -1715,7 +1715,7 @@ user-select: none;
 }
 
 .quick-search-btn.luxury:hover {
-  background: linear-gradient(135deg, #dda0dd, #1b44bee5);
+  background: linear-gradient(135deg, #dda0dd, #c71585);
   color: #fff;
 }
 
@@ -3225,28 +3225,6 @@ footer {
   align-items: center;
 }
 
-/* Search Filter Container */
-.search-filter-container {
-  display: flex;
-  gap: 75px;
-  align-items: center;
-  width: 100%;
-  flex-wrap: wrap;
-}
-
-.search-filter-container .booking-search {
-  flex: 1;
-  min-width: 250px;
-}
-
-.search-filter-container .booking-filters {
-  flex-shrink: 0;
-  background: none;
-  padding: 0;
-  margin: 0;
-  box-shadow: none;
-}
-
 .search-input-wrapper {
   position: relative;
   flex: 1;
@@ -3389,15 +3367,15 @@ footer {
 /* Enhanced Booking Cards */
 .booking-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 25px;
 }
 
 .booking-card {
   background: white;
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   border: 1px solid #f0f0f0;
 }
@@ -3432,7 +3410,7 @@ footer {
 
 .booking-card-image {
   position: relative;
-  height: 160px;
+  height: 200px;
   overflow: hidden;
 }
 
@@ -3454,7 +3432,7 @@ footer {
 }
 
 .booking-card-details {
-  padding: 20px;
+  padding: 25px;
 }
 
 .car-name {
@@ -3472,8 +3450,8 @@ footer {
 .booking-info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 20px;
+  margin-bottom: 25px;
 }
 
 .info-item {
@@ -4369,12 +4347,11 @@ footer {
 }
 
 .user-avatar img {
-  width: 94px;
-  height: 94px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #dee2e6;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 4px solid #e9ecef;
 }
 
 .user-info {

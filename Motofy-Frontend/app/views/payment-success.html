@@ -1,0 +1,70 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg">
+        <div class="card-body text-center p-5">
+          
+          <!-- Loading State -->
+          <div ng-if="paymentSuccess.loading">
+            <div class="mb-4">
+              <i class="fas fa-spinner fa-spin text-primary" style="font-size: 4rem;"></i>
+            </div>
+            <h3>Verifying Payment...</h3>
+            <p>Please wait while we confirm your payment.</p>
+          </div>
+
+          <!-- Error State -->
+          <div ng-if="paymentSuccess.error && !paymentSuccess.loading">
+            <div class="mb-4">
+              <i class="fas fa-exclamation-triangle text-warning" style="font-size: 4rem;"></i>
+            </div>
+            <h2 class="text-warning mb-3">Payment Verification Failed</h2>
+            <p class="lead mb-4">{{paymentSuccess.error}}</p>
+            <div class="d-flex justify-content-center gap-3">
+              <a href="#!/bookings" class="btn btn-primary btn-lg">
+                <i class="fas fa-list mr-2"></i>Check My Bookings
+              </a>
+              <a href="#!/home" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-home mr-2"></i>Back to Home
+              </a>
+            </div>
+          </div>
+
+          <!-- Success State -->
+          <div ng-if="paymentSuccess.bookingDetails && !paymentSuccess.loading">
+            <div class="mb-4">
+              <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+            </div>
+            <h2 class="text-success mb-3">Payment Successful!</h2>
+            <p class="lead mb-4">Thank you for your booking. Your payment has been processed successfully.</p>
+            
+            <div class="alert alert-info">
+              <h5>Booking Details:</h5>
+              <p><strong>Booking ID:</strong> {{paymentSuccess.bookingDetails.bookingId}}</p>
+              <p><strong>Car:</strong> {{paymentSuccess.bookingDetails.carName}}</p>
+              <p><strong>Total Amount:</strong> ₹{{paymentSuccess.bookingDetails.totalAmount}}</p>
+              <p><strong>Pickup Date:</strong> {{paymentSuccess.bookingDetails.pickupDate | date:'medium'}}</p>
+              <p><strong>Dropoff Date:</strong> {{paymentSuccess.bookingDetails.dropoffDate | date:'medium'}}</p>
+              <p><strong>Location:</strong> {{paymentSuccess.bookingDetails.location}}</p>
+            </div>
+            
+            <div class="d-flex justify-content-center gap-3">
+              <a href="#!/bookings" class="btn btn-primary btn-lg">
+                <i class="fas fa-list mr-2"></i>View My Bookings
+              </a>
+              <a href="#!/home" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-home mr-2"></i>Back to Home
+              </a>
+            </div>
+            
+            <div class="mt-4">
+              <p class="text-muted">
+                <small>A confirmation email has been sent to your registered email address.</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

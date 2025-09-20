@@ -48,6 +48,14 @@ angular.module('motofyApp')
         templateUrl: 'app/views/profile.html',
         controller: 'ProfileController'
       })
+      .when('/payment-success', {
+        templateUrl: 'app/views/payment-success.html',
+        controller: 'PaymentSuccessController'
+      })
+      .when('/payment-cancel', {
+        templateUrl: 'app/views/payment-cancel.html',
+        controller: 'PaymentCancelController'
+      })
       .otherwise({
         redirectTo: '/'
       });

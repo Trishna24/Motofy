@@ -273,18 +273,29 @@ angular.module('motofyApp')
         totalAmount: vm.bookingData.totalAmount
       };
       
+      // Create payment session first
+      var paymentData = {
+        bookingData: bookingData,
+        successUrl: $window.location.origin + '/#/payment-success',
+        cancelUrl: $window.location.origin + '/#/payment-cancel'
+      };
+      
       vm.bookingData.creating = true;
       
-      ApiService.createBooking(bookingData, token)
+      ApiService.createPaymentSession(paymentData, token)
         .then(function(response) {
           vm.bookingData.creating = false;
-          alert('Booking created successfully! Redirecting to bookings page...');
-          $location.path('/bookings');
+          if (response.data.success && response.data.sessionUrl) {
+            // Redirect to Stripe checkout
+            $window.location.href = response.data.sessionUrl;
+          } else {
+            alert('Error creating payment session: ' + (response.data.message || 'Unknown error'));
+          }
         })
         .catch(function(error) {
           vm.bookingData.creating = false;
-          console.error('Error creating booking:', error);
-          alert('Failed to create booking. Please try again.');
+          console.error('Payment session error:', error);
+          alert('Error creating payment session. Please try again.');
         });
     };
     
