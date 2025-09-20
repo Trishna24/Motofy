@@ -15,7 +15,7 @@ angular.module('motofyApp')
       if (filename.startsWith('http')) {
         return filename; // Already a full URL
       }
-      return 'https://motofy-l5gq.onrender.com/uploads/car-images/' + filename;
+      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + filename;
     };
     
     // Car listing data

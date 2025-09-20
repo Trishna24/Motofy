@@ -20,7 +20,7 @@ angular.module('motofyApp')
       if (imagePath.startsWith('http')) {
         return imagePath;
       }
-      return 'https://motofy-l5gq.onrender.com/uploads/car-images/' + imagePath;
+      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + imagePath;
     };
 
     // Fetch user bookings on load

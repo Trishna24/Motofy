@@ -16,7 +16,7 @@ angular.module('motofyApp')
 
 
     vm.imageUrl = function(filename) {
-      return 'https://motofy-l5gq.onrender.com/uploads/car-images/' + filename;
+      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + filename;
     };
     vm.toggleView = function() {
       if (vm.viewMode === 'list') {
