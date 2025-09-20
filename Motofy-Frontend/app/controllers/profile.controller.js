@@ -41,7 +41,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'GET',
-            url: 'http://localhost:5000/api/profile',
+            url: 'https://motofy-l5gq.onrender.com/api/profile',
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -144,7 +144,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
 
         $http({
             method: 'PUT',
-            url: 'http://localhost:5000/api/profile',
+            url: 'https://motofy-l5gq.onrender.com/api/profile',
             data: formData,
             headers: {
                 'Authorization': 'Bearer ' + token,
@@ -285,7 +285,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             return $scope.profile.profilePicturePreview;
         }
         if (profilePicture) {
-            return 'http://localhost:5000/uploads/profile-pictures/' + profilePicture;
+            return 'https://motofy-l5gq.onrender.com/uploads/profile-pictures/' + profilePicture;
         }
         return '/assets/images/default-avatar.svg';
     };
@@ -293,7 +293,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
     // Get driving license URL
     $scope.profile.getDrivingLicenseUrl = function(drivingLicense) {
         if (drivingLicense) {
-            return 'http://localhost:5000/uploads/driving-licenses/' + drivingLicense;
+            return 'https://motofy-l5gq.onrender.com/uploads/driving-licenses/' + drivingLicense;
         }
         return null;
     };
@@ -344,7 +344,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'PUT',
-            url: 'http://localhost:5000/api/profile/change-password',
+            url: 'https://motofy-l5gq.onrender.com/api/profile/change-password',
             data: {
                 currentPassword: $scope.profile.passwordData.currentPassword,
                 newPassword: $scope.profile.passwordData.newPassword
@@ -388,7 +388,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'PUT',
-            url: 'http://localhost:5000/api/profile/deactivate',
+            url: 'https://motofy-l5gq.onrender.com/api/profile/deactivate',
             headers: {
                 'Authorization': 'Bearer ' + token
             }

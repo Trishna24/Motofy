@@ -20,7 +20,7 @@ const app = express();
 // Middlewares
 // Allow all origins for development only
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "",
   credentials: true,
 }));
 

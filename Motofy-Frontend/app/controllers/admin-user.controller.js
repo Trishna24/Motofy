@@ -263,7 +263,7 @@ angular.module('motofyApp')
     // License handling methods for admin
     vm.getLicenseUrl = function(licenseFileName) {
       if (!licenseFileName) return '';
-      return 'http://localhost:5000/uploads/driving-licenses/' + licenseFileName;
+      return 'https://motofy-l5gq.onrender.com/uploads/driving-licenses/' + licenseFileName;
     };
     
     vm.getLicenseFileName = function(licenseFileName) {
@@ -281,7 +281,7 @@ angular.module('motofyApp')
     // Profile picture handling method for admin
     vm.getProfilePictureUrl = function(profilePicture) {
       if (!profilePicture) return 'assets/images/default-avatar.svg';
-      return 'http://localhost:5000/uploads/profile-pictures/' + profilePicture;
+      return 'https://motofy-l5gq.onrender.com/uploads/profile-pictures/' + profilePicture;
     };
     
     vm.downloadLicense = function(user) {

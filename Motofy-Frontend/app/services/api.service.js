@@ -4,7 +4,7 @@
 angular.module('motofyApp')
   .factory('ApiService', ['$http', function($http) {
     // Change this to your backend URL if needed
-    var BASE_URL = 'http://localhost:5000/api';
+    var BASE_URL = 'https://motofy-l5gq.onrender.com/api';
 
     return {
       // Example: User login

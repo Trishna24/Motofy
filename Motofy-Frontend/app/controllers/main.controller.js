@@ -218,7 +218,7 @@ angular.module('motofyApp')
       if (filename.startsWith('http')) {
         return filename; // Already a full URL
       }
-      return 'http://localhost:5000/uploads/' + filename;
+      return 'https://motofy-l5gq.onrender.com/uploads/car-images/' + imageName;
     };
     
     // Initialize cars
