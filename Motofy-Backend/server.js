@@ -18,9 +18,12 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-// Allow all origins for development only
+// Allow specific Vercel origins
 app.use(cors({
-  origin: "https://motofy-tau.vercel.app/#/",
+  origin: [
+    "https://motofy-tau.vercel.app",
+    "https://motofy-q4sttdxby-trishnas-projects-5abdc8ba.vercel.app"
+  ],
   credentials: true,
 }));
 
