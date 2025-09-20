@@ -20,7 +20,7 @@ const app = express();
 // Middlewares
 // Allow all origins for development only
 app.use(cors({
-  origin: "",
+  origin: "https://motofy-tau.vercel.app/#/",
   credentials: true,
 }));
 
