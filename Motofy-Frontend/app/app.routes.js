@@ -7,8 +7,9 @@ angular.module('motofyApp')
     
     $routeProvider
       .when('/', {
-        templateUrl: 'app/views/main.html',
-        controller: 'MainController'
+        templateUrl: 'app/views/home.html',
+        controller: 'MainController',
+        controllerAs: 'main'
       })
       .when('/login', {
         templateUrl: 'app/views/login.html',
