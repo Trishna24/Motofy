@@ -86,8 +86,10 @@ const handlePaymentSuccess = async (req, res) => {
 const verifyPaymentSession = async (req, res) => {
   try {
     const { sessionId } = req.params;
+    console.log('🔍 Payment verification started for session:', sessionId);
 
     if (!sessionId) {
+      console.log('❌ No session ID provided');
       return res.status(400).json({ 
         success: false, 
         message: 'Session ID is required' 
@@ -95,17 +97,34 @@ const verifyPaymentSession = async (req, res) => {
     }
 
     // Retrieve session from Stripe
+    console.log('📞 Retrieving session from Stripe...');
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+    console.log('✅ Stripe session retrieved:', {
+      id: session.id,
+      payment_status: session.payment_status,
+      amount_total: session.amount_total,
+      metadata: session.metadata
+    });
     
     if (session.payment_status === 'paid') {
+      console.log('💳 Payment confirmed as paid, looking for existing booking...');
+      
       // Find the booking created for this session
       let booking = await Booking.findOne({ stripeSessionId: sessionId })
         .populate('car user');
 
+      if (booking) {
+        console.log('✅ Existing booking found:', booking._id);
+      } else {
+        console.log('⚠️ No existing booking found, creating fallback booking...');
+      }
+
       // If booking doesn't exist, create it (fallback for webhook failures)
       if (!booking) {
         try {
+          console.log('📝 Parsing booking data from session metadata...');
           const bookingData = JSON.parse(session.metadata.bookingData);
+          console.log('📋 Booking data parsed:', bookingData);
           
           booking = new Booking({
             ...bookingData,
@@ -114,20 +133,28 @@ const verifyPaymentSession = async (req, res) => {
             totalAmount: session.amount_total / 100 // Convert from paisa to rupees
           });
 
+          console.log('💾 Saving new booking...');
           await booking.save();
           await booking.populate('car user');
           
-          console.log('Booking created via payment verification fallback:', booking._id);
+          console.log('✅ Booking created via payment verification fallback:', booking._id);
         } catch (createError) {
-          console.error('Error creating booking in verification fallback:', createError);
+          console.error('❌ Error creating booking in verification fallback:', createError);
+          console.error('📊 Session metadata:', session.metadata);
           return res.status(500).json({ 
             success: false, 
-            message: 'Payment successful but booking creation failed. Please contact support.' 
+            message: 'Payment successful but booking creation failed. Please contact support.',
+            debug: {
+              error: createError.message,
+              sessionId: sessionId,
+              metadata: session.metadata
+            }
           });
         }
       }
 
       if (booking) {
+        console.log('🎉 Returning successful booking details');
         res.status(200).json({ 
           success: true, 
           bookingDetails: {
@@ -141,22 +168,33 @@ const verifyPaymentSession = async (req, res) => {
           }
         });
       } else {
+        console.log('❌ Booking still not found after creation attempt');
         res.status(404).json({ 
           success: false, 
           message: 'Booking not found for this session' 
         });
       }
     } else {
+      console.log('❌ Payment not completed. Status:', session.payment_status);
       res.status(400).json({ 
         success: false, 
-        message: 'Payment not completed' 
+        message: `Payment not completed. Status: ${session.payment_status}` 
       });
     }
   } catch (error) {
-    console.error('Payment verification error:', error);
+    console.error('❌ Payment verification error:', error);
+    console.error('📊 Error details:', {
+      message: error.message,
+      stack: error.stack,
+      sessionId: req.params.sessionId
+    });
     res.status(500).json({ 
       success: false, 
-      message: 'Error verifying payment session' 
+      message: 'Error verifying payment session',
+      debug: {
+        error: error.message,
+        sessionId: req.params.sessionId
+      }
     });
   }
 };
