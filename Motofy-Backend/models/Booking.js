@@ -42,6 +42,10 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    stripeSessionId: {
+      type: String,
+      default: null,
+    },
     paymentMethod: {
       type: String,
       default: 'stripe',

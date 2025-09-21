@@ -17,6 +17,9 @@ dotenv.config();
 // App setup
 const app = express();
 
+// Trust proxy for Render deployment (fixes rate limiting and IP detection)
+app.set('trust proxy', true);
+
 // Middlewares
 // Allow specific Vercel origins
 app.use(cors({
@@ -67,7 +70,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
-
+app.get("/ping", (req, res) => {
+  res.json({ status: "UP", timestamp: Date.now() });
+});
 //payment
 app.use('/api/payment', paymentRoutes);
 

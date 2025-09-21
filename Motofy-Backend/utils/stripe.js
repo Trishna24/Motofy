@@ -12,7 +12,7 @@ const createStripeSession = async ({ bookingData, successUrl, cancelUrl }) => {
         price_data: {
           currency: 'inr',
           product_data: { 
-            name: `Car Booking - ${bookingData.location}`,
+            name: `Car Booking - ${bookingData.pickupLocation}`,
             description: `Pickup: ${new Date(bookingData.pickupDate).toLocaleDateString()} - Dropoff: ${new Date(bookingData.dropoffDate).toLocaleDateString()}`
           },
           unit_amount: Math.round(bookingData.totalAmount * 100), // ₹ to paisa

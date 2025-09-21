@@ -111,7 +111,7 @@ const verifyPaymentSession = async (req, res) => {
             totalAmount: booking.totalAmount,
             pickupDate: booking.pickupDate,
             dropoffDate: booking.dropoffDate,
-            location: booking.location,
+            location: booking.pickupLocation,
             paymentStatus: booking.paymentStatus
           }
         });

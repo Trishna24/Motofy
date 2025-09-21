@@ -31,7 +31,7 @@ const handleStripeWebhook = async (req, res) => {
         const booking = new Booking({
           ...bookingData,
           paymentStatus: 'paid',
-          paymentSessionId: session.id,
+          stripeSessionId: session.id,
           totalAmount: session.amount_total / 100 // Convert from paisa to rupees
         });
 
