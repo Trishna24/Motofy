@@ -323,6 +323,18 @@ angular.module('motofyApp')
       
       return days > 0 ? days : 0;
     };
+
+    // Get full days for display
+    vm.getFullDays = function() {
+      var totalHours = vm.getTotalHours();
+      return Math.floor(totalHours / 24);
+    };
+
+    // Get remaining hours for display
+    vm.getRemainingHours = function() {
+      var totalHours = vm.getTotalHours();
+      return totalHours % 24;
+    };
     
     // Book a car
     vm.bookCar = function() {

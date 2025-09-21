@@ -166,14 +166,14 @@
               Duration: {{car.getTotalHours()}} hours (charged as 1 day)
             </p>
             <p class="booking-info" ng-if="car.getTotalHours() > 24">
-              Duration: {{Math.floor(car.getTotalHours() / 24)}} day(s) + {{car.getTotalHours() % 24}} hour(s)
+              Duration: {{car.getFullDays()}} day(s) + {{car.getRemainingHours()}} hour(s)
             </p>
             <div class="price-calculation" ng-if="car.getTotalHours() <= 24">
               <span>1 day × ₹{{car.selectedCar.price}} = ₹{{car.selectedCar.price}}</span>
             </div>
             <div class="price-calculation" ng-if="car.getTotalHours() > 24">
-              <div>{{Math.floor(car.getTotalHours() / 24)}} day(s) × ₹{{car.selectedCar.price}} = ₹{{Math.floor(car.getTotalHours() / 24) * car.selectedCar.price}}</div>
-              <div ng-if="car.getTotalHours() % 24 > 0">{{car.getTotalHours() % 24}} hour(s) × ₹{{car.selectedCar.pricePerHour}} = ₹{{(car.getTotalHours() % 24) * car.selectedCar.pricePerHour}}</div>
+              <div>{{car.getFullDays()}} day(s) × ₹{{car.selectedCar.price}} = ₹{{car.getFullDays() * car.selectedCar.price}}</div>
+              <div ng-if="car.getRemainingHours() > 0">{{car.getRemainingHours()}} hour(s) × ₹{{car.selectedCar.pricePerHour}} = ₹{{car.getRemainingHours() * car.selectedCar.pricePerHour}}</div>
             </div>
           </div>
         </div>
@@ -183,8 +183,9 @@
               ng-disabled="!car.bookingData.totalAmount || car.bookingData.totalAmount <= 0 || 
                           !car.bookingData.pickupDate || !car.bookingData.dropoffDate || 
                           !car.bookingData.pickupTime || !car.bookingData.dropoffTime || 
-                          !car.bookingData.pickupLocation">
-        Book Now
+                          !car.bookingData.pickupLocation || car.loading">
+        <span ng-if="!car.loading">Book Now</span>
+        <span ng-if="car.loading">Processing...</span>
       </button>
     </form>
   </div>
