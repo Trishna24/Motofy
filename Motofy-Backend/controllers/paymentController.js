@@ -159,7 +159,7 @@ const verifyPaymentSession = async (req, res) => {
             }
           };
           console.log('📤 Sending booking creation error response:', JSON.stringify(errorResponse, null, 2));
-          res.status(500).json(errorResponse);
+          return res.status(500).json(errorResponse);
         }
       }
 
