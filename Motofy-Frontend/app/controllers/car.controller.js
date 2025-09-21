@@ -148,8 +148,11 @@ angular.module('motofyApp')
     // Filter cars based on search and filters
     vm.filterCars = function() {
       vm.filteredCars = vm.cars.filter(function(car) {
-        // Availability filter - only show available cars
-        var isAvailable = car.availability === true;
+        // Only apply availability filter on car listing page, not on car detail page
+        var isAvailable = true;
+        if ($location.path() === '/cars' || $location.path() === '/') {
+          isAvailable = car.availability === true;
+        }
         
         // Search term filter
         var matchesSearch = !vm.searchTerm || 
