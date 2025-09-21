@@ -8,6 +8,7 @@ const Car = require('../models/Car');
 const getAllCars = async (req, res) => {
   try {
     const jwt = require('jsonwebtoken');
+    const Booking = require('../models/Booking');
     
     // Check if user is authenticated
     const token = req.headers.authorization?.split(' ')[1];
@@ -28,8 +29,30 @@ const getAllCars = async (req, res) => {
     if (isAdmin) {
       cars = await Car.find();
     } else {
-      // For regular users, only show available cars
-      cars = await Car.find({ availability: true });
+      // For regular users, show cars based on real-time availability
+      // Get all cars first
+      const allCars = await Car.find();
+      
+      // Filter cars based on current confirmed bookings
+      const availableCars = [];
+      const currentDate = new Date();
+      
+      for (const car of allCars) {
+        // Check if car has any active confirmed bookings
+        const activeBooking = await Booking.findOne({
+          car: car._id,
+          status: 'Confirmed',
+          pickupDate: { $lte: currentDate },
+          dropoffDate: { $gte: currentDate }
+        });
+        
+        // If no active booking and car is marked as available, include it
+        if (!activeBooking && car.availability) {
+          availableCars.push(car);
+        }
+      }
+      
+      cars = availableCars;
     }
     
     res.json(cars);

@@ -11,19 +11,30 @@ const createBooking = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
+    // Create full datetime objects for accurate overlap checking
+    const newPickupDateTime = new Date(`${pickupDate}T${pickupTime || '00:00:00'}`);
+    const newDropoffDateTime = new Date(`${dropoffDate}T${dropoffTime || '23:59:59'}`);
+
     // Check for overlapping bookings for the same car
-    const overlappingBooking = await Booking.findOne({
+    const existingBookings = await Booking.find({
       car,
-      status: { $ne: 'Cancelled' },
-      $or: [
-        {
-          pickupDate: { $lte: new Date(dropoffDate) },
-          dropoffDate: { $gte: new Date(pickupDate) }
-        }
-      ]
+      status: { $ne: 'Cancelled' }
     });
-    if (overlappingBooking) {
-      return res.status(400).json({ success: false, message: 'Car is already booked for the selected dates.' });
+
+    // Check each existing booking for time overlap
+    for (const existingBooking of existingBookings) {
+      const existingPickupDateTime = new Date(`${existingBooking.pickupDate.toISOString().split('T')[0]}T${existingBooking.pickupTime || '00:00:00'}`);
+      const existingDropoffDateTime = new Date(`${existingBooking.dropoffDate.toISOString().split('T')[0]}T${existingBooking.dropoffTime || '23:59:59'}`);
+      
+      // Check for overlap: new booking starts before existing ends AND new booking ends after existing starts
+      const hasOverlap = (newPickupDateTime < existingDropoffDateTime) && (newDropoffDateTime > existingPickupDateTime);
+      
+      if (hasOverlap) {
+        return res.status(400).json({ 
+          success: false, 
+          message: `Car is already booked from ${existingPickupDateTime.toLocaleString()} to ${existingDropoffDateTime.toLocaleString()}. Please choose different dates/times.` 
+        });
+      }
     }
 
     const booking = new Booking({
@@ -35,9 +46,13 @@ const createBooking = async (req, res) => {
       dropoffTime,
       pickupLocation,
       totalAmount,
+      status: 'Pending' // Set initial status as Pending
     });
 
     await booking.save();
+
+    // Don't update car availability here - only when payment is confirmed
+    // Car availability will be updated in payment success handler
 
     res.status(201).json({ message: 'Booking created successfully', booking });
   } catch (error) {
