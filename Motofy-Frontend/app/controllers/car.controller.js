@@ -329,7 +329,7 @@ angular.module('motofyApp')
       if (!vm.selectedCar) return;
       
       // Check if user is logged in
-      var token = $window.localStorage.getItem('appToken');
+      var token = $window.localStorage.getItem('userToken') || $window.localStorage.getItem('adminToken');
       if (!token) {
         alert('Please log in to book a car');
         return;
