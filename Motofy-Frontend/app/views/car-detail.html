@@ -65,8 +65,38 @@
         
         <div class="form-group">
           <label for="pickupTime">Pickup Time</label>
-          <input type="time" id="pickupTime" ng-model="car.bookingData.pickupTime" 
-                 ng-change="car.calculateTotal()" required>
+          <div class="time-input-group">
+            <select id="pickupHour" ng-model="car.bookingData.pickupHour" 
+                    ng-change="car.updatePickupTime()" required>
+              <option value="">Hour</option>
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+            <select id="pickupMinute" ng-model="car.bookingData.pickupMinute" 
+                    ng-change="car.updatePickupTime()" required>
+              <option value="">Min</option>
+              <option value="00">00</option>
+              <option value="15">15</option>
+              <option value="30">30</option>
+              <option value="45">45</option>
+            </select>
+            <select id="pickupAmPm" ng-model="car.bookingData.pickupAmPm" 
+                    ng-change="car.updatePickupTime()" required>
+              <option value="">AM/PM</option>
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -79,8 +109,38 @@
         
         <div class="form-group">
           <label for="dropoffTime">Dropoff Time</label>
-          <input type="time" id="dropoffTime" ng-model="car.bookingData.dropoffTime" 
-                 ng-change="car.calculateTotal()" required>
+          <div class="time-input-group">
+            <select id="dropoffHour" ng-model="car.bookingData.dropoffHour" 
+                    ng-change="car.updateDropoffTime()" required>
+              <option value="">Hour</option>
+              <option value="01">01</option>
+              <option value="02">02</option>
+              <option value="03">03</option>
+              <option value="04">04</option>
+              <option value="05">05</option>
+              <option value="06">06</option>
+              <option value="07">07</option>
+              <option value="08">08</option>
+              <option value="09">09</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+            </select>
+            <select id="dropoffMinute" ng-model="car.bookingData.dropoffMinute" 
+                    ng-change="car.updateDropoffTime()" required>
+              <option value="">Min</option>
+              <option value="00">00</option>
+              <option value="15">15</option>
+              <option value="30">30</option>
+              <option value="45">45</option>
+            </select>
+            <select id="dropoffAmPm" ng-model="car.bookingData.dropoffAmPm" 
+                    ng-change="car.updateDropoffTime()" required>
+              <option value="">AM/PM</option>
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -292,6 +352,26 @@
   .form-group input:focus {
     outline: none;
     border-color: #7ed957;
+  }
+
+  .time-input-group {
+    display: flex;
+    gap: 10px;
+  }
+
+  .time-input-group select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: white;
+  }
+
+  .time-input-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   }
 
   .total-section {

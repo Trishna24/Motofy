@@ -43,6 +43,12 @@ angular.module('motofyApp')
       dropoffDate: '',
       pickupTime: '',
       dropoffTime: '',
+      pickupHour: '',
+      pickupMinute: '',
+      pickupAmPm: '',
+      dropoffHour: '',
+      dropoffMinute: '',
+      dropoffAmPm: '',
       pickupLocation: '',
       totalAmount: 0,
       creating: false
@@ -345,6 +351,36 @@ angular.module('motofyApp')
     // Go back to previous page
     vm.goBack = function() {
       $window.history.back();
+    };
+    
+    // Update pickup time from components
+    vm.updatePickupTime = function() {
+      if (vm.bookingData.pickupHour && vm.bookingData.pickupMinute && vm.bookingData.pickupAmPm) {
+        var hour = parseInt(vm.bookingData.pickupHour);
+        if (vm.bookingData.pickupAmPm === 'PM' && hour !== 12) {
+          hour += 12;
+        } else if (vm.bookingData.pickupAmPm === 'AM' && hour === 12) {
+          hour = 0;
+        }
+        var timeString = (hour < 10 ? '0' : '') + hour + ':' + vm.bookingData.pickupMinute;
+        vm.bookingData.pickupTime = timeString;
+        vm.calculateTotal();
+      }
+    };
+    
+    // Update dropoff time from components
+    vm.updateDropoffTime = function() {
+      if (vm.bookingData.dropoffHour && vm.bookingData.dropoffMinute && vm.bookingData.dropoffAmPm) {
+        var hour = parseInt(vm.bookingData.dropoffHour);
+        if (vm.bookingData.dropoffAmPm === 'PM' && hour !== 12) {
+          hour += 12;
+        } else if (vm.bookingData.dropoffAmPm === 'AM' && hour === 12) {
+          hour = 0;
+        }
+        var timeString = (hour < 10 ? '0' : '') + hour + ':' + vm.bookingData.dropoffMinute;
+        vm.bookingData.dropoffTime = timeString;
+        vm.calculateTotal();
+      }
     };
     
     // Initialize
