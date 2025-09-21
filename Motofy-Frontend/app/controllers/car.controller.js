@@ -41,6 +41,8 @@ angular.module('motofyApp')
     vm.bookingData = {
       pickupDate: '',
       dropoffDate: '',
+      pickupTime: '',
+      dropoffTime: '',
       pickupLocation: '',
       totalAmount: 0,
       creating: false
@@ -210,14 +212,27 @@ angular.module('motofyApp')
     
     // Calculate booking total
     vm.calculateTotal = function() {
-      if (!vm.selectedCar || !vm.bookingData.pickupDate || !vm.bookingData.dropoffDate) {
+      if (!vm.selectedCar || !vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
+          !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime) {
         vm.bookingData.totalAmount = 0;
         return;
       }
       
-      var pickup = new Date(vm.bookingData.pickupDate);
-      var dropoff = new Date(vm.bookingData.dropoffDate);
-      var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
+      var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
+      var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
+      
+      // Calculate hours difference
+      var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);
+      
+      // If same date and time, minimum 1 day
+      var days;
+      if (hoursDiff <= 0) {
+        days = 1;
+      } else if (hoursDiff <= 24) {
+        days = 1; // Same day or within 24 hours = 1 day
+      } else {
+        days = Math.ceil(hoursDiff / 24); // Round up to next day
+      }
       
       if (days > 0) {
         vm.bookingData.totalAmount = days * vm.selectedCar.price;
@@ -228,13 +243,26 @@ angular.module('motofyApp')
     
     // Calculate days for display
     vm.calculateDays = function() {
-      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate) {
+      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
+          !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime) {
         return 0;
       }
       
-      var pickup = new Date(vm.bookingData.pickupDate);
-      var dropoff = new Date(vm.bookingData.dropoffDate);
-      var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
+      var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
+      var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
+      
+      // Calculate hours difference
+      var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);
+      
+      // If same date and time, minimum 1 day
+      var days;
+      if (hoursDiff <= 0) {
+        days = 1;
+      } else if (hoursDiff <= 24) {
+        days = 1; // Same day or within 24 hours = 1 day
+      } else {
+        days = Math.ceil(hoursDiff / 24); // Round up to next day
+      }
       
       return days > 0 ? days : 0;
     };
@@ -251,16 +279,18 @@ angular.module('motofyApp')
       }
       
       // Validate booking data
-      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || !vm.bookingData.pickupLocation) {
-        alert('Please fill in all booking details');
+      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
+          !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime || 
+          !vm.bookingData.pickupLocation) {
+        alert('Please fill in all booking details including pickup and dropoff times');
         return;
       }
       
-      var pickup = new Date(vm.bookingData.pickupDate);
-      var dropoff = new Date(vm.bookingData.dropoffDate);
+      var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
+      var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
       
       if (pickup >= dropoff) {
-        alert('Dropoff date must be after pickup date');
+        alert('Dropoff date and time must be after pickup date and time');
         return;
       }
       
@@ -269,6 +299,8 @@ angular.module('motofyApp')
         car: vm.selectedCar._id,
         pickupDate: vm.bookingData.pickupDate,
         dropoffDate: vm.bookingData.dropoffDate,
+        pickupTime: vm.bookingData.pickupTime,
+        dropoffTime: vm.bookingData.dropoffTime,
         pickupLocation: vm.bookingData.pickupLocation,
         totalAmount: vm.bookingData.totalAmount
       };

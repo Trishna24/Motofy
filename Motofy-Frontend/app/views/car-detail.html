@@ -64,8 +64,22 @@
         </div>
         
         <div class="form-group">
+          <label for="pickupTime">Pickup Time</label>
+          <input type="time" id="pickupTime" ng-model="car.bookingData.pickupTime" 
+                 ng-change="car.calculateTotal()" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
           <label for="dropoffDate">Dropoff Date</label>
           <input type="date" id="dropoffDate" ng-model="car.bookingData.dropoffDate" 
+                 ng-change="car.calculateTotal()" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="dropoffTime">Dropoff Time</label>
+          <input type="time" id="dropoffTime" ng-model="car.bookingData.dropoffTime" 
                  ng-change="car.calculateTotal()" required>
         </div>
       </div>

@@ -610,7 +610,7 @@
                     <td>{{booking.pickupDate | date:'dd MMM yyyy, h:mm a'}}</td>
                     <td>{{booking.dropoffDate | date:'dd MMM yyyy, h:mm a'}}</td>
                     <td>{{booking.pickupLocation}}</td>
-                    <td>{{adminUser.calculateDuration(booking.pickupDate, booking.dropoffDate)}} days</td>
+                    <td>{{adminUser.calculateDuration(booking.pickupDate, booking.dropoffDate, booking.pickupTime, booking.dropoffTime)}} days</td>
                     <td>₹{{booking.totalAmount}}</td>
                     <td>
                       <span class="status-badge" ng-class="{
@@ -803,7 +803,9 @@
                 <h4>Booking Details</h4>
                 <div class="detail-row">
                   <span class="detail-label">Pickup Date:</span>
-                  <span class="detail-value">{{adminBooking.selectedBooking.pickupDate | date:'medium'}}</span>
+                  <span class="detail-value">{{adminBooking.selectedBooking.pickupDate | date:'dd MMM yyyy'}}
+                    <span ng-if="adminBooking.selectedBooking.pickupTime"> at {{adminBooking.selectedBooking.pickupTime}}</span>
+                  </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Pickup Location:</span>
@@ -811,7 +813,9 @@
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Return Date:</span>
-                  <span class="detail-value">{{adminBooking.selectedBooking.dropoffDate | date:'medium'}}</span>
+                  <span class="detail-value">{{adminBooking.selectedBooking.dropoffDate | date:'dd MMM yyyy'}}
+                    <span ng-if="adminBooking.selectedBooking.dropoffTime"> at {{adminBooking.selectedBooking.dropoffTime}}</span>
+                  </span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Return Location:</span>

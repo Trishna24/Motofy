@@ -291,10 +291,32 @@ angular.module('motofyApp')
     };
     
     // Calculate booking duration in days
-    vm.calculateDuration = function(pickupDate, dropoffDate) {
-      var pickup = new Date(pickupDate);
-      var dropoff = new Date(dropoffDate);
-      var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
+    vm.calculateDuration = function(pickupDate, dropoffDate, pickupTime, dropoffTime) {
+      // If time is not provided, use the old calculation for backward compatibility
+      if (!pickupTime || !dropoffTime) {
+        var pickup = new Date(pickupDate);
+        var dropoff = new Date(dropoffDate);
+        var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
+        return days > 0 ? days : 0;
+      }
+      
+      // New time-aware calculation
+      var pickup = new Date(pickupDate + 'T' + pickupTime);
+      var dropoff = new Date(dropoffDate + 'T' + dropoffTime);
+      
+      // Calculate hours difference
+      var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);
+      
+      // If same date and time, minimum 1 day
+      var days;
+      if (hoursDiff <= 0) {
+        days = 1;
+      } else if (hoursDiff <= 24) {
+        days = 1; // Same day or within 24 hours = 1 day
+      } else {
+        days = Math.ceil(hoursDiff / 24); // Round up to next day
+      }
+      
       return days > 0 ? days : 0;
     };
     

@@ -5,7 +5,7 @@ const Car = require('../models/Car');
 // @desc   Create a new booking
 const createBooking = async (req, res) => {
   try {
-    const { car, pickupDate, dropoffDate, pickupLocation, totalAmount } = req.body;
+    const { car, pickupDate, dropoffDate, pickupTime, dropoffTime, pickupLocation, totalAmount } = req.body;
 
     if (!car || !pickupDate || !dropoffDate || !pickupLocation || !totalAmount) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -31,6 +31,8 @@ const createBooking = async (req, res) => {
       car,
       pickupDate,
       dropoffDate,
+      pickupTime,
+      dropoffTime,
       pickupLocation,
       totalAmount,
     });
@@ -122,6 +124,19 @@ const updateBookingStatus = async (req, res) => {
     }
     
     const oldStatus = booking.status;
+    
+    // Prevent confirming cancelled bookings after the booking date has passed
+    if (status === 'Confirmed' && oldStatus === 'Cancelled') {
+      const currentDate = new Date();
+      const bookingDate = new Date(booking.pickupDate);
+      
+      // If the booking date has passed, don't allow confirmation
+      if (currentDate > bookingDate) {
+        return res.status(400).json({ 
+          message: 'Cannot confirm a cancelled booking after the pickup date has passed' 
+        });
+      }
+    }
     booking.status = status;
     await booking.save();
     

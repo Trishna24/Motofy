@@ -23,6 +23,37 @@ angular.module('motofyApp')
       return 'https://motofy-l5gq.onrender.com/uploads/cars/' + imagePath;
     };
 
+    // Calculate duration between pickup and dropoff dates with time support
+    vm.calculateDuration = function(pickupDate, dropoffDate, pickupTime, dropoffTime) {
+      if (!pickupDate || !dropoffDate) {
+        return 0;
+      }
+
+      var pickup, dropoff;
+
+      // If times are provided, combine date and time for accurate calculation
+      if (pickupTime && dropoffTime) {
+        pickup = new Date(pickupDate + 'T' + pickupTime);
+        dropoff = new Date(dropoffDate + 'T' + dropoffTime);
+        
+        // Calculate difference in hours
+        var diffInMs = dropoff - pickup;
+        var diffInHours = diffInMs / (1000 * 60 * 60);
+        
+        // Convert to days (round up for partial days)
+        return Math.ceil(diffInHours / 24);
+      } else {
+        // Fallback to date-only calculation for backward compatibility
+        pickup = new Date(pickupDate);
+        dropoff = new Date(dropoffDate);
+        
+        var diffInMs = dropoff - pickup;
+        var diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+        
+        return Math.ceil(diffInDays);
+      }
+    };
+
     // Fetch user bookings on load
     function loadBookings() {
       var token = $window.localStorage.getItem('appToken');
