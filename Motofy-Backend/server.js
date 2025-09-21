@@ -18,7 +18,8 @@ dotenv.config();
 const app = express();
 
 // Trust proxy for Render deployment (fixes rate limiting and IP detection)
-app.set('trust proxy', true);
+// Use specific proxy count instead of 'true' for better security
+app.set('trust proxy', 1);
 
 // Middlewares
 // Allow specific Vercel origins

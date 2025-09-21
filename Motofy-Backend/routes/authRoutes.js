@@ -40,6 +40,9 @@ const authLimiter = rateLimit({
   message: { success: false, message: 'Too many attempts, please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    trustProxy: false, // Disable trust proxy validation since we handle it at app level
+  },
 });
 
 router.post('/google-login', googleLogin);
