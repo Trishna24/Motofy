@@ -192,7 +192,7 @@ const verifyPaymentSession = async (req, res) => {
             dropoffDate: new Date(bookingData.dropoffDate),
             pickupLocation: bookingData.pickupLocation,
             totalAmount: bookingData.totalAmount,
-            paymentStatus: 'completed',
+            paymentStatus: 'paid',
             stripeSessionId: sessionId,
             bookingDate: new Date()
           });
