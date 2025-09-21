@@ -212,7 +212,19 @@ angular.module('motofyApp')
       
       // Verify payment session and get booking details
       verifyPaymentSession: function(sessionId) {
-        return $http.get(BASE_URL + '/payment/verify-session/' + sessionId);
+        console.log('🔗 Making API call to verify payment session');
+        console.log('🎯 Session ID:', sessionId);
+        console.log('🌐 API URL:', BASE_URL + '/payment/verify-session/' + sessionId);
+        
+        return $http.get(BASE_URL + '/payment/verify-session/' + sessionId)
+          .then(function(response) {
+            console.log('✅ API call successful:', response);
+            return response;
+          })
+          .catch(function(error) {
+            console.error('❌ API call failed:', error);
+            throw error;
+          });
       }
     };
   }]);
