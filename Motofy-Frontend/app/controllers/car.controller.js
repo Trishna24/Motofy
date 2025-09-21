@@ -148,6 +148,9 @@ angular.module('motofyApp')
     // Filter cars based on search and filters
     vm.filterCars = function() {
       vm.filteredCars = vm.cars.filter(function(car) {
+        // Availability filter - only show available cars
+        var isAvailable = car.availability === true;
+        
         // Search term filter
         var matchesSearch = !vm.searchTerm || 
           car.name.toLowerCase().includes(vm.searchTerm.toLowerCase()) ||
@@ -172,7 +175,7 @@ angular.module('motofyApp')
         // Price filter
         var matchesPrice = !vm.maxPrice || car.price <= vm.maxPrice;
         
-        var result = matchesSearch && matchesBrand && matchesFuel && matchesTransmission && matchesSeats && matchesPrice;
+        var result = isAvailable && matchesSearch && matchesBrand && matchesFuel && matchesTransmission && matchesSeats && matchesPrice;
         
         return result;
       });

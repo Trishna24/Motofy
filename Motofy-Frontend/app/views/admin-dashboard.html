@@ -804,7 +804,7 @@
                 <div class="detail-row">
                   <span class="detail-label">Pickup Date:</span>
                   <span class="detail-value">{{adminBooking.selectedBooking.pickupDate | date:'dd MMM yyyy'}}
-                    <span ng-if="adminBooking.selectedBooking.pickupTime"> at {{adminBooking.selectedBooking.pickupTime}}</span>
+                    <span ng-if="adminBooking.selectedBooking.pickupTime"> at {{adminBooking.selectedBooking.pickupTime | date:'h:mm a'}}</span>
                   </span>
                 </div>
                 <div class="detail-row">
@@ -814,7 +814,7 @@
                 <div class="detail-row">
                   <span class="detail-label">Return Date:</span>
                   <span class="detail-value">{{adminBooking.selectedBooking.dropoffDate | date:'dd MMM yyyy'}}
-                    <span ng-if="adminBooking.selectedBooking.dropoffTime"> at {{adminBooking.selectedBooking.dropoffTime}}</span>
+                    <span ng-if="adminBooking.selectedBooking.dropoffTime"> at {{adminBooking.selectedBooking.dropoffTime | date:'h:mm a'}}</span>
                   </span>
                 </div>
                 <div class="detail-row">

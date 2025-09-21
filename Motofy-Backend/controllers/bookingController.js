@@ -85,8 +85,28 @@ const cancelBooking = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
+    const oldStatus = booking.status;
     booking.status = 'Cancelled';
     await booking.save();
+
+    // Update car availability when booking is cancelled
+    if (oldStatus === 'Confirmed') {
+      const car = await Car.findById(booking.car);
+      if (car) {
+        // Check if there are other confirmed bookings for this car
+        const otherConfirmedBookings = await Booking.countDocuments({
+          car: booking.car,
+          status: 'Confirmed',
+          _id: { $ne: booking._id }
+        });
+        
+        // If no other confirmed bookings, make car available
+        if (otherConfirmedBookings === 0) {
+          car.availability = true;
+          await car.save();
+        }
+      }
+    }
 
     res.json({ message: 'Booking cancelled' });
   } catch (error) {
