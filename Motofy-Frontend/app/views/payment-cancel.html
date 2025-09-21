@@ -90,27 +90,58 @@
 <style>
 .payment-failed-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 25%, #991b1b 50%, #7f1d1d 100%);
+  background-size: 400% 400%;
+  animation: backgroundShift 8s ease-in-out infinite;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.payment-failed-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="car-pattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M10 25h30l5-5h10l5 5v10l-5 5H15l-5-5z" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/><circle cx="20" cy="35" r="3" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/><circle cx="40" cy="35" r="3" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23car-pattern)"/></svg>') repeat;
+  opacity: 0.1;
+  animation: patternMove 20s linear infinite;
 }
 
 .payment-failed-card {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
   max-width: 700px;
   width: 100%;
   overflow: hidden;
   position: relative;
+  border: 1px solid rgba(220, 38, 38, 0.1);
+}
+
+.payment-failed-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #dc2626, #f59e0b, #dc2626);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
 }
 
 .payment-state {
   padding: 3rem 2rem;
   text-align: center;
+  position: relative;
 }
 
 .failed-animation {
@@ -125,7 +156,8 @@
 .failed-icon {
   width: 80px;
   height: 80px;
-  animation: shake 0.8s ease-in-out;
+  animation: carShake 1s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(220, 38, 38, 0.3));
 }
 
 .failed-particles {
@@ -139,28 +171,33 @@
 
 .particle {
   position: absolute;
-  width: 6px;
-  height: 6px;
-  background: #ef4444;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(45deg, #dc2626, #f59e0b);
   border-radius: 50%;
-  animation: particleFloat 2s ease-out infinite;
+  animation: exhaustParticle 2.5s ease-out infinite;
+  box-shadow: 0 0 6px rgba(220, 38, 38, 0.5);
 }
 
 .particle:nth-child(1) { left: 20%; animation-delay: 0s; }
-.particle:nth-child(2) { left: 40%; animation-delay: 0.4s; }
-.particle:nth-child(3) { left: 60%; animation-delay: 0.8s; }
-.particle:nth-child(4) { left: 80%; animation-delay: 1.2s; }
-.particle:nth-child(5) { left: 50%; animation-delay: 1.6s; }
+.particle:nth-child(2) { left: 40%; animation-delay: 0.5s; }
+.particle:nth-child(3) { left: 60%; animation-delay: 1s; }
+.particle:nth-child(4) { left: 80%; animation-delay: 1.5s; }
+.particle:nth-child(5) { left: 50%; animation-delay: 2s; }
 
 .state-title {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   margin-bottom: 1rem;
   color: #1f2937;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .failed-title {
-  color: #ef4444;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .state-message {
@@ -168,15 +205,30 @@
   color: #6b7280;
   margin-bottom: 2rem;
   line-height: 1.6;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .failure-reasons-card, .next-steps-card {
-  background: #f8fafc;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #fef2f2, #fef7ed);
+  border-radius: 16px;
   padding: 1.5rem;
   margin: 1.5rem 0;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(220, 38, 38, 0.1);
   text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.failure-reasons-card::before, .next-steps-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #dc2626, #f59e0b);
 }
 
 .reasons-header, .steps-header {
@@ -184,48 +236,64 @@
 }
 
 .reasons-header h3, .steps-header h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 700;
   color: #1f2937;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .reasons-list, .steps-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .reason-item, .step-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(220, 38, 38, 0.05);
+}
+
+.reason-item:hover, .step-item:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
 }
 
 .reason-icon {
-  font-size: 1.2rem;
-  width: 24px;
+  font-size: 1.4rem;
+  width: 32px;
   text-align: center;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .reason-text, .step-text {
-  color: #4b5563;
-  font-weight: 500;
+  color: #374151;
+  font-weight: 600;
+  flex: 1;
 }
 
 .step-number {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
   color: white;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   flex-shrink: 0;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
 }
 
 .action-buttons {
@@ -233,80 +301,147 @@
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn-primary {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
   color: white;
+  box-shadow: 0 8px 16px rgba(220, 38, 38, 0.3);
 }
 
 .btn-primary:hover {
-  background: #2563eb;
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(220, 38, 38, 0.4);
 }
 
 .btn-secondary {
-  background: #6b7280;
+  background: linear-gradient(135deg, #6b7280, #4b5563);
   color: white;
+  box-shadow: 0 8px 16px rgba(107, 114, 128, 0.3);
 }
 
 .btn-secondary:hover {
-  background: #4b5563;
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #4b5563, #374151);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(107, 114, 128, 0.4);
 }
 
 .btn-outline {
-  background: transparent;
-  color: #3b82f6;
-  border: 2px solid #3b82f6;
+  background: rgba(255, 255, 255, 0.9);
+  color: #dc2626;
+  border: 2px solid #dc2626;
+  backdrop-filter: blur(10px);
 }
 
 .btn-outline:hover {
-  background: #3b82f6;
+  background: #dc2626;
   color: white;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(220, 38, 38, 0.3);
 }
 
 .btn-icon {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 .reassurance-note {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+  border-radius: 12px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  position: relative;
+}
+
+.reassurance-note::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #22c55e, #16a34a);
+  border-radius: 2px;
 }
 
 .reassurance-note p {
-  color: #6b7280;
-  font-size: 0.9rem;
+  color: #166534;
+  font-size: 1rem;
   margin: 0;
+  font-weight: 600;
+  padding-left: 1rem;
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+@keyframes carShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-3px) rotate(-1deg); }
+  75% { transform: translateX(3px) rotate(1deg); }
 }
 
-@keyframes particleFloat {
-  0% { transform: translateY(0) scale(1); opacity: 1; }
-  50% { transform: translateY(-20px) scale(0.8); opacity: 0.7; }
-  100% { transform: translateY(-40px) scale(0.5); opacity: 0; }
+@keyframes exhaustParticle {
+  0% { 
+    transform: translateY(0) scale(1) rotate(0deg); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: translateY(-30px) scale(0.8) rotate(180deg); 
+    opacity: 0.7; 
+  }
+  100% { 
+    transform: translateY(-60px) scale(0.3) rotate(360deg); 
+    opacity: 0; 
+  }
+}
+
+@keyframes backgroundShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes patternMove {
+  0% { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(50px) translateY(50px); }
 }
 
 @media (max-width: 768px) {
@@ -319,20 +454,31 @@
   }
   
   .state-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
   
   .action-buttons {
     flex-direction: column;
+    gap: 0.75rem;
   }
   
   .btn {
     width: 100%;
     justify-content: center;
+    padding: 1rem 1.5rem;
   }
   
   .failure-reasons-card, .next-steps-card {
-    padding: 1rem;
+    padding: 1.25rem;
+    margin: 1rem 0;
+  }
+  
+  .reason-item, .step-item {
+    padding: 0.75rem;
+  }
+  
+  .reasons-header h3, .steps-header h3 {
+    font-size: 1.1rem;
   }
 }
 </style>

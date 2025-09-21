@@ -110,51 +110,85 @@
 <style>
 .payment-success-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.payment-success-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.2) 0%, transparent 50%);
+  animation: backgroundShift 20s ease-in-out infinite;
 }
 
 .payment-success-card {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  max-width: 650px;
   width: 100%;
   overflow: hidden;
   position: relative;
+  z-index: 1;
+}
+
+.payment-success-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #ff7730, #7ed957, #4a90e2, #ff7730);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
 }
 
 .payment-state {
-  padding: 3rem 2rem;
+  padding: 3.5rem 2.5rem;
   text-align: center;
 }
 
 .success-animation {
   position: relative;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 120px;
+  height: 140px;
 }
 
 .success-icon, .error-icon {
-  width: 80px;
-  height: 80px;
-  animation: scaleIn 0.6s ease-out;
+  width: 90px;
+  height: 90px;
+  animation: scaleInBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  filter: drop-shadow(0 10px 20px rgba(16, 185, 129, 0.3));
 }
 
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 4px solid #e5e7eb;
-  border-top: 4px solid #3b82f6;
+  width: 70px;
+  height: 70px;
+  border: 5px solid rgba(59, 130, 246, 0.1);
+  border-top: 5px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  filter: drop-shadow(0 5px 15px rgba(59, 130, 246, 0.3));
 }
 
 .success-confetti {
@@ -168,71 +202,107 @@
 
 .confetti-piece {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background: #10b981;
-  animation: confetti 3s ease-out infinite;
+  border-radius: 2px;
+  animation: confetti 4s ease-out infinite;
 }
 
-.confetti-piece:nth-child(1) { left: 10%; animation-delay: 0s; background: #f59e0b; }
-.confetti-piece:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #ef4444; }
-.confetti-piece:nth-child(3) { left: 30%; animation-delay: 1s; background: #8b5cf6; }
-.confetti-piece:nth-child(4) { left: 70%; animation-delay: 0.3s; background: #06b6d4; }
-.confetti-piece:nth-child(5) { left: 80%; animation-delay: 0.8s; background: #10b981; }
-.confetti-piece:nth-child(6) { left: 90%; animation-delay: 1.2s; background: #f97316; }
+.confetti-piece:nth-child(1) { left: 10%; animation-delay: 0s; background: #ff7730; transform: rotate(45deg); }
+.confetti-piece:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #7ed957; transform: rotate(90deg); }
+.confetti-piece:nth-child(3) { left: 30%; animation-delay: 1s; background: #4a90e2; transform: rotate(135deg); }
+.confetti-piece:nth-child(4) { left: 70%; animation-delay: 0.3s; background: #ff6b6b; transform: rotate(180deg); }
+.confetti-piece:nth-child(5) { left: 80%; animation-delay: 0.8s; background: #10b981; transform: rotate(225deg); }
+.confetti-piece:nth-child(6) { left: 90%; animation-delay: 1.2s; background: #ffd93d; transform: rotate(270deg); }
 
 .state-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
   color: #1f2937;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .success-title {
-  color: #10b981;
+  background: linear-gradient(135deg, #10b981, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .error-title {
-  color: #f59e0b;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .state-message {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: #6b7280;
-  margin-bottom: 2rem;
-  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
+  font-weight: 500;
 }
 
 .booking-details-card {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-  border: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2.5rem 0;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.booking-details-card::before {
+  content: '🚗';
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  font-size: 2rem;
+  background: white;
+  padding: 8px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .details-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
 }
 
 .details-header h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: #1f2937;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .details-grid {
   display: grid;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .detail-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.6);
+  transition: all 0.2s ease;
+}
+
+.detail-item:hover {
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 -1rem;
+  padding: 1rem;
+  border-radius: 8px;
 }
 
 .detail-item:last-child {
@@ -240,14 +310,176 @@
 }
 
 .detail-label {
-  font-weight: 500;
+  font-weight: 600;
   color: #6b7280;
+  font-size: 0.95rem;
 }
 
 .detail-value {
-  font-weight: 600;
+  font-weight: 700;
   color: #1f2937;
+  font-size: 1rem;
 }
+
+.detail-value.amount {
+  background: linear-gradient(135deg, #10b981, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  font-size: 1rem;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+  box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #4b5563, #374151);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(107, 114, 128, 0.4);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+
+.confirmation-note {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(229, 231, 235, 0.6);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
+.confirmation-note p {
+  color: #059669;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes scaleInBounce {
+  0% { transform: scale(0) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(180deg); }
+  100% { transform: scale(1) rotate(360deg); }
+}
+
+@keyframes confetti {
+  0% { 
+    transform: translateY(-120px) rotate(0deg); 
+    opacity: 1; 
+  }
+  100% { 
+    transform: translateY(120px) rotate(720deg); 
+    opacity: 0; 
+  }
+}
+
+@keyframes backgroundShift {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(-20px) translateY(-10px); }
+  50% { transform: translateX(20px) translateY(10px); }
+  75% { transform: translateX(-10px) translateY(20px); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (max-width: 768px) {
+  .payment-success-container {
+    padding: 1rem;
+  }
+  
+  .payment-state {
+    padding: 2.5rem 1.8rem;
+  }
+  
+  .state-title {
+    font-size: 1.8rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .booking-details-card {
+    padding: 1.5rem;
+  }
+}
+</style>
 
 .detail-value.amount {
   color: #10b981;
