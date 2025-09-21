@@ -242,21 +242,23 @@ angular.module('motofyApp')
       // Calculate hours difference
       var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);
       
-      // If same date and time, minimum 1 day
-      var days;
+      // Minimum 1 hour booking
       if (hoursDiff <= 0) {
-        days = 1;
-      } else if (hoursDiff <= 24) {
-        days = 1; // Same day or within 24 hours = 1 day
-      } else {
-        days = Math.ceil(hoursDiff / 24); // Round up to next day
+        hoursDiff = 1;
       }
       
-      if (days > 0) {
-        vm.bookingData.totalAmount = days * vm.selectedCar.price;
-      } else {
-        vm.bookingData.totalAmount = 0;
+      // Calculate total based on hourly rate
+      // Assuming car price is per day (24 hours), calculate hourly rate
+      var hourlyRate = vm.selectedCar.price / 24;
+      var totalAmount = Math.ceil(hoursDiff) * hourlyRate;
+      
+      // If booking is for more than 24 hours, use daily rate
+      if (hoursDiff > 24) {
+        var days = Math.ceil(hoursDiff / 24);
+        totalAmount = days * vm.selectedCar.price;
       }
+      
+      vm.bookingData.totalAmount = Math.round(totalAmount);
     };
     
     // Calculate days for display
@@ -373,7 +375,7 @@ angular.module('motofyApp')
         } else if (vm.bookingData.pickupAmPm === 'AM' && hour === 12) {
           hour = 0;
         }
-        var timeString = (hour < 10 ? '0' : '') + hour + ':' + vm.bookingData.pickupMinute;
+        var timeString = (hour < 10 ? '0' : '') + hour + ':' + vm.bookingData.pickupMinute + ':00';
         vm.bookingData.pickupTime = timeString;
         vm.calculateTotal();
       }
@@ -388,7 +390,7 @@ angular.module('motofyApp')
         } else if (vm.bookingData.dropoffAmPm === 'AM' && hour === 12) {
           hour = 0;
         }
-        var timeString = (hour < 10 ? '0' : '') + hour + ':' + vm.bookingData.dropoffMinute;
+        var timeString = (hour < 10 ? '0' : '') + hour + ':' + vm.bookingData.dropoffMinute + ':00';
         vm.bookingData.dropoffTime = timeString;
         vm.calculateTotal();
       }
