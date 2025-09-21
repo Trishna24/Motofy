@@ -84,9 +84,15 @@ const handlePaymentSuccess = async (req, res) => {
 
 // @desc    Verify payment session and get booking details
 const verifyPaymentSession = async (req, res) => {
+  console.log('🚀 PAYMENT VERIFICATION FUNCTION STARTED');
+  console.log('📊 Environment check - STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
+  console.log('📊 Environment check - STRIPE_SECRET_KEY length:', process.env.STRIPE_SECRET_KEY ? process.env.STRIPE_SECRET_KEY.length : 0);
+  
   try {
     const { sessionId } = req.params;
     console.log('🔍 Payment verification started for session:', sessionId);
+    console.log('📊 Request params:', req.params);
+    console.log('📊 Request URL:', req.url);
 
     // Prevent caching to ensure fresh responses
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -104,10 +110,15 @@ const verifyPaymentSession = async (req, res) => {
       return res.status(400).json(errorResponse);
     }
 
+    // Check Stripe configuration
+    console.log('🔧 Stripe instance check:', !!stripe);
+    console.log('🔧 About to call Stripe API...');
+
     // Retrieve session from Stripe
     console.log('📞 Retrieving session from Stripe...');
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    console.log('✅ Stripe session retrieved:', {
+    console.log('✅ Stripe session retrieved successfully!');
+    console.log('✅ Stripe session details:', {
       id: session.id,
       payment_status: session.payment_status,
       amount_total: session.amount_total,
