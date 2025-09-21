@@ -2,7 +2,7 @@
 // BookingController: Fetches and displays current user's bookings
 
 angular.module('motofyApp')
-  .controller('BookingController', ['ApiService', 'AppConfig', '$window', '$scope', function(ApiService, AppConfig, $window, $scope) {
+  .controller('BookingController', ['ApiService', '$window', '$scope', function(ApiService, $window, $scope) {
     var vm = this;
     vm.bookings = [];
     vm.loading = true;
@@ -20,7 +20,7 @@ angular.module('motofyApp')
       if (imagePath.startsWith('http')) {
         return imagePath;
       }
-      return AppConfig.API.BASE_URL + '/uploads/cars/' + imagePath;
+      return 'https://motofy-l5gq.onrender.com' + '/uploads/cars/' + imagePath;
     };
 
     // Calculate duration between pickup and dropoff dates with time support

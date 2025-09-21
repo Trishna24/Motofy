@@ -8,8 +8,7 @@ angular.module('motofyApp')
     $routeProvider
       .when('/', {
         templateUrl: 'app/views/home.html',
-        controller: 'MainController',
-        controllerAs: 'main'
+        controller: 'MainController'
       })
       .when('/login', {
         templateUrl: 'app/views/login.html',
@@ -20,19 +19,19 @@ angular.module('motofyApp')
         controller: 'RegisterController'
       })
       .when('/cars', {
-        templateUrl: 'app/views/cars.html',
+        templateUrl: 'app/views/car-list.html',
         controller: 'CarController'
       })
       .when('/car/:id', {
         templateUrl: 'app/views/car-detail.html',
-        controller: 'CarDetailController'
+        controller: 'CarController'
       })
       .when('/profile', {
         templateUrl: 'app/views/profile.html',
         controller: 'ProfileController'
       })
       .when('/bookings', {
-        templateUrl: 'app/views/bookings.html',
+        templateUrl: 'app/views/booking.html',
         controller: 'BookingController'
       })
       .when('/payment/success', {
@@ -44,23 +43,23 @@ angular.module('motofyApp')
         controller: 'PaymentCancelController'
       })
       .when('/admin/login', {
-        templateUrl: 'app/views/admin/login.html',
+        templateUrl: 'app/views/admin-login.html',
         controller: 'AdminLoginController'
       })
       .when('/admin/dashboard', {
-        templateUrl: 'app/views/admin/dashboard.html',
+        templateUrl: 'app/views/admin-dashboard.html',
         controller: 'AdminDashboardController'
       })
       .when('/admin/cars', {
-        templateUrl: 'app/views/admin/cars.html',
+        templateUrl: 'app/views/admin-dashboard.html',
         controller: 'AdminCarController'
       })
       .when('/admin/bookings', {
-        templateUrl: 'app/views/admin/bookings.html',
+        templateUrl: 'app/views/admin-dashboard.html',
         controller: 'AdminBookingController'
       })
       .when('/admin/users', {
-        templateUrl: 'app/views/admin/users.html',
+        templateUrl: 'app/views/admin-dashboard.html',
         controller: 'AdminUserController'
       })
       .otherwise({

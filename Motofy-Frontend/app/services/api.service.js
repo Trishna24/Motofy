@@ -2,11 +2,10 @@
 // Shared AngularJS service for backend API calls
 
 angular.module('motofyApp')
-  .factory('ApiService', ['$http', 'AppConfig', function($http, AppConfig) {
-    // ApiService loaded
-    
+  .factory('ApiService', ['$http', function($http) {
+    console.log('ApiService loaded');
     var service = {};
-    var BASE_URL = AppConfig.API.BASE_URL;
+    var BASE_URL = 'https://motofy-l5gq.onrender.com';
 
     return {
       // Example: User login
@@ -51,6 +50,14 @@ angular.module('motofyApp')
           headers['Authorization'] = 'Bearer ' + token;
         }
         return $http.get(BASE_URL + '/cars', { headers: headers });
+      },
+      getCarById: function(carId) {
+        var token = window.localStorage.getItem('userToken') || window.localStorage.getItem('adminToken');
+        var headers = {};
+        if (token) {
+          headers['Authorization'] = 'Bearer ' + token;
+        }
+        return $http.get(BASE_URL + '/cars/' + carId, { headers: headers });
       },
       addCar: function(formData) {
         var adminToken = window.localStorage.getItem('adminToken');

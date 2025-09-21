@@ -14,16 +14,6 @@ angular.module('motofyApp')
       vm.error = '';
       vm.success = '';
       
-      // Gmail validation - only validate if loginInput is an email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (emailRegex.test(vm.loginData.loginInput)) {
-        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-        if (!gmailRegex.test(vm.loginData.loginInput)) {
-          vm.error = 'Invalid Email. Please use a Gmail ID.';
-          return;
-        }
-      }
-      
       ApiService.login(vm.loginData)
         .then(function(response) {
           // Store token and update UI
@@ -73,6 +63,46 @@ angular.module('motofyApp')
         })
         .catch(function(err) {
           vm.error = (err.data && err.data.message) ? err.data.message : 'Signup failed. Please try again.';
+        });
+    };
+  }])
+  .controller('LoginController', ['ApiService', '$window', '$location', function(ApiService, $window, $location) {
+    var vm = this;
+    vm.credentials = {};
+    vm.error = '';
+    
+    vm.login = function() {
+      vm.error = '';
+      
+      ApiService.login(vm.credentials)
+        .then(function(response) {
+          $window.localStorage.setItem('appToken', response.data.appToken);
+          $location.path('/');
+        })
+        .catch(function(err) {
+          vm.error = (err.data && err.data.message) ? err.data.message : 'Login failed. Please try again.';
+        });
+    };
+  }])
+  .controller('RegisterController', ['ApiService', '$window', '$location', function(ApiService, $window, $location) {
+    var vm = this;
+    vm.userData = {};
+    vm.error = '';
+    vm.success = '';
+    
+    vm.register = function() {
+      vm.error = '';
+      vm.success = '';
+      
+      ApiService.signup(vm.userData)
+        .then(function(response) {
+          vm.success = 'Registration successful! Please login.';
+          setTimeout(function() {
+            $location.path('/login');
+          }, 2000);
+        })
+        .catch(function(err) {
+          vm.error = (err.data && err.data.message) ? err.data.message : 'Registration failed. Please try again.';
         });
     };
   }]);
