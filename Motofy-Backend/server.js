@@ -31,6 +31,9 @@ app.use(cors({
     "https://motofy-nvup49oa2-trishnas-projects-5abdc8ba.vercel.app"
   ],
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
 }));
 
 // Webhook routes MUST come before JSON body parser
