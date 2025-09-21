@@ -27,6 +27,11 @@ angular.module('motofyApp')
             console.log('🔍 Response headers:', response.headers);
             console.log('🔍 Full response object keys:', Object.keys(response));
             
+            // Log each key-value pair to understand the response structure
+            Object.keys(response).forEach(function(key) {
+              console.log('🔍 Response.' + key + ':', response[key]);
+            });
+            
             // Check if response.data exists and has the expected structure
             if (response.data && response.data.success) {
               console.log('✅ Payment verification successful');
