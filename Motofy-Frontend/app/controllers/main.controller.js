@@ -2,7 +2,7 @@
 // MainController: Handles global app logic
 
 angular.module('motofyApp')
-  .controller('MainController', ['$window', '$location', '$timeout', '$scope', '$rootScope', 'ApiService', function($window, $location, $timeout, $scope, $rootScope, ApiService) {
+  .controller('MainController', ['$window', '$location', '$timeout', '$scope', '$rootScope', 'ApiService', 'AppConfig', function($window, $location, $timeout, $scope, $rootScope, ApiService, AppConfig) {
     var vm = this;
 
     // Dropdown state
@@ -218,7 +218,7 @@ angular.module('motofyApp')
       if (filename.startsWith('http')) {
         return filename; // Already a full URL
       }
-      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + filename;
+      return AppConfig.API.BASE_URL + '/uploads/cars/' + filename;
     };
     
     // Initialize cars

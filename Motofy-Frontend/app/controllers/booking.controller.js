@@ -2,7 +2,7 @@
 // BookingController: Fetches and displays current user's bookings
 
 angular.module('motofyApp')
-  .controller('BookingController', ['ApiService', '$window', '$scope', function(ApiService, $window, $scope) {
+  .controller('BookingController', ['ApiService', 'AppConfig', '$window', '$scope', function(ApiService, AppConfig, $window, $scope) {
     var vm = this;
     vm.bookings = [];
     vm.loading = true;
@@ -20,7 +20,7 @@ angular.module('motofyApp')
       if (imagePath.startsWith('http')) {
         return imagePath;
       }
-      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + imagePath;
+      return AppConfig.API.BASE_URL + '/uploads/cars/' + imagePath;
     };
 
     // Calculate duration between pickup and dropoff dates with time support
@@ -57,18 +57,18 @@ angular.module('motofyApp')
     // Fetch user bookings on load
     function loadBookings() {
       var token = $window.localStorage.getItem('appToken');
-      console.log('🔑 Token found:', token ? 'Yes' : 'No');
+      // Token found check
       if (!token) {
         vm.loading = false;
         vm.error = 'You must be logged in to view your bookings.';
         return;
       }
-      console.log('📞 Calling getUserBookings API...');
+      // Calling getUserBookings API
       ApiService.getUserBookings(token)
         .then(function(response) {
-          console.log('✅ API Response:', response.data);
+          // API Response received
           vm.bookings = response.data;
-          console.log('📋 Total bookings loaded:', vm.bookings.length);
+          // Total bookings loaded count
           // Ensure each booking has an image URL
           vm.bookings.forEach(function(booking) {
             if (booking.car && !booking.car.imageUrl) {

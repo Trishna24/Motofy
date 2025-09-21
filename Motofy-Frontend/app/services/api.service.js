@@ -2,9 +2,11 @@
 // Shared AngularJS service for backend API calls
 
 angular.module('motofyApp')
-  .factory('ApiService', ['$http', function($http) {
-    // Change this to your backend URL if needed
-    var BASE_URL = 'https://motofy-l5gq.onrender.com/api';
+  .factory('ApiService', ['$http', 'AppConfig', function($http, AppConfig) {
+    // ApiService loaded
+    
+    var service = {};
+    var BASE_URL = AppConfig.API.BASE_URL;
 
     return {
       // Example: User login
@@ -212,17 +214,16 @@ angular.module('motofyApp')
       
       // Verify payment session and get booking details
       verifyPaymentSession: function(sessionId) {
-        console.log('🔗 Making API call to verify payment session');
-        console.log('🎯 Session ID:', sessionId);
-        console.log('🌐 API URL:', BASE_URL + '/payment/verify-session/' + sessionId);
+        // Making API call to verify payment session
+        // Session ID and API URL logging
         
         return $http.get(BASE_URL + '/payment/verify-session/' + sessionId)
           .then(function(response) {
-            console.log('✅ API call successful:', response);
+            // API call successful
             return response;
           })
           .catch(function(error) {
-            console.error('❌ API call failed:', error);
+            console.error('Payment verification error:', error);
             throw error;
           });
       }

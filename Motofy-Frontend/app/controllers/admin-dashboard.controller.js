@@ -1,7 +1,7 @@
 // app/controllers/admin-dashboard.controller.js
 angular.module('motofyApp')
   .controller('AdminDashboardController', ['$scope', 'ApiService', '$window', '$location', function($scope, ApiService, $window, $location) {
-    console.log('📊 AdminDashboardController loaded successfully!');
+    // AdminDashboardController loaded successfully
     var vm = this;
 
     // Admin data
@@ -42,7 +42,7 @@ angular.module('motofyApp')
 
     // Function to change section
     vm.showSection = function(section) {
-      console.log('🔄 Switching to section:', section);
+      // Switching to section
       vm.activeSection = section;
       
       // Auto-refresh data based on section

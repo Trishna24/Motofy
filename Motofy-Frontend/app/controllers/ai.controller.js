@@ -1,97 +1,117 @@
 angular.module('motofyApp')
-  .controller('AIController', ['ApiService', '$timeout', function(ApiService, $timeout) {
-    console.log("✅ AIController loaded");
-
-    var vm = this;
-    vm.chatOpen = false;
-    vm.input = '';
-    vm.messages = [];
-    vm.loading = false;
-
-    // Array of dynamic welcome messages
-    var welcomeMessages = [
-      'Hey there! 👋 Welcome to Motofy AI! Ready to find your perfect ride? 🚗✨',
-      'Hello! 🌟 I\'m your Motofy AI Assistant! Let\'s get you rolling with the best car deals! 🚙💨',
-      'Welcome aboard! 🎉 Your personal car rental expert is here! What adventure are we planning today? 🗺️🚗',
-      'Hi! 🤖 Motofy AI at your service! From budget cars to luxury rides - I\'ve got you covered! 💎🚘',
-      'Greetings! 🌈 Ready to explore amazing cars? Let\'s make your journey unforgettable! 🛣️✨'
-    ];
-
-    vm.toggleChat = function() {
-      vm.chatOpen = !vm.chatOpen;
-      if (vm.chatOpen) {
-        // Send dynamic welcome message if this is the first time opening chat
-        if (vm.messages.length === 0) {
-          vm.sendDynamicWelcome();
-        }
-        $timeout(scrollToBottom, 100);
-      }
+  .controller('AIController', ['$scope', 'ApiService', function($scope, ApiService) {
+    // AIController loaded
+    
+    $scope.ai = {
+      messages: [],
+      newMessage: '',
+      isLoading: false,
+      isVisible: false
     };
-
-    // Function to send dynamic welcome messages with typing effect
-    vm.sendDynamicWelcome = function() {
-      var randomMessage = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+    
+    // Initialize with a welcome message
+    $scope.ai.messages.push({
+      text: "Hello! I'm your Motofy AI assistant. How can I help you today?",
+      isUser: false,
+      timestamp: new Date()
+    });
+    
+    $scope.toggleAI = function() {
+      $scope.ai.isVisible = !$scope.ai.isVisible;
+    };
+    
+    $scope.closeAI = function() {
+      $scope.ai.isVisible = false;
+    };
+    
+    $scope.sendMessage = function() {
+      if (!$scope.ai.newMessage.trim()) return;
       
-      // Add typing indicator first
-      vm.messages.push({ 
-        sender: 'bot', 
-        text: '🤖 AI is typing...', 
-        isTyping: true 
+      // Add user message
+      $scope.ai.messages.push({
+        text: $scope.ai.newMessage,
+        isUser: true,
+        timestamp: new Date()
       });
-      scrollToBottom();
       
-      // Replace typing indicator with actual message after delay
-      $timeout(function() {
-        vm.messages[vm.messages.length - 1] = {
-          sender: 'bot',
-          text: randomMessage,
-          isTyping: false
-        };
-        scrollToBottom();
-        
-        // Add a follow-up message after another delay
-        $timeout(function() {
-          vm.messages.push({
-            sender: 'bot',
-            text: 'Type your question below and I\'ll help you instantly! 💬⚡'
-          });
-          scrollToBottom();
-        }, 1500);
-      }, 2000);
-    };
-
-    vm.sendMessage = function($event) {
-      if ($event) $event.preventDefault();
-      console.log("📩 sendMessage() triggered");
-
-      if (!vm.input || !vm.input.trim()) return;
-
-      vm.messages.push({ sender: 'user', text: vm.input });
-      scrollToBottom();
-
-      var userInput = vm.input;
-      vm.input = '';
-      vm.loading = true;
-
-      ApiService.askAI({ message: userInput })
+      var userMessage = $scope.ai.newMessage;
+      $scope.ai.newMessage = '';
+      $scope.ai.isLoading = true;
+      
+      // Add typing indicator
+      var typingMessage = {
+        text: 'AI is typing...',
+        isUser: false,
+        isTyping: true,
+        timestamp: new Date()
+      };
+      $scope.ai.messages.push(typingMessage);
+      
+      // Scroll to bottom
+      setTimeout(function() {
+        var chatContainer = document.querySelector('.ai-chat-messages');
+        if (chatContainer) {
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+      }, 100);
+      
+      // Send message to API
+      // sendMessage() triggered
+      ApiService.sendAIMessage(userMessage)
         .then(function(res) {
-          console.log("API Response:", res.data);
-          vm.messages.push({ sender: 'bot', text: res.data.reply || 'No response.' });
-          vm.loading = false;
-          scrollToBottom();
+          // Remove typing indicator
+          var typingIndex = $scope.ai.messages.indexOf(typingMessage);
+          if (typingIndex > -1) {
+            $scope.ai.messages.splice(typingIndex, 1);
+          }
+          
+          // API Response received
+          if (res.data && res.data.response) {
+            $scope.ai.messages.push({
+              text: res.data.response,
+              isUser: false,
+              timestamp: new Date()
+            });
+          } else {
+            $scope.ai.messages.push({
+              text: "I'm sorry, I couldn't process your request right now. Please try again.",
+              isUser: false,
+              timestamp: new Date()
+            });
+          }
+          
+          $scope.ai.isLoading = false;
+          
+          // Scroll to bottom after response
+          setTimeout(function() {
+            var chatContainer = document.querySelector('.ai-chat-messages');
+            if (chatContainer) {
+              chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+          }, 100);
         })
-        .catch(function(err) {
-          console.error("AI Error:", err);
-          vm.messages.push({ sender: 'bot', text: 'Sorry, there was an error. Please try again.' });
-          vm.loading = false;
-          scrollToBottom();
+        .catch(function(error) {
+          // Remove typing indicator
+          var typingIndex = $scope.ai.messages.indexOf(typingMessage);
+          if (typingIndex > -1) {
+            $scope.ai.messages.splice(typingIndex, 1);
+          }
+          
+          $scope.ai.messages.push({
+            text: "Sorry, I'm having trouble connecting right now. Please try again later.",
+            isUser: false,
+            timestamp: new Date()
+          });
+          
+          $scope.ai.isLoading = false;
         });
     };
-
-    function scrollToBottom() {
-      $timeout(function() {
-        var el = document.getElementById('aiChatMessages');
-        if (el) el.scrollTop = el.scrollHeight;
-      }, 50);
-    }
+    
+    // Handle Enter key press
+    $scope.handleKeyPress = function(event) {
+      if (event.keyCode === 13 && !event.shiftKey) {
+        event.preventDefault();
+        $scope.sendMessage();
+      }
+    };
   }]);

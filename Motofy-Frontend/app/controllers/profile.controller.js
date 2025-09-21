@@ -1,5 +1,5 @@
 // app/controllers/profile.controller.js
-angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', '$location', '$timeout', function($scope, $http, $location, $timeout) {
+angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', '$location', 'AppConfig', '$timeout', function($scope, $http, $location, AppConfig, $timeout) {
     
     // Initialize profile object
     $scope.profile = {
@@ -41,7 +41,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'GET',
-            url: 'https://motofy-l5gq.onrender.com/api/profile',
+            url: AppConfig.API.BASE_URL + '/api/profile',
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -132,26 +132,26 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
 
         // Add files if selected
         if ($scope.profile.selectedProfilePicture) {
-            console.log('💾 Adding profile picture to FormData:', $scope.profile.selectedProfilePicture.name);
-            formData.append('profilePicture', $scope.profile.selectedProfilePicture);
+          // Adding profile picture to FormData
+          formData.append('profilePicture', $scope.profile.selectedProfilePicture);
         }
         if ($scope.profile.selectedLicense) {
-            console.log('💾 Adding license to FormData:', $scope.profile.selectedLicense.name);
-            formData.append('drivingLicense', $scope.profile.selectedLicense);
+          // Adding license to FormData
+          formData.append('drivingLicense', $scope.profile.selectedLicense);
         }
-
-        console.log('🚀 Sending profile update request to backend...');
+        
+        // Sending profile update request to backend
 
         $http({
             method: 'PUT',
-            url: 'https://motofy-l5gq.onrender.com/api/profile',
+            url: AppConfig.API.BASE_URL + '/api/profile',
             data: formData,
             headers: {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': undefined
             }
         }).then(function(response) {
-            console.log('✅ Profile update successful:', response.data);
+            // Profile update successful
             $scope.profile.user = response.data.user;
             $scope.profile.editMode = false;
             $scope.profile.loading = false;
@@ -206,10 +206,10 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
 
     // Handle profile picture selection
     $scope.profile.onProfilePictureSelect = function(files) {
-        console.log('📸 Profile picture selection triggered:', files);
+        // Profile picture selection triggered
         if (files && files.length > 0) {
             const file = files[0];
-            console.log('📸 Selected file:', file.name, 'Type:', file.type, 'Size:', file.size);
+            // Selected file validation
             
             // Validate file type
             if (!file.type.startsWith('image/')) {
@@ -224,7 +224,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             }
             
             $scope.profile.selectedProfilePicture = file;
-            console.log('📸 Profile picture stored successfully');
+            // Profile picture stored successfully
             
             // Create preview
             const reader = new FileReader();
@@ -245,10 +245,10 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
 
     // Handle driving license selection
     $scope.profile.onLicenseSelect = function(files) {
-        console.log('📄 License selection triggered:', files);
+        // License selection triggered
         if (files && files.length > 0) {
             const file = files[0];
-            console.log('📄 Selected license file:', file.name, 'Type:', file.type, 'Size:', file.size);
+            // Selected license file validation
             
             // Validate file type
             const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
@@ -264,7 +264,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             }
             
             $scope.profile.selectedLicense = file;
-            console.log('📄 License file stored successfully');
+            // License file stored successfully
             $scope.profile.success = 'License file selected: ' + file.name;
             
             // Clear success message after 3 seconds
@@ -285,7 +285,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             return $scope.profile.profilePicturePreview;
         }
         if (profilePicture) {
-            return 'https://motofy-l5gq.onrender.com/uploads/profile-pictures/' + profilePicture;
+            return AppConfig.API.BASE_URL + '/uploads/profile-pictures/' + profilePicture;
         }
         return '/assets/images/default-avatar.svg';
     };
@@ -293,7 +293,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
     // Get driving license URL
     $scope.profile.getDrivingLicenseUrl = function(drivingLicense) {
         if (drivingLicense) {
-            return 'https://motofy-l5gq.onrender.com/uploads/driving-licenses/' + drivingLicense;
+            return AppConfig.API.BASE_URL + '/uploads/driving-licenses/' + drivingLicense;
         }
         return null;
     };
@@ -344,7 +344,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'PUT',
-            url: 'https://motofy-l5gq.onrender.com/api/profile/change-password',
+            url: AppConfig.API.BASE_URL + '/api/profile/change-password',
             data: {
                 currentPassword: $scope.profile.passwordData.currentPassword,
                 newPassword: $scope.profile.passwordData.newPassword
@@ -388,7 +388,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'PUT',
-            url: 'https://motofy-l5gq.onrender.com/api/profile/deactivate',
+            url: AppConfig.API.BASE_URL + '/api/profile/deactivate',
             headers: {
                 'Authorization': 'Bearer ' + token
             }

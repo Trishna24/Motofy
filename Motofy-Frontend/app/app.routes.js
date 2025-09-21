@@ -3,63 +3,69 @@
 
 angular.module('motofyApp')
   .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-    console.log('🔧 Setting up AngularJS routes...');
-    
-    // Use hash mode for better compatibility
-    $locationProvider.hashPrefix('');
+    // Setting up AngularJS routes
     
     $routeProvider
       .when('/', {
-        templateUrl: 'app/views/home.html',
-        controller: 'MainController',
-        controllerAs: 'main'
+        templateUrl: 'app/views/main.html',
+        controller: 'MainController'
+      })
+      .when('/login', {
+        templateUrl: 'app/views/login.html',
+        controller: 'LoginController'
+      })
+      .when('/register', {
+        templateUrl: 'app/views/register.html',
+        controller: 'RegisterController'
       })
       .when('/cars', {
-        templateUrl: 'app/views/car-list.html',
-        controller: 'CarController',
-        controllerAs: 'car'
+        templateUrl: 'app/views/cars.html',
+        controller: 'CarController'
       })
-      .when('/cars/:id', {
+      .when('/car/:id', {
         templateUrl: 'app/views/car-detail.html',
-        controller: 'CarController',
-        controllerAs: 'car'
-      })
-      .when('/bookings', {
-        templateUrl: 'app/views/booking.html',
-        controller: 'BookingController',
-        controllerAs: 'booking'
-      })
-      .when('/admin/login', {
-        templateUrl: 'app/views/admin-login.html',
-        controller: 'AdminLoginController',
-        controllerAs: 'adminLogin'
-      })
-      .when('/admin/dashboard', {
-        templateUrl: 'app/views/admin-dashboard.html',
-        controller: 'AdminDashboardController',
-        controllerAs: 'adminDashboard'
-      })
-      .when('/ai-chat', {
-        templateUrl: 'app/views/ai-chat.html',
-        controller: 'AIController',
-        controllerAs: 'ai'
+        controller: 'CarDetailController'
       })
       .when('/profile', {
         templateUrl: 'app/views/profile.html',
         controller: 'ProfileController'
       })
-      .when('/payment-success', {
+      .when('/bookings', {
+        templateUrl: 'app/views/bookings.html',
+        controller: 'BookingController'
+      })
+      .when('/payment/success', {
         templateUrl: 'app/views/payment-success.html',
         controller: 'PaymentSuccessController'
       })
-      .when('/payment-cancel', {
+      .when('/payment/cancel', {
         templateUrl: 'app/views/payment-cancel.html',
         controller: 'PaymentCancelController'
+      })
+      .when('/admin/login', {
+        templateUrl: 'app/views/admin/login.html',
+        controller: 'AdminLoginController'
+      })
+      .when('/admin/dashboard', {
+        templateUrl: 'app/views/admin/dashboard.html',
+        controller: 'AdminDashboardController'
+      })
+      .when('/admin/cars', {
+        templateUrl: 'app/views/admin/cars.html',
+        controller: 'AdminCarController'
+      })
+      .when('/admin/bookings', {
+        templateUrl: 'app/views/admin/bookings.html',
+        controller: 'AdminBookingController'
+      })
+      .when('/admin/users', {
+        templateUrl: 'app/views/admin/users.html',
+        controller: 'AdminUserController'
       })
       .otherwise({
         redirectTo: '/'
       });
-      
-      
-    console.log('✅ Routes configured successfully');
+    
+    // Routes configured successfully
+    $locationProvider.hashPrefix('');
   }]);

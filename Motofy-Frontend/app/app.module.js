@@ -1,20 +1,20 @@
 // app/app.module.js
 // Main AngularJS module for Motofy
  
-angular.module('motofyApp', ['ngRoute', 'ngFileUpload'])
-  .run(['$rootScope', function($rootScope) {
-    console.log('🚀 MotofyApp module loaded successfully!');
+angular.module('motofyApp', ['ngRoute'])
+  .run(['$rootScope', '$location', function($rootScope, $location) {
+    // MotofyApp module loaded successfully
     
-    // Debug route changes
+    // Route change event handlers
     $rootScope.$on('$routeChangeStart', function(event, next, current) {
-      console.log('🔄 Route change starting:', next ? next.originalPath : 'unknown');
+      // Route change starting
     });
     
     $rootScope.$on('$routeChangeSuccess', function(event, current, previous) {
-      console.log('✅ Route change successful:', current ? current.originalPath : 'unknown');
+      // Route change successful
     });
     
     $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
-      console.log('❌ Route change error:', rejection);
+      // Route change error
     });
   }]);
