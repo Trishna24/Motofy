@@ -22,7 +22,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Middlewares
-// Allow specific Vercel origins
+// Allow specific Vercel origins and catch-all for Vercel preview deployments
 app.use(cors({
   origin: [
     "https://motofy-tau.vercel.app",

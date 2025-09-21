@@ -90,10 +90,13 @@ const verifyPaymentSession = async (req, res) => {
 
     if (!sessionId) {
       console.log('❌ No session ID provided');
-      return res.status(400).json({ 
+      const errorResponse = { 
         success: false, 
         message: 'Session ID is required' 
-      });
+      };
+      console.log('📤 Sending session ID error response:', JSON.stringify(errorResponse, null, 2));
+      res.setHeader('Content-Type', 'application/json');
+      return res.status(400).json(errorResponse);
     }
 
     // Retrieve session from Stripe
@@ -141,7 +144,7 @@ const verifyPaymentSession = async (req, res) => {
         } catch (createError) {
           console.error('❌ Error creating booking in verification fallback:', createError);
           console.error('📊 Session metadata:', session.metadata);
-          return res.status(500).json({ 
+          const errorResponse = { 
             success: false, 
             message: 'Payment successful but booking creation failed. Please contact support.',
             debug: {
@@ -149,13 +152,16 @@ const verifyPaymentSession = async (req, res) => {
               sessionId: sessionId,
               metadata: session.metadata
             }
-          });
+          };
+          console.log('📤 Sending booking creation error response:', JSON.stringify(errorResponse, null, 2));
+          res.setHeader('Content-Type', 'application/json');
+          return res.status(500).json(errorResponse);
         }
       }
 
       if (booking) {
         console.log('🎉 Returning successful booking details');
-        res.status(200).json({ 
+        const responseData = { 
           success: true, 
           bookingDetails: {
             bookingId: booking._id,
@@ -166,20 +172,29 @@ const verifyPaymentSession = async (req, res) => {
             location: booking.pickupLocation,
             paymentStatus: booking.paymentStatus
           }
-        });
+        };
+        console.log('📤 Sending response data:', JSON.stringify(responseData, null, 2));
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).json(responseData);
       } else {
         console.log('❌ Booking still not found after creation attempt');
-        res.status(404).json({ 
+        const errorResponse = { 
           success: false, 
           message: 'Booking not found for this session' 
-        });
+        };
+        console.log('📤 Sending error response:', JSON.stringify(errorResponse, null, 2));
+        res.setHeader('Content-Type', 'application/json');
+        res.status(404).json(errorResponse);
       }
     } else {
       console.log('❌ Payment not completed. Status:', session.payment_status);
-      res.status(400).json({ 
+      const errorResponse = { 
         success: false, 
         message: `Payment not completed. Status: ${session.payment_status}` 
-      });
+      };
+      console.log('📤 Sending payment error response:', JSON.stringify(errorResponse, null, 2));
+      res.setHeader('Content-Type', 'application/json');
+      res.status(400).json(errorResponse);
     }
   } catch (error) {
     console.error('❌ Payment verification error:', error);
@@ -188,14 +203,17 @@ const verifyPaymentSession = async (req, res) => {
       stack: error.stack,
       sessionId: req.params.sessionId
     });
-    res.status(500).json({ 
+    const errorResponse = { 
       success: false, 
       message: 'Error verifying payment session',
       debug: {
         error: error.message,
         sessionId: req.params.sessionId
       }
-    });
+    };
+    console.log('📤 Sending catch error response:', JSON.stringify(errorResponse, null, 2));
+    res.setHeader('Content-Type', 'application/json');
+    res.status(500).json(errorResponse);
   }
 };
 
