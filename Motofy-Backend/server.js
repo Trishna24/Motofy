@@ -40,11 +40,13 @@ app.use(cors({
     "https://motofy-tau.vercel.app",
     "https://motofy-q4sttdxby-trishnas-projects-5abdc8ba.vercel.app",
     "https://motofy-da5w68hnp-trishnas-projects-5abdc8ba.vercel.app",
-    "https://motofy-nvup49oa2-trishnas-projects-5abdc8ba.vercel.app"
+    "https://motofy-nvup49oa2-trishnas-projects-5abdc8ba.vercel.app",
+    "http://localhost:8080", // Add localhost for development
+    "http://127.0.0.1:8080"
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Range'],
   optionsSuccessStatus: 200
 }));
 
@@ -55,7 +57,30 @@ app.use('/api/webhook', webhookRoutes);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Configure static file serving with proper range request handling
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  acceptRanges: true,
+  cacheControl: true,
+  etag: true,
+  lastModified: true,
+  maxAge: '1d', // Cache for 1 day
+  setHeaders: (res, path, stat) => {
+    // Set proper headers for file serving
+    res.setHeader('Accept-Ranges', 'bytes');
+    res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 day cache
+  }
+}));
+
+// Add error handling middleware for static file serving
+app.use('/uploads', (err, req, res, next) => {
+  if (err.status === 416) {
+    // Handle Range Not Satisfiable error
+    console.log('Range Not Satisfiable error for:', req.url);
+    res.status(200).sendFile(path.join(__dirname, 'uploads', req.url.replace('/uploads/', '')));
+  } else {
+    next(err);
+  }
+});
 
 //admin routes
 app.use('/api/admin', adminRoutes);
