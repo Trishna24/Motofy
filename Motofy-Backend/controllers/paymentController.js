@@ -88,6 +88,12 @@ const verifyPaymentSession = async (req, res) => {
     const { sessionId } = req.params;
     console.log('🔍 Payment verification started for session:', sessionId);
 
+    // Prevent caching to ensure fresh responses
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Content-Type', 'application/json');
+
     if (!sessionId) {
       console.log('❌ No session ID provided');
       const errorResponse = { 
@@ -95,7 +101,6 @@ const verifyPaymentSession = async (req, res) => {
         message: 'Session ID is required' 
       };
       console.log('📤 Sending session ID error response:', JSON.stringify(errorResponse, null, 2));
-      res.setHeader('Content-Type', 'application/json');
       return res.status(400).json(errorResponse);
     }
 
@@ -154,8 +159,7 @@ const verifyPaymentSession = async (req, res) => {
             }
           };
           console.log('📤 Sending booking creation error response:', JSON.stringify(errorResponse, null, 2));
-          res.setHeader('Content-Type', 'application/json');
-          return res.status(500).json(errorResponse);
+          res.status(500).json(errorResponse);
         }
       }
 
@@ -174,7 +178,6 @@ const verifyPaymentSession = async (req, res) => {
           }
         };
         console.log('📤 Sending response data:', JSON.stringify(responseData, null, 2));
-        res.setHeader('Content-Type', 'application/json');
         res.status(200).json(responseData);
       } else {
         console.log('❌ Booking still not found after creation attempt');
@@ -183,7 +186,6 @@ const verifyPaymentSession = async (req, res) => {
           message: 'Booking not found for this session' 
         };
         console.log('📤 Sending error response:', JSON.stringify(errorResponse, null, 2));
-        res.setHeader('Content-Type', 'application/json');
         res.status(404).json(errorResponse);
       }
     } else {
@@ -193,7 +195,6 @@ const verifyPaymentSession = async (req, res) => {
         message: `Payment not completed. Status: ${session.payment_status}` 
       };
       console.log('📤 Sending payment error response:', JSON.stringify(errorResponse, null, 2));
-      res.setHeader('Content-Type', 'application/json');
       res.status(400).json(errorResponse);
     }
   } catch (error) {
@@ -212,7 +213,6 @@ const verifyPaymentSession = async (req, res) => {
       }
     };
     console.log('📤 Sending catch error response:', JSON.stringify(errorResponse, null, 2));
-    res.setHeader('Content-Type', 'application/json');
     res.status(500).json(errorResponse);
   }
 };
