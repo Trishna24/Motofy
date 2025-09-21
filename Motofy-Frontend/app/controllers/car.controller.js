@@ -233,6 +233,12 @@ angular.module('motofyApp')
       var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
       var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
       
+      // Validate dates
+      if (isNaN(pickup.getTime()) || isNaN(dropoff.getTime())) {
+        vm.bookingData.totalAmount = 0;
+        return;
+      }
+      
       // Calculate hours difference
       var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);
       
@@ -262,6 +268,11 @@ angular.module('motofyApp')
       
       var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
       var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
+      
+      // Validate dates
+      if (isNaN(pickup.getTime()) || isNaN(dropoff.getTime())) {
+        return 0;
+      }
       
       // Calculate hours difference
       var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);

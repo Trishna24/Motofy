@@ -163,7 +163,11 @@
         </div>
       </div>
 
-      <button type="submit" class="book-now-btn" ng-disabled="!car.bookingData.totalAmount">
+      <button type="submit" class="book-now-btn" 
+              ng-disabled="!car.bookingData.totalAmount || car.bookingData.totalAmount <= 0 || 
+                          !car.bookingData.pickupDate || !car.bookingData.dropoffDate || 
+                          !car.bookingData.pickupTime || !car.bookingData.dropoffTime || 
+                          !car.bookingData.pickupLocation">
         Book Now
       </button>
     </form>
