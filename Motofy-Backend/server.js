@@ -36,14 +36,25 @@ app.use('/api', (req, res, next) => {
 
 // Allow specific Vercel origins and catch-all for Vercel preview deployments
 app.use(cors({
-  origin: [
-    "https://motofy-tau.vercel.app",
-    "https://motofy-q4sttdxby-trishnas-projects-5abdc8ba.vercel.app",
-    "https://motofy-da5w68hnp-trishnas-projects-5abdc8ba.vercel.app",
-    "https://motofy-nvup49oa2-trishnas-projects-5abdc8ba.vercel.app",
-    "http://localhost:8080", // Add localhost for development
-    "http://127.0.0.1:8080"
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      "https://motofy-tau.vercel.app",
+      "https://motofy-q4sttdxby-trishnas-projects-5abdc8ba.vercel.app",
+      "https://motofy-nvup49oa2-trishnas-projects-5abdc8ba.vercel.app",
+      "https://motofy-50lj5is32-trishnas-projects-5abdc8ba.vercel.app"
+    ];
+    
+    // Check if origin is in allowed list or matches Vercel pattern
+    if (allowedOrigins.includes(origin) || 
+        origin.match(/^https:\/\/motofy-[a-z0-9]+-trishnas-projects-5abdc8ba\.vercel\.app$/)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Range'],
