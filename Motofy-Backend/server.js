@@ -22,6 +22,18 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Middlewares
+// Disable Express default caching
+app.disable('etag');
+app.set('etag', false);
+
+// Add global no-cache headers for API routes
+app.use('/api', (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
 // Allow specific Vercel origins and catch-all for Vercel preview deployments
 app.use(cors({
   origin: [
