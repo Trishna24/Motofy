@@ -82,16 +82,18 @@ app.use('/api/ai-chat', aiChatRoutes);
 //Booking Car
 app.use('/api/bookings', bookingRoutes);
 
+//payment
+app.use('/api/payment', paymentRoutes);
+
+app.get("/ping", (req, res) => {
+  res.json({ status: "UP", timestamp: Date.now() });
+});
+
 // Optional: Serve frontend from "public" folder
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
-app.get("/ping", (req, res) => {
-  res.json({ status: "UP", timestamp: Date.now() });
-});
-//payment
-app.use('/api/payment', paymentRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
