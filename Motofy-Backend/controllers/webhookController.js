@@ -24,6 +24,14 @@ const handleStripeWebhook = async (req, res) => {
       const session = event.data.object;
       
       try {
+        // Check if booking already exists for this session
+        const existingBooking = await Booking.findOne({ stripeSessionId: session.id });
+        
+        if (existingBooking) {
+          console.log('Booking already exists for session:', session.id);
+          break;
+        }
+
         // Extract booking data from session metadata
         const bookingData = JSON.parse(session.metadata.bookingData);
         

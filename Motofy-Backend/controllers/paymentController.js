@@ -99,8 +99,33 @@ const verifyPaymentSession = async (req, res) => {
     
     if (session.payment_status === 'paid') {
       // Find the booking created for this session
-      const booking = await Booking.findOne({ stripeSessionId: sessionId })
+      let booking = await Booking.findOne({ stripeSessionId: sessionId })
         .populate('car user');
+
+      // If booking doesn't exist, create it (fallback for webhook failures)
+      if (!booking) {
+        try {
+          const bookingData = JSON.parse(session.metadata.bookingData);
+          
+          booking = new Booking({
+            ...bookingData,
+            paymentStatus: 'paid',
+            stripeSessionId: sessionId,
+            totalAmount: session.amount_total / 100 // Convert from paisa to rupees
+          });
+
+          await booking.save();
+          await booking.populate('car user');
+          
+          console.log('Booking created via payment verification fallback:', booking._id);
+        } catch (createError) {
+          console.error('Error creating booking in verification fallback:', createError);
+          return res.status(500).json({ 
+            success: false, 
+            message: 'Payment successful but booking creation failed. Please contact support.' 
+          });
+        }
+      }
 
       if (booking) {
         res.status(200).json({ 
