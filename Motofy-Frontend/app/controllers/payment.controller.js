@@ -23,13 +23,21 @@ angular.module('motofyApp')
           .then(function(response) {
             console.log('📨 API Response received:', response);
             console.log('📊 Response data:', response.data);
+            console.log('🔍 Response status:', response.status);
+            console.log('🔍 Response headers:', response.headers);
+            console.log('🔍 Full response object keys:', Object.keys(response));
             
-            if (response.data.success) {
+            // Check if response.data exists and has the expected structure
+            if (response.data && response.data.success) {
               console.log('✅ Payment verification successful');
               $scope.paymentSuccess.bookingDetails = response.data.bookingDetails;
             } else {
-              console.log('❌ Payment verification failed:', response.data.message);
-              $scope.paymentSuccess.error = response.data.message || 'Unable to verify payment';
+              console.log('❌ Payment verification failed');
+              console.log('🔍 Response.data exists:', !!response.data);
+              console.log('🔍 Response.data.success:', response.data ? response.data.success : 'N/A');
+              console.log('🔍 Response.data.message:', response.data ? response.data.message : 'N/A');
+              
+              $scope.paymentSuccess.error = (response.data && response.data.message) || 'Unable to verify payment - Invalid response format';
             }
             $scope.paymentSuccess.loading = false;
           })
