@@ -16,6 +16,11 @@ const carSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    pricePerHour: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     fuelType: {
       type: String,
       required: true,

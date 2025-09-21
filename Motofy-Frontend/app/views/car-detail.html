@@ -19,7 +19,7 @@
       <div class="car-header">
         <h1 class="car-title">{{car.selectedCar.name}}</h1>
         <p class="car-brand">{{car.selectedCar.brand}}</p>
-        <div class="car-price-large">₹{{car.selectedCar.price}}/day</div>
+        <div class="car-price-large">₹{{car.selectedCar.price}}/day • ₹{{car.selectedCar.pricePerHour}}/hour</div>
       </div>
 
       <div class="car-specifications">
@@ -157,9 +157,21 @@
         </div>
         
         <div ng-if="car.bookingData.totalAmount > 0" class="booking-details">
-          <p class="booking-info">
-            {{car.calculateDays()}} day(s) × ₹{{car.selectedCar.price}}/day
-          </p>
+          <div class="pricing-breakdown">
+            <p class="booking-info" ng-if="car.getTotalHours() <= 24">
+              Duration: {{car.getTotalHours()}} hours (charged as 1 day)
+            </p>
+            <p class="booking-info" ng-if="car.getTotalHours() > 24">
+              Duration: {{Math.floor(car.getTotalHours() / 24)}} day(s) + {{car.getTotalHours() % 24}} hour(s)
+            </p>
+            <div class="price-calculation" ng-if="car.getTotalHours() <= 24">
+              <span>1 day × ₹{{car.selectedCar.price}} = ₹{{car.selectedCar.price}}</span>
+            </div>
+            <div class="price-calculation" ng-if="car.getTotalHours() > 24">
+              <div>{{Math.floor(car.getTotalHours() / 24)}} day(s) × ₹{{car.selectedCar.price}} = ₹{{Math.floor(car.getTotalHours() / 24) * car.selectedCar.price}}</div>
+              <div ng-if="car.getTotalHours() % 24 > 0">{{car.getTotalHours() % 24}} hour(s) × ₹{{car.selectedCar.pricePerHour}} = ₹{{(car.getTotalHours() % 24) * car.selectedCar.pricePerHour}}</div>
+            </div>
+          </div>
         </div>
       </div>
 

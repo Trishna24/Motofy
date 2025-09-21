@@ -184,7 +184,8 @@
                 <th>Fuel</th>
                 <th>Seats</th>
                 <th>Transmission</th>
-                <th>Price</th>
+                <th>Price/Day</th>
+                <th>Price/Hour</th>
                 <th>Status</th>
                 <th style="width:180px;">Actions</th>
               </tr>
@@ -202,6 +203,7 @@
                 <td>{{car.seats}}</td>
                 <td>{{car.transmission}}</td>
                 <td>₹{{car.price | number}}</td>
+                <td>₹{{car.pricePerHour | number}}</td>
                 <td>
                   <span class="status-badge" ng-class="{'status-available': car.availability, 'status-unavailable': !car.availability}">
                     {{car.availability ? 'Available' : 'Unavailable'}}
@@ -243,8 +245,12 @@
                 <input type="text" ng-model="adminCar.formData.carNumber" required placeholder="Enter car number/license plate">
               </label>
               <label>
-                <span>Price (₹)</span>
+                <span>Price Per Day (₹)</span>
                 <input type="number" ng-model="adminCar.formData.price" required placeholder="Enter price per day">
+              </label>
+              <label>
+                <span>Price Per Hour (₹)</span>
+                <input type="number" ng-model="adminCar.formData.pricePerHour" required placeholder="Enter price per hour">
               </label>
               <label>
                 <span>Fuel Type</span>

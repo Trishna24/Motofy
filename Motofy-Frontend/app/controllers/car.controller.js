@@ -222,7 +222,33 @@ angular.module('motofyApp')
       vm.filterCars();
     };
     
-    // Calculate booking total
+    // Calculate total hours for display
+    vm.getTotalHours = function() {
+      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
+          !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime) {
+        return 0;
+      }
+      
+      var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
+      var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
+      
+      // Validate dates
+      if (isNaN(pickup.getTime()) || isNaN(dropoff.getTime())) {
+        return 0;
+      }
+      
+      // Calculate total hours difference
+      var totalHours = (dropoff - pickup) / (1000 * 60 * 60);
+      
+      // Minimum 1 hour booking
+      if (totalHours <= 0) {
+        totalHours = 1;
+      }
+      
+      return Math.round(totalHours);
+    };
+
+    // Calculate booking total with new pricing logic
     vm.calculateTotal = function() {
       if (!vm.selectedCar || !vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
           !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime) {
@@ -239,26 +265,32 @@ angular.module('motofyApp')
         return;
       }
       
-      // Calculate hours difference
-      var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);
+      // Calculate total hours difference
+      var totalHours = (dropoff - pickup) / (1000 * 60 * 60);
       
       // Minimum 1 hour booking
-      if (hoursDiff <= 0) {
-        hoursDiff = 1;
+      if (totalHours <= 0) {
+        totalHours = 1;
       }
       
-      // Calculate total based on hourly rate
-      // Assuming car price is per day (24 hours), calculate hourly rate
-      var hourlyRate = vm.selectedCar.price / 24;
-      var totalAmount = Math.ceil(hoursDiff) * hourlyRate;
+      var pricePerDay = vm.selectedCar.price || 0;
+      var pricePerHour = vm.selectedCar.pricePerHour || 0;
+      var totalPrice = 0;
       
-      // If booking is for more than 24 hours, use daily rate
-      if (hoursDiff > 24) {
-        var days = Math.ceil(hoursDiff / 24);
-        totalAmount = days * vm.selectedCar.price;
+      // Pricing logic as per requirements
+      if (totalHours <= 24) {
+        // If 24 hours or less, charge only 1 full day price
+        totalPrice = pricePerDay;
+      } else {
+        // If more than 24 hours: calculate days and remaining hours
+        var fullDays = Math.floor(totalHours / 24);
+        var remainingHours = totalHours % 24;
+        
+        // Total Price = (days × pricePerDay) + (remainingHours × pricePerHour)
+        totalPrice = (fullDays * pricePerDay) + (remainingHours * pricePerHour);
       }
       
-      vm.bookingData.totalAmount = Math.round(totalAmount);
+      vm.bookingData.totalAmount = Math.round(totalPrice);
     };
     
     // Calculate days for display

@@ -44,7 +44,7 @@
       <img ng-src="{{main.imageUrl(carItem.image)}}" alt="{{carItem.name}}">
       <div class="car-title">{{carItem.name}}</div>
       <div class="car-brand">{{carItem.brand}}</div>
-      <div class="car-price">₹{{carItem.price}}/day</div>
+      <div class="car-price">₹{{carItem.price}}/day • ₹{{carItem.pricePerHour}}/hour</div>
       <button class="view-details-btn" ng-click="main.viewCarDetail(carItem._id)">View Details</button>
     </div>
   </div>

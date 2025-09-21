@@ -54,7 +54,7 @@ const getCarById = async (req, res) => {
 // @desc Add a new car (with optional image)
 const addCar = async (req, res) => {
   try {
-    const { name, brand, price, fuelType, seats, transmission, description, carNumber } = req.body;
+    const { name, brand, price, pricePerHour, fuelType, seats, transmission, description, carNumber } = req.body;
 
     // Check if car with same name and brand already exists
     const existingCar = await Car.findOne({ name, brand });
@@ -73,6 +73,7 @@ const addCar = async (req, res) => {
       name,
       brand,
       price,
+      pricePerHour: pricePerHour || 0, // Default to 0 if not provided
       fuelType,
       seats,
       transmission,
@@ -93,7 +94,7 @@ const addCar = async (req, res) => {
 // @desc Update car by ID
 const updateCar = async (req, res) => {
   try {
-    const { name, brand, price, fuelType, seats, transmission, description, carNumber } = req.body;
+    const { name, brand, price, pricePerHour, fuelType, seats, transmission, description, carNumber } = req.body;
     const car = await Car.findById(req.params.id);
 
     if (!car) return res.status(404).json({ message: 'Car not found' });
@@ -102,6 +103,7 @@ const updateCar = async (req, res) => {
     car.name = name || car.name;
     car.brand = brand || car.brand;
     car.price = price || car.price;
+    car.pricePerHour = pricePerHour !== undefined ? pricePerHour : car.pricePerHour;
     car.fuelType = fuelType || car.fuelType;
     car.seats = seats || car.seats;
     car.transmission = transmission || car.transmission;
