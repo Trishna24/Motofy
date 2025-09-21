@@ -44,7 +44,8 @@ app.use(cors({
       "https://motofy-tau.vercel.app",
       "https://motofy-q4sttdxby-trishnas-projects-5abdc8ba.vercel.app",
       "https://motofy-nvup49oa2-trishnas-projects-5abdc8ba.vercel.app",
-      "https://motofy-50lj5is32-trishnas-projects-5abdc8ba.vercel.app"
+      "https://motofy-50lj5is32-trishnas-projects-5abdc8ba.vercel.app",
+      "https://motofy-551zk4ukh-trishnas-projects-5abdc8ba.vercel.app"
     ];
     
     // Check if origin is in allowed list or matches Vercel pattern
