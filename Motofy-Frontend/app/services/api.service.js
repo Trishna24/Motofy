@@ -3,9 +3,8 @@
 
 angular.module('motofyApp')
   .factory('ApiService', ['$http', function($http) {
-    console.log('ApiService loaded');
-    var service = {};
-    var BASE_URL = 'https://motofy-l5gq.onrender.com';
+    // Change this to your backend URL if needed
+    var BASE_URL = 'https://motofy-l5gq.onrender.com/api';
 
     return {
       // Example: User login
@@ -50,14 +49,6 @@ angular.module('motofyApp')
           headers['Authorization'] = 'Bearer ' + token;
         }
         return $http.get(BASE_URL + '/cars', { headers: headers });
-      },
-      getCarById: function(carId) {
-        var token = window.localStorage.getItem('userToken') || window.localStorage.getItem('adminToken');
-        var headers = {};
-        if (token) {
-          headers['Authorization'] = 'Bearer ' + token;
-        }
-        return $http.get(BASE_URL + '/cars/' + carId, { headers: headers });
       },
       addCar: function(formData) {
         var adminToken = window.localStorage.getItem('adminToken');
@@ -221,16 +212,17 @@ angular.module('motofyApp')
       
       // Verify payment session and get booking details
       verifyPaymentSession: function(sessionId) {
-        // Making API call to verify payment session
-        // Session ID and API URL logging
+        console.log('🔗 Making API call to verify payment session');
+        console.log('🎯 Session ID:', sessionId);
+        console.log('🌐 API URL:', BASE_URL + '/payment/verify-session/' + sessionId);
         
         return $http.get(BASE_URL + '/payment/verify-session/' + sessionId)
           .then(function(response) {
-            // API call successful
+            console.log('✅ API call successful:', response);
             return response;
           })
           .catch(function(error) {
-            console.error('Payment verification error:', error);
+            console.error('❌ API call failed:', error);
             throw error;
           });
       }

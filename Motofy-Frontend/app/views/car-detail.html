@@ -19,7 +19,7 @@
       <div class="car-header">
         <h1 class="car-title">{{car.selectedCar.name}}</h1>
         <p class="car-brand">{{car.selectedCar.brand}}</p>
-        <div class="car-price-large">₹{{car.selectedCar.price}}/day • ₹{{car.selectedCar.pricePerHour}}/hour</div>
+        <div class="car-price-large">₹{{car.selectedCar.price}}/day</div>
       </div>
 
       <div class="car-specifications">
@@ -64,87 +64,9 @@
         </div>
         
         <div class="form-group">
-          <label for="pickupHour">Pickup Time</label>
-          <div class="time-input-group">
-            <select id="pickupHour" ng-model="car.bookingData.pickupHour" 
-                    ng-change="car.calculateTotal()" required>
-              <option value="">Hour</option>
-              <option value="01">01</option>
-              <option value="02">02</option>
-              <option value="03">03</option>
-              <option value="04">04</option>
-              <option value="05">05</option>
-              <option value="06">06</option>
-              <option value="07">07</option>
-              <option value="08">08</option>
-              <option value="09">09</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-            </select>
-            <label for="pickupMinute" class="sr-only">Pickup Minute</label>
-            <select id="pickupMinute" ng-model="car.bookingData.pickupMinute" 
-                    ng-change="car.calculateTotal()" required>
-              <option value="">Min</option>
-              <option value="00">00</option>
-              <option value="15">15</option>
-              <option value="30">30</option>
-              <option value="45">45</option>
-            </select>
-            <label for="pickupAmPm" class="sr-only">Pickup AM/PM</label>
-            <select id="pickupAmPm" ng-model="car.bookingData.pickupAmPm" 
-                    ng-change="car.calculateTotal()" required>
-              <option value="">AM/PM</option>
-              <option value="AM">AM</option>
-              <option value="PM">PM</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
           <label for="dropoffDate">Dropoff Date</label>
           <input type="date" id="dropoffDate" ng-model="car.bookingData.dropoffDate" 
                  ng-change="car.calculateTotal()" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="dropoffHour">Dropoff Time</label>
-          <div class="time-input-group">
-            <select id="dropoffHour" ng-model="car.bookingData.dropoffHour" 
-                    ng-change="car.calculateTotal()" required>
-              <option value="">Hour</option>
-              <option value="01">01</option>
-              <option value="02">02</option>
-              <option value="03">03</option>
-              <option value="04">04</option>
-              <option value="05">05</option>
-              <option value="06">06</option>
-              <option value="07">07</option>
-              <option value="08">08</option>
-              <option value="09">09</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-            </select>
-            <label for="dropoffMinute" class="sr-only">Dropoff Minute</label>
-            <select id="dropoffMinute" ng-model="car.bookingData.dropoffMinute" 
-                    ng-change="car.calculateTotal()" required>
-              <option value="">Min</option>
-              <option value="00">00</option>
-              <option value="15">15</option>
-              <option value="30">30</option>
-              <option value="45">45</option>
-            </select>
-            <label for="dropoffAmPm" class="sr-only">Dropoff AM/PM</label>
-            <select id="dropoffAmPm" ng-model="car.bookingData.dropoffAmPm" 
-                    ng-change="car.calculateTotal()" required>
-              <option value="">AM/PM</option>
-              <option value="AM">AM</option>
-              <option value="PM">PM</option>
-            </select>
-          </div>
         </div>
       </div>
 
@@ -155,45 +77,20 @@
       </div>
 
       <div class="total-section">
-        <div class="total-amount" ng-class="{'calculating': car.isCalculating}">
+        <div class="total-amount">
           <span class="total-label">Total Amount:</span>
-          <span class="total-value" ng-if="!car.isCalculating">₹{{car.bookingData.totalAmount || 0}}</span>
-          <span class="calculating-text" ng-if="car.isCalculating">Calculating...</span>
+          <span class="total-value">₹{{car.bookingData.totalAmount}}</span>
         </div>
         
-        <div ng-if="car.bookingData.totalAmount > 0 && !car.isCalculating" class="booking-details">
-          <div class="pricing-breakdown">
-            <div class="breakdown-item">
-              <span class="breakdown-label">Duration:</span>
-              <span class="breakdown-value">{{car.getFullDays()}} day(s) {{car.getRemainingHours()}} hour(s)</span>
-            </div>
-            <div class="breakdown-item" ng-if="car.selectedCar.price">
-              <span class="breakdown-label">Daily Rate:</span>
-              <span class="breakdown-value">₹{{car.selectedCar.price}}/day</span>
-            </div>
-            <div class="breakdown-item" ng-if="car.selectedCar.pricePerHour">
-              <span class="breakdown-label">Hourly Rate:</span>
-              <span class="breakdown-value">₹{{car.selectedCar.pricePerHour}}/hour</span>
-            </div>
-            <div class="breakdown-item total-breakdown">
-              <span class="breakdown-label">Total:</span>
-              <span class="breakdown-value">₹{{car.bookingData.totalAmount}}</span>
-            </div>
-          </div>
-        </div>
-        
-        <div ng-if="car.bookingData.totalAmount <= 0 && !car.isCalculating" class="booking-message">
-          <p class="text-muted">Please select valid pickup and drop-off dates and times to see the total amount.</p>
+        <div ng-if="car.bookingData.totalAmount > 0" class="booking-details">
+          <p class="booking-info">
+            {{car.calculateDays()}} day(s) × ₹{{car.selectedCar.price}}/day
+          </p>
         </div>
       </div>
 
-      <button type="submit" class="book-now-btn" 
-              ng-disabled="!car.bookingData.totalAmount || car.bookingData.totalAmount <= 0 || 
-                          !car.bookingData.pickupDate || !car.bookingData.dropoffDate || 
-                          !car.bookingData.pickupTime || !car.bookingData.dropoffTime || 
-                          !car.bookingData.pickupLocation || car.loading">
-        <span ng-if="!car.loading">Book Now</span>
-        <span ng-if="car.loading">Processing...</span>
+      <button type="submit" class="book-now-btn" ng-disabled="!car.bookingData.totalAmount">
+        Book Now
       </button>
     </form>
   </div>
@@ -381,26 +278,6 @@
   .form-group input:focus {
     outline: none;
     border-color: #7ed957;
-  }
-
-  .time-input-group {
-    display: flex;
-    gap: 10px;
-  }
-
-  .time-input-group select {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: white;
-  }
-
-  .time-input-group select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
   }
 
   .total-section {

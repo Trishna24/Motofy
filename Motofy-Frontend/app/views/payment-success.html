@@ -1,583 +1,70 @@
-<div class="payment-success-container">
-  <div class="payment-success-card">
-    
-    <!-- Loading State -->
-    <div ng-if="paymentSuccess.loading" class="payment-state loading-state">
-      <div class="success-animation">
-        <div class="loading-spinner"></div>
-      </div>
-      <h2 class="state-title">Verifying Payment...</h2>
-      <p class="state-message">Please wait while we confirm your payment and create your booking.</p>
-    </div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg">
+        <div class="card-body text-center p-5">
+          
+          <!-- Loading State -->
+          <div ng-if="paymentSuccess.loading">
+            <div class="mb-4">
+              <i class="fas fa-spinner fa-spin text-primary" style="font-size: 4rem;"></i>
+            </div>
+            <h3>Verifying Payment...</h3>
+            <p>Please wait while we confirm your payment.</p>
+          </div>
 
-    <!-- Error State -->
-    <div ng-if="paymentSuccess.error && !paymentSuccess.loading" class="payment-state error-state">
-      <div class="success-animation">
-        <div class="error-icon">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="#f59e0b" stroke-width="2"/>
-            <path d="m15 9-6 6" stroke="#f59e0b" stroke-width="2"/>
-            <path d="m9 9 6 6" stroke="#f59e0b" stroke-width="2"/>
-          </svg>
-        </div>
-      </div>
-      <h2 class="state-title error-title">Payment Verification Failed</h2>
-      <p class="state-message">{{paymentSuccess.error}}</p>
-      <div class="action-buttons">
-        <a href="#!/bookings" class="btn btn-primary">
-          <span class="btn-icon">📋</span>
-          Check My Bookings
-        </a>
-        <a href="#!/home" class="btn btn-secondary">
-          <span class="btn-icon">🏠</span>
-          Back to Home
-        </a>
-      </div>
-    </div>
+          <!-- Error State -->
+          <div ng-if="paymentSuccess.error && !paymentSuccess.loading">
+            <div class="mb-4">
+              <i class="fas fa-exclamation-triangle text-warning" style="font-size: 4rem;"></i>
+            </div>
+            <h2 class="text-warning mb-3">Payment Verification Failed</h2>
+            <p class="lead mb-4">{{paymentSuccess.error}}</p>
+            <div class="d-flex justify-content-center gap-3">
+              <a href="#!/bookings" class="btn btn-primary btn-lg">
+                <i class="fas fa-list mr-2"></i>Check My Bookings
+              </a>
+              <a href="#!/home" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-home mr-2"></i>Back to Home
+              </a>
+            </div>
+          </div>
 
-    <!-- Success State -->
-    <div ng-if="paymentSuccess.bookingDetails && !paymentSuccess.loading" class="payment-state success-state">
-      <div class="success-animation">
-        <div class="success-icon">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="#10b981" stroke-width="2"/>
-            <path d="m9 12 2 2 4-4" stroke="#10b981" stroke-width="2"/>
-          </svg>
-        </div>
-        <div class="success-confetti">
-          <div class="confetti-piece"></div>
-          <div class="confetti-piece"></div>
-          <div class="confetti-piece"></div>
-          <div class="confetti-piece"></div>
-          <div class="confetti-piece"></div>
-          <div class="confetti-piece"></div>
-        </div>
-      </div>
-      
-      <h2 class="state-title success-title">🎉 Payment Successful!</h2>
-      <p class="state-message">Thank you for your booking! Your payment has been processed successfully and your car is reserved.</p>
-      
-      <div class="booking-details-card">
-        <div class="details-header">
-          <h3>📋 Booking Confirmation</h3>
-        </div>
-        <div class="details-grid">
-          <div class="detail-item">
-            <span class="detail-label">Booking ID</span>
-            <span class="detail-value">#{{paymentSuccess.bookingDetails.bookingId.slice(-8)}}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Car</span>
-            <span class="detail-value">{{paymentSuccess.bookingDetails.carName}}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Total Amount</span>
-            <span class="detail-value amount">₹{{paymentSuccess.bookingDetails.totalAmount | number}}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Pickup Date</span>
-            <span class="detail-value">{{paymentSuccess.bookingDetails.pickupDate | date:'dd MMM yyyy, h:mm a'}}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Return Date</span>
-            <span class="detail-value">{{paymentSuccess.bookingDetails.dropoffDate | date:'dd MMM yyyy, h:mm a'}}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Location</span>
-            <span class="detail-value">{{paymentSuccess.bookingDetails.location}}</span>
+          <!-- Success State -->
+          <div ng-if="paymentSuccess.bookingDetails && !paymentSuccess.loading">
+            <div class="mb-4">
+              <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+            </div>
+            <h2 class="text-success mb-3">Payment Successful!</h2>
+            <p class="lead mb-4">Thank you for your booking. Your payment has been processed successfully.</p>
+            
+            <div class="alert alert-info">
+              <h5>Booking Details:</h5>
+              <p><strong>Booking ID:</strong> {{paymentSuccess.bookingDetails.bookingId}}</p>
+              <p><strong>Car:</strong> {{paymentSuccess.bookingDetails.carName}}</p>
+              <p><strong>Total Amount:</strong> ₹{{paymentSuccess.bookingDetails.totalAmount}}</p>
+              <p><strong>Pickup Date:</strong> {{paymentSuccess.bookingDetails.pickupDate | date:'medium'}}</p>
+              <p><strong>Dropoff Date:</strong> {{paymentSuccess.bookingDetails.dropoffDate | date:'medium'}}</p>
+              <p><strong>Location:</strong> {{paymentSuccess.bookingDetails.location}}</p>
+            </div>
+            
+            <div class="d-flex justify-content-center gap-3">
+              <a href="#!/bookings" class="btn btn-primary btn-lg">
+                <i class="fas fa-list mr-2"></i>View My Bookings
+              </a>
+              <a href="#!/home" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-home mr-2"></i>Back to Home
+              </a>
+            </div>
+            
+            <div class="mt-4">
+              <p class="text-muted">
+                <small>A confirmation email has been sent to your registered email address.</small>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="action-buttons">
-        <a href="#!/bookings" class="btn btn-primary">
-          <span class="btn-icon">📋</span>
-          View My Bookings
-        </a>
-        <a href="#!/home" class="btn btn-secondary">
-          <span class="btn-icon">🏠</span>
-          Back to Home
-        </a>
-      </div>
-      
-      <div class="confirmation-note">
-        <p>📧 A confirmation email has been sent to your registered email address.</p>
       </div>
     </div>
   </div>
 </div>
-
-<style>
-.payment-success-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  position: relative;
-  overflow: hidden;
-}
-
-.payment-success-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 119, 48, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.2) 0%, transparent 50%);
-  animation: backgroundShift 20s ease-in-out infinite;
-}
-
-.payment-success-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
-  box-shadow: 
-    0 25px 50px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  max-width: 650px;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-}
-
-.payment-success-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 6px;
-  background: linear-gradient(90deg, #ff7730, #7ed957, #4a90e2, #ff7730);
-  background-size: 200% 100%;
-  animation: gradientShift 3s ease-in-out infinite;
-}
-
-.payment-state {
-  padding: 3.5rem 2.5rem;
-  text-align: center;
-}
-
-.success-animation {
-  position: relative;
-  margin-bottom: 2.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 140px;
-}
-
-.success-icon, .error-icon {
-  width: 90px;
-  height: 90px;
-  animation: scaleInBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  filter: drop-shadow(0 10px 20px rgba(16, 185, 129, 0.3));
-}
-
-.loading-spinner {
-  width: 70px;
-  height: 70px;
-  border: 5px solid rgba(59, 130, 246, 0.1);
-  border-top: 5px solid #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  filter: drop-shadow(0 5px 15px rgba(59, 130, 246, 0.3));
-}
-
-.success-confetti {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-
-.confetti-piece {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background: #10b981;
-  border-radius: 2px;
-  animation: confetti 4s ease-out infinite;
-}
-
-.confetti-piece:nth-child(1) { left: 10%; animation-delay: 0s; background: #ff7730; transform: rotate(45deg); }
-.confetti-piece:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #7ed957; transform: rotate(90deg); }
-.confetti-piece:nth-child(3) { left: 30%; animation-delay: 1s; background: #4a90e2; transform: rotate(135deg); }
-.confetti-piece:nth-child(4) { left: 70%; animation-delay: 0.3s; background: #ff6b6b; transform: rotate(180deg); }
-.confetti-piece:nth-child(5) { left: 80%; animation-delay: 0.8s; background: #10b981; transform: rotate(225deg); }
-.confetti-piece:nth-child(6) { left: 90%; animation-delay: 1.2s; background: #ffd93d; transform: rotate(270deg); }
-
-.state-title {
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin-bottom: 1.2rem;
-  color: #1f2937;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.success-title {
-  background: linear-gradient(135deg, #10b981, #059669);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.error-title {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.state-message {
-  font-size: 1.15rem;
-  color: #6b7280;
-  margin-bottom: 2.5rem;
-  line-height: 1.7;
-  font-weight: 500;
-}
-
-.booking-details-card {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border-radius: 16px;
-  padding: 2rem;
-  margin: 2.5rem 0;
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 4px 12px rgba(0, 0, 0, 0.05);
-  position: relative;
-}
-
-.booking-details-card::before {
-  content: '🚗';
-  position: absolute;
-  top: -10px;
-  right: 20px;
-  font-size: 2rem;
-  background: white;
-  padding: 8px;
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.details-header {
-  margin-bottom: 1.8rem;
-}
-
-.details-header h3 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.details-grid {
-  display: grid;
-  gap: 1.2rem;
-}
-
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(229, 231, 235, 0.6);
-  transition: all 0.2s ease;
-}
-
-.detail-item:hover {
-  background: rgba(255, 255, 255, 0.5);
-  margin: 0 -1rem;
-  padding: 1rem;
-  border-radius: 8px;
-}
-
-.detail-item:last-child {
-  border-bottom: none;
-}
-
-.detail-label {
-  font-weight: 600;
-  color: #6b7280;
-  font-size: 0.95rem;
-}
-
-.detail-value {
-  font-weight: 700;
-  color: #1f2937;
-  font-size: 1rem;
-}
-
-.detail-value.amount {
-  background: linear-gradient(135deg, #10b981, #059669);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 1.2rem;
-  font-weight: 800;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 1.2rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2.5rem;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  font-size: 1rem;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.btn:hover::before {
-  left: 100%;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  color: white;
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
-}
-
-.btn-secondary {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-  color: white;
-  box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3);
-}
-
-.btn-secondary:hover {
-  background: linear-gradient(135deg, #4b5563, #374151);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(107, 114, 128, 0.4);
-}
-
-.btn-icon {
-  font-size: 1.2rem;
-}
-
-.confirmation-note {
-  margin-top: 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(229, 231, 235, 0.6);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
-}
-
-.confirmation-note p {
-  color: #059669;
-  font-size: 1rem;
-  margin: 0;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes scaleInBounce {
-  0% { transform: scale(0) rotate(0deg); }
-  50% { transform: scale(1.2) rotate(180deg); }
-  100% { transform: scale(1) rotate(360deg); }
-}
-
-@keyframes confetti {
-  0% { 
-    transform: translateY(-120px) rotate(0deg); 
-    opacity: 1; 
-  }
-  100% { 
-    transform: translateY(120px) rotate(720deg); 
-    opacity: 0; 
-  }
-}
-
-@keyframes backgroundShift {
-  0%, 100% { transform: translateX(0) translateY(0); }
-  25% { transform: translateX(-20px) translateY(-10px); }
-  50% { transform: translateX(20px) translateY(10px); }
-  75% { transform: translateX(-10px) translateY(20px); }
-}
-
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@media (max-width: 768px) {
-  .payment-success-container {
-    padding: 1rem;
-  }
-  
-  .payment-state {
-    padding: 2.5rem 1.8rem;
-  }
-  
-  .state-title {
-    font-size: 1.8rem;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-  }
-  
-  .btn {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .booking-details-card {
-    padding: 1.5rem;
-  }
-}
-</style>
-
-.detail-value.amount {
-  color: #10b981;
-  font-size: 1.1rem;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: #3b82f6;
-  color: white;
-}
-
-.btn-primary:hover {
-  background: #2563eb;
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background: #6b7280;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: #4b5563;
-  transform: translateY(-2px);
-}
-
-.btn-icon {
-  font-size: 1.1rem;
-}
-
-.confirmation-note {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.confirmation-note p {
-  color: #6b7280;
-  font-size: 0.9rem;
-  margin: 0;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes scaleIn {
-  0% { transform: scale(0); }
-  100% { transform: scale(1); }
-}
-
-@keyframes confetti {
-  0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100px) rotate(720deg); opacity: 0; }
-}
-
-@media (max-width: 768px) {
-  .payment-success-container {
-    padding: 1rem;
-  }
-  
-  .payment-state {
-    padding: 2rem 1.5rem;
-  }
-  
-  .state-title {
-    font-size: 1.5rem;
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-  }
-  
-  .btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-</style>

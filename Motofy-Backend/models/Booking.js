@@ -20,14 +20,6 @@ const bookingSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    pickupTime: {
-      type: String,
-      required: false, // Optional for backward compatibility
-    },
-    dropoffTime: {
-      type: String,
-      required: false, // Optional for backward compatibility
-    },
     pickupLocation: {
       type: String,
       required: true,

@@ -2,48 +2,68 @@
 // AdminLoginController: Handles admin authentication
 
 angular.module('motofyApp')
-  .controller('AdminLoginController', ['$scope', '$location', 'ApiService', function($scope, $location, ApiService) {
-    // AdminLoginController loaded successfully
+  .controller('AdminLoginController', ['ApiService', '$window', '$location', '$timeout', function(ApiService, $window, $location, $timeout) {
+    console.log('🔐 AdminLoginController loaded successfully!');
+    var vm = this;
     
-    $scope.admin = {
-      email: '',
-      password: '',
-      loading: false,
-      error: ''
+    // Admin credentials
+    vm.credentials = {
+      username: '',
+      password: ''
     };
     
-    $scope.login = function() {
-      if (!$scope.admin.email || !$scope.admin.password) {
-        $scope.admin.error = 'Please fill in all fields';
-        return;
+    // UI state
+    vm.loading = false;
+    vm.error = '';
+    vm.success = '';
+    
+    // Check if already logged in
+    vm.checkAuth = function() {
+      var adminToken = $window.localStorage.getItem('adminToken');
+      if (adminToken) {
+        // Redirect to admin dashboard if already logged in
+        $location.path('/admin/dashboard');
       }
+    };
+    
+    // Admin login
+    vm.login = function() {
+      vm.loading = true;
+      vm.error = '';
+      vm.success = '';
       
-      $scope.admin.loading = true;
-      $scope.admin.error = '';
-      
-      var loginData = {
-        email: $scope.admin.email,
-        password: $scope.admin.password
-      };
-      
-      ApiService.adminLogin(loginData)
+      // Call real admin login API
+      ApiService.adminLogin(vm.credentials)
         .then(function(response) {
-          // Admin login response received
-          if (response.data && response.data.success) {
-            // Store admin token
-            localStorage.setItem('adminToken', response.data.token);
-            localStorage.setItem('adminUser', JSON.stringify(response.data.admin));
+          console.log('Admin login response:', response);
+          
+          // Check if response has the expected structure
+          if (response.data && response.data.admin && response.data.token) {
+            // Store admin token and data
+            $window.localStorage.setItem('adminToken', response.data.token);
+            $window.localStorage.setItem('adminData', JSON.stringify({
+              username: response.data.admin.username,
+              id: response.data.admin.id,
+              role: 'admin'
+            }));
             
-            // Redirect to admin dashboard
-            $location.path('/admin/dashboard');
+            vm.success = 'Login successful! Redirecting...';
+            
+            // Redirect to admin dashboard after short delay
+            $timeout(function() {
+              $location.path('/admin/dashboard');
+            }, 1000);
           } else {
-            $scope.admin.error = response.data.message || 'Login failed';
+            throw new Error('Invalid response structure from server');
           }
-          $scope.admin.loading = false;
         })
         .catch(function(error) {
-          $scope.admin.error = error.data ? error.data.message : 'Login failed. Please try again.';
-          $scope.admin.loading = false;
+          console.error('Admin login error:', error);
+          vm.error = error.data?.message || error.message || 'Login failed. Please check your credentials.';
+          vm.loading = false;
         });
     };
-  }]);
+    
+    // Initialize - check if already logged in
+    vm.checkAuth();
+  }]); 

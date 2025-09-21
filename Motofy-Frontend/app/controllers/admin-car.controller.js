@@ -16,8 +16,7 @@ angular.module('motofyApp')
 
 
     vm.imageUrl = function(filename) {
-      if (!filename) return 'app/assets/images/default-car.jpg';
-      return 'https://motofy-l5gq.onrender.com' + '/uploads/cars/' + filename;
+      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + filename;
     };
     vm.toggleView = function() {
       if (vm.viewMode === 'list') {
@@ -40,7 +39,7 @@ angular.module('motofyApp')
       vm.resetAlerts();
       vm.viewMode = 'form';
       vm.editingId = null;
-      vm.formData = { name:'', brand:'', carNumber:'', price:null, pricePerHour:null, fuelType:'', seats:null, transmission:'', description:'' };
+      vm.formData = { name:'', brand:'', carNumber:'', price:null, fuelType:'', seats:null, transmission:'', description:'' };
       vm.previewUrl = '';
     };
 
@@ -53,7 +52,6 @@ angular.module('motofyApp')
         brand: car.brand,
         carNumber: car.carNumber || '',
         price: car.price,
-        pricePerHour: car.pricePerHour || 0,
         fuelType: car.fuelType,
         seats: car.seats,
         transmission: car.transmission,
@@ -78,7 +76,6 @@ angular.module('motofyApp')
       fd.append('brand', vm.formData.brand || '');
       fd.append('carNumber', vm.formData.carNumber || '');
       fd.append('price', vm.formData.price || 0);
-      fd.append('pricePerHour', vm.formData.pricePerHour || 0);
       fd.append('fuelType', vm.formData.fuelType || '');
       fd.append('seats', vm.formData.seats || 0);
       fd.append('transmission', vm.formData.transmission || '');

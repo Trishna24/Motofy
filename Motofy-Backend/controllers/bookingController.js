@@ -5,36 +5,25 @@ const Car = require('../models/Car');
 // @desc   Create a new booking
 const createBooking = async (req, res) => {
   try {
-    const { car, pickupDate, dropoffDate, pickupTime, dropoffTime, pickupLocation, totalAmount } = req.body;
+    const { car, pickupDate, dropoffDate, pickupLocation, totalAmount } = req.body;
 
     if (!car || !pickupDate || !dropoffDate || !pickupLocation || !totalAmount) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Create full datetime objects for accurate overlap checking
-    const newPickupDateTime = new Date(`${pickupDate}T${pickupTime || '00:00:00'}`);
-    const newDropoffDateTime = new Date(`${dropoffDate}T${dropoffTime || '23:59:59'}`);
-
     // Check for overlapping bookings for the same car
-    const existingBookings = await Booking.find({
+    const overlappingBooking = await Booking.findOne({
       car,
-      status: { $ne: 'Cancelled' }
+      status: { $ne: 'Cancelled' },
+      $or: [
+        {
+          pickupDate: { $lte: new Date(dropoffDate) },
+          dropoffDate: { $gte: new Date(pickupDate) }
+        }
+      ]
     });
-
-    // Check each existing booking for time overlap
-    for (const existingBooking of existingBookings) {
-      const existingPickupDateTime = new Date(`${existingBooking.pickupDate.toISOString().split('T')[0]}T${existingBooking.pickupTime || '00:00:00'}`);
-      const existingDropoffDateTime = new Date(`${existingBooking.dropoffDate.toISOString().split('T')[0]}T${existingBooking.dropoffTime || '23:59:59'}`);
-      
-      // Check for overlap: new booking starts before existing ends AND new booking ends after existing starts
-      const hasOverlap = (newPickupDateTime < existingDropoffDateTime) && (newDropoffDateTime > existingPickupDateTime);
-      
-      if (hasOverlap) {
-        return res.status(400).json({ 
-          success: false, 
-          message: `Car is already booked from ${existingPickupDateTime.toLocaleString()} to ${existingDropoffDateTime.toLocaleString()}. Please choose different dates/times.` 
-        });
-      }
+    if (overlappingBooking) {
+      return res.status(400).json({ success: false, message: 'Car is already booked for the selected dates.' });
     }
 
     const booking = new Booking({
@@ -42,17 +31,11 @@ const createBooking = async (req, res) => {
       car,
       pickupDate,
       dropoffDate,
-      pickupTime,
-      dropoffTime,
       pickupLocation,
       totalAmount,
-      status: 'Pending' // Set initial status as Pending
     });
 
     await booking.save();
-
-    // Don't update car availability here - only when payment is confirmed
-    // Car availability will be updated in payment success handler
 
     res.status(201).json({ message: 'Booking created successfully', booking });
   } catch (error) {
@@ -100,28 +83,8 @@ const cancelBooking = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    const oldStatus = booking.status;
     booking.status = 'Cancelled';
     await booking.save();
-
-    // Update car availability when booking is cancelled
-    if (oldStatus === 'Confirmed') {
-      const car = await Car.findById(booking.car);
-      if (car) {
-        // Check if there are other confirmed bookings for this car
-        const otherConfirmedBookings = await Booking.countDocuments({
-          car: booking.car,
-          status: 'Confirmed',
-          _id: { $ne: booking._id }
-        });
-        
-        // If no other confirmed bookings, make car available
-        if (otherConfirmedBookings === 0) {
-          car.availability = true;
-          await car.save();
-        }
-      }
-    }
 
     res.json({ message: 'Booking cancelled' });
   } catch (error) {
@@ -158,45 +121,8 @@ const updateBookingStatus = async (req, res) => {
       return res.status(404).json({ message: 'Booking not found' });
     }
     
-    const oldStatus = booking.status;
-    
-    // Prevent confirming cancelled bookings after the booking date has passed
-    if (status === 'Confirmed' && oldStatus === 'Cancelled') {
-      const currentDate = new Date();
-      const bookingDate = new Date(booking.pickupDate);
-      
-      // If the booking date has passed, don't allow confirmation
-      if (currentDate > bookingDate) {
-        return res.status(400).json({ 
-          message: 'Cannot confirm a cancelled booking after the pickup date has passed' 
-        });
-      }
-    }
     booking.status = status;
     await booking.save();
-    
-    // Update car availability based on booking status
-    const car = await Car.findById(booking.car);
-    if (car) {
-      if (status === 'Confirmed' && oldStatus !== 'Confirmed') {
-        // When booking is confirmed, make car unavailable
-        car.availability = false;
-        await car.save();
-      } else if ((status === 'Cancelled' || status === 'Pending') && oldStatus === 'Confirmed') {
-        // When confirmed booking is cancelled or changed to pending, make car available
-        // But first check if there are other confirmed bookings for this car
-        const otherConfirmedBookings = await Booking.countDocuments({
-          car: booking.car,
-          status: 'Confirmed',
-          _id: { $ne: booking._id }
-        });
-        
-        if (otherConfirmedBookings === 0) {
-          car.availability = true;
-          await car.save();
-        }
-      }
-    }
     
     res.json({ message: 'Booking status updated', booking });
   } catch (error) {

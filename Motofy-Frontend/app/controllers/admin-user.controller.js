@@ -243,34 +243,11 @@ angular.module('motofyApp')
     };
     
     // Calculate booking duration in days
-    vm.calculateDuration = function(pickupDate, dropoffDate, pickupTime, dropoffTime) {
+    vm.calculateDuration = function(pickupDate, dropoffDate) {
       if (!pickupDate || !dropoffDate) return 0;
-      
-      // If time is not provided, use the old calculation for backward compatibility
-      if (!pickupTime || !dropoffTime) {
-        var pickup = new Date(pickupDate);
-        var dropoff = new Date(dropoffDate);
-        var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
-        return days > 0 ? days : 0;
-      }
-      
-      // New time-aware calculation
-      var pickup = new Date(pickupDate + 'T' + pickupTime);
-      var dropoff = new Date(dropoffDate + 'T' + dropoffTime);
-      
-      // Calculate hours difference
-      var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);
-      
-      // If same date and time, minimum 1 day
-      var days;
-      if (hoursDiff <= 0) {
-        days = 1;
-      } else if (hoursDiff <= 24) {
-        days = 1; // Same day or within 24 hours = 1 day
-      } else {
-        days = Math.ceil(hoursDiff / 24); // Round up to next day
-      }
-      
+      var pickup = new Date(pickupDate);
+      var dropoff = new Date(dropoffDate);
+      var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
       return days > 0 ? days : 0;
     };
     
@@ -286,7 +263,7 @@ angular.module('motofyApp')
     // License handling methods for admin
     vm.getLicenseUrl = function(licenseFileName) {
       if (!licenseFileName) return '';
-      return 'https://motofy-l5gq.onrender.com' + '/uploads/driving-licenses/' + licenseFileName;
+      return 'https://motofy-l5gq.onrender.com/uploads/driving-licenses/' + licenseFileName;
     };
     
     vm.getLicenseFileName = function(licenseFileName) {
@@ -303,8 +280,8 @@ angular.module('motofyApp')
     
     // Profile picture handling method for admin
     vm.getProfilePictureUrl = function(profilePicture) {
-      if (!profilePicture) return 'app/assets/images/default-avatar.svg';
-      return 'https://motofy-l5gq.onrender.com' + '/uploads/profile-pictures/' + profilePicture;
+      if (!profilePicture) return 'assets/images/default-avatar.svg';
+      return 'https://motofy-l5gq.onrender.com/uploads/profile-pictures/' + profilePicture;
     };
     
     vm.downloadLicense = function(user) {

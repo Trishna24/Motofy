@@ -7,55 +7,65 @@ const Car = require('../models/Car');
 // @desc Get all cars
 const getAllCars = async (req, res) => {
   try {
-    const jwt = require('jsonwebtoken');
     const Booking = require('../models/Booking');
+    const jwt = require('jsonwebtoken');
+    
+    let cars = await Car.find();
     
     // Check if user is authenticated
     const token = req.headers.authorization?.split(' ')[1];
+    let currentUserId = null;
     let isAdmin = false;
     
     if (token) {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        currentUserId = decoded.userId;
         isAdmin = decoded.isAdmin || false;
       } catch (err) {
         // Token invalid, continue as guest
       }
     }
     
-    let cars;
-    
-    // If user is admin, return all cars (including unavailable ones)
+    // If user is admin, return all cars without filtering
     if (isAdmin) {
-      cars = await Car.find();
-    } else {
-      // For regular users, show cars based on real-time availability
-      // Get all cars first
-      const allCars = await Car.find();
-      
-      // Filter cars based on current confirmed bookings
-      const availableCars = [];
-      const currentDate = new Date();
-      
-      for (const car of allCars) {
-        // Check if car has any active confirmed bookings
-        const activeBooking = await Booking.findOne({
-          car: car._id,
-          status: 'Confirmed',
-          pickupDate: { $lte: currentDate },
-          dropoffDate: { $gte: currentDate }
-        });
-        
-        // If no active booking and car is marked as available, include it
-        if (!activeBooking && car.availability) {
-          availableCars.push(car);
-        }
-      }
-      
-      cars = availableCars;
+      return res.json(cars);
     }
     
-    res.json(cars);
+    // Get all active bookings (not cancelled)
+    const activeBookings = await Booking.find({
+      status: { $ne: 'Cancelled' }
+    }).populate('car user');
+    
+    // Create a map of booked car IDs and their booking users
+    const bookedCarsMap = new Map();
+    activeBookings.forEach(booking => {
+      if (booking.car && booking.car._id) {
+        bookedCarsMap.set(booking.car._id.toString(), booking.user._id.toString());
+      }
+    });
+    
+    // Filter cars based on booking status
+    const filteredCars = cars.filter(car => {
+      const carId = car._id.toString();
+      const bookedByUserId = bookedCarsMap.get(carId);
+      
+      // If car is not booked, show it
+      if (!bookedByUserId) {
+        return true;
+      }
+      
+      // If car is booked by current user, show it with booking status
+      if (currentUserId && bookedByUserId === currentUserId) {
+        car.userBookedThis = true;
+        return true;
+      }
+      
+      // If car is booked by someone else, hide it
+      return false;
+    });
+    
+    res.json(filteredCars);
   } catch (error) {
     console.error('Error fetching cars:', error);
     res.status(500).json({ success: false, message: 'Error fetching cars from database. Please try again later.' });
@@ -77,7 +87,7 @@ const getCarById = async (req, res) => {
 // @desc Add a new car (with optional image)
 const addCar = async (req, res) => {
   try {
-    const { name, brand, price, pricePerHour, fuelType, seats, transmission, description, carNumber } = req.body;
+    const { name, brand, price, fuelType, seats, transmission, description, carNumber } = req.body;
 
     // Check if car with same name and brand already exists
     const existingCar = await Car.findOne({ name, brand });
@@ -96,7 +106,6 @@ const addCar = async (req, res) => {
       name,
       brand,
       price,
-      pricePerHour: pricePerHour || 0, // Default to 0 if not provided
       fuelType,
       seats,
       transmission,
@@ -117,7 +126,7 @@ const addCar = async (req, res) => {
 // @desc Update car by ID
 const updateCar = async (req, res) => {
   try {
-    const { name, brand, price, pricePerHour, fuelType, seats, transmission, description, carNumber } = req.body;
+    const { name, brand, price, fuelType, seats, transmission, description, carNumber } = req.body;
     const car = await Car.findById(req.params.id);
 
     if (!car) return res.status(404).json({ message: 'Car not found' });
@@ -126,7 +135,6 @@ const updateCar = async (req, res) => {
     car.name = name || car.name;
     car.brand = brand || car.brand;
     car.price = price || car.price;
-    car.pricePerHour = pricePerHour !== undefined ? pricePerHour : car.pricePerHour;
     car.fuelType = fuelType || car.fuelType;
     car.seats = seats || car.seats;
     car.transmission = transmission || car.transmission;

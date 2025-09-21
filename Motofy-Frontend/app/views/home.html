@@ -44,7 +44,7 @@
       <img ng-src="{{main.imageUrl(carItem.image)}}" alt="{{carItem.name}}">
       <div class="car-title">{{carItem.name}}</div>
       <div class="car-brand">{{carItem.brand}}</div>
-      <div class="car-price">₹{{carItem.price}}/day • ₹{{carItem.pricePerHour}}/hour</div>
+      <div class="car-price">₹{{carItem.price}}/day</div>
       <button class="view-details-btn" ng-click="main.viewCarDetail(carItem._id)">View Details</button>
     </div>
   </div>
@@ -66,7 +66,6 @@
       <div class="booking-car-info">
         <div class="car-name">{{booking.carName || booking.car.name}}</div>
         <div class="car-brand">{{booking.car.brand}}</div>
-        <div class="car-number">{{booking.car.carNumber || 'N/A'}}</div>
       </div>
       <div class="booking-dates">
         <div class="date-item">

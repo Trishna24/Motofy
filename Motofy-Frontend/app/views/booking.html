@@ -81,7 +81,6 @@
         
         <div class="booking-card-details">
           <h3 class="car-name">{{b.car.name}} <span class="car-brand">{{b.car.brand}}</span></h3>
-          <div class="car-number">Car Number: <strong>{{b.car.carNumber || 'N/A'}}</strong></div>
           
           <div class="booking-info-grid">
             <div class="info-item">
@@ -106,7 +105,7 @@
               <div class="info-icon">⏱️</div>
               <div class="info-content">
                 <span class="info-label">Duration</span>
-                <span class="info-value">{{booking.calculateDuration(b.pickupDate, b.dropoffDate, b.pickupTime, b.dropoffTime)}} day(s)</span>
+                <span class="info-value">{{((b.dropoffDate | date:'yyyy-MM-dd') | date) - ((b.pickupDate | date:'yyyy-MM-dd') | date) | number:0}} days</span>
               </div>
             </div>
             
@@ -188,10 +187,6 @@
                 <span class="detail-label">Car:</span>
                 <span class="detail-value">{{booking.selectedBooking.car.name}} {{booking.selectedBooking.car.brand}}</span>
               </div>
-              <div class="booking-detail-row">
-                <span class="detail-label">Car Number:</span>
-                <span class="detail-value">{{booking.selectedBooking.car.carNumber || 'N/A'}}</span>
-              </div>
             </div>
           </div>
           
@@ -216,7 +211,7 @@
               </div>
               <div class="booking-detail-row">
                 <span class="detail-label">Duration:</span>
-                <span class="detail-value">{{booking.calculateDuration(booking.selectedBooking.pickupDate, booking.selectedBooking.dropoffDate, booking.selectedBooking.pickupTime, booking.selectedBooking.dropoffTime)}} day(s)</span>
+                <span class="detail-value">{{((booking.selectedBooking.dropoffDate | date:'yyyy-MM-dd') | date) - ((booking.selectedBooking.pickupDate | date:'yyyy-MM-dd') | date) | number:0}} days</span>
               </div>
             </div>
           </div>

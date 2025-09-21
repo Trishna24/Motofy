@@ -15,7 +15,7 @@ angular.module('motofyApp')
       if (filename.startsWith('http')) {
         return filename; // Already a full URL
       }
-      return 'https://motofy-l5gq.onrender.com' + '/uploads/cars/' + filename;
+      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + filename;
     };
     
     // Car listing data
@@ -41,14 +41,6 @@ angular.module('motofyApp')
     vm.bookingData = {
       pickupDate: '',
       dropoffDate: '',
-      pickupTime: '',
-      dropoffTime: '',
-      pickupHour: '',
-      pickupMinute: '',
-      pickupAmPm: '',
-      dropoffHour: '',
-      dropoffMinute: '',
-      dropoffAmPm: '',
       pickupLocation: '',
       totalAmount: 0,
       creating: false
@@ -154,12 +146,6 @@ angular.module('motofyApp')
     // Filter cars based on search and filters
     vm.filterCars = function() {
       vm.filteredCars = vm.cars.filter(function(car) {
-        // Only apply availability filter on car listing page, not on car detail page
-        var isAvailable = true;
-        if ($location.path() === '/cars' || $location.path() === '/') {
-          isAvailable = car.availability === true;
-        }
-        
         // Search term filter
         var matchesSearch = !vm.searchTerm || 
           car.name.toLowerCase().includes(vm.searchTerm.toLowerCase()) ||
@@ -184,7 +170,7 @@ angular.module('motofyApp')
         // Price filter
         var matchesPrice = !vm.maxPrice || car.price <= vm.maxPrice;
         
-        var result = isAvailable && matchesSearch && matchesBrand && matchesFuel && matchesTransmission && matchesSeats && matchesPrice;
+        var result = matchesSearch && matchesBrand && matchesFuel && matchesTransmission && matchesSeats && matchesPrice;
         
         return result;
       });
@@ -222,134 +208,35 @@ angular.module('motofyApp')
       vm.filterCars();
     };
     
-    // Calculate total hours for display
-    vm.getTotalHours = function() {
-      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
-          !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime) {
-        return 0;
-      }
-      
-      var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
-      var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
-      
-      // Validate dates
-      if (isNaN(pickup.getTime()) || isNaN(dropoff.getTime())) {
-        return 0;
-      }
-      
-      // Calculate total hours difference
-      var totalHours = (dropoff - pickup) / (1000 * 60 * 60);
-      
-      // Minimum 1 hour booking
-      if (totalHours <= 0) {
-        totalHours = 1;
-      }
-      
-      return Math.round(totalHours);
-    };
-
-    // Calculate booking total with new pricing logic and visual feedback
+    // Calculate booking total
     vm.calculateTotal = function() {
-      // Set calculating state for UI feedback
-      vm.isCalculating = true;
+      if (!vm.selectedCar || !vm.bookingData.pickupDate || !vm.bookingData.dropoffDate) {
+        vm.bookingData.totalAmount = 0;
+        return;
+      }
       
-      // Use timeout to show calculating state briefly for better UX
-      $timeout(function() {
-        if (!vm.selectedCar || !vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
-            !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime) {
-          vm.bookingData.totalAmount = 0;
-          vm.isCalculating = false;
-          return;
-        }
-        
-        var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
-        var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
-        
-        // Validate dates
-        if (isNaN(pickup.getTime()) || isNaN(dropoff.getTime())) {
-          vm.bookingData.totalAmount = 0;
-          vm.isCalculating = false;
-          return;
-        }
-        
-        // Check if dropoff is after pickup
-        if (dropoff <= pickup) {
-          vm.bookingData.totalAmount = 0;
-          vm.isCalculating = false;
-          return;
-        }
-        
-        // Calculate total hours difference
-        var totalHours = (dropoff - pickup) / (1000 * 60 * 60);
-        
-        // Minimum 1 hour booking
-        if (totalHours <= 0) {
-          totalHours = 1;
-        }
-        
-        var pricePerDay = vm.selectedCar.price || 0;
-        var pricePerHour = vm.selectedCar.pricePerHour || 0;
-        var totalPrice = 0;
-        
-        // Pricing logic as per requirements
-        if (totalHours <= 24) {
-          // If 24 hours or less, charge only 1 full day price
-          totalPrice = pricePerDay;
-        } else {
-          // If more than 24 hours: calculate days and remaining hours
-          var fullDays = Math.floor(totalHours / 24);
-          var remainingHours = totalHours % 24;
-          
-          // Total Price = (days × pricePerDay) + (remainingHours × pricePerHour)
-          totalPrice = (fullDays * pricePerDay) + (remainingHours * pricePerHour);
-        }
-        
-        vm.bookingData.totalAmount = Math.round(totalPrice);
-        vm.isCalculating = false;
-      }, 200); // Small delay to show calculating state
+      var pickup = new Date(vm.bookingData.pickupDate);
+      var dropoff = new Date(vm.bookingData.dropoffDate);
+      var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
+      
+      if (days > 0) {
+        vm.bookingData.totalAmount = days * vm.selectedCar.price;
+      } else {
+        vm.bookingData.totalAmount = 0;
+      }
     };
     
     // Calculate days for display
     vm.calculateDays = function() {
-      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
-          !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime) {
+      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate) {
         return 0;
       }
       
-      var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
-      var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
-      
-      // Validate dates
-      if (isNaN(pickup.getTime()) || isNaN(dropoff.getTime())) {
-        return 0;
-      }
-      
-      // Calculate hours difference
-      var hoursDiff = (dropoff - pickup) / (1000 * 60 * 60);
-      
-      // If same date and time, minimum 1 day
-      var days;
-      if (hoursDiff <= 0) {
-        days = 1;
-      } else if (hoursDiff <= 24) {
-        days = 1; // Same day or within 24 hours = 1 day
-      } else {
-        days = Math.ceil(hoursDiff / 24); // Round up to next day
-      }
+      var pickup = new Date(vm.bookingData.pickupDate);
+      var dropoff = new Date(vm.bookingData.dropoffDate);
+      var days = Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24));
       
       return days > 0 ? days : 0;
-    };
-
-    // Get full days for display
-    vm.getFullDays = function() {
-      var totalHours = vm.getTotalHours();
-      return Math.floor(totalHours / 24);
-    };
-
-    // Get remaining hours for display
-    vm.getRemainingHours = function() {
-      var totalHours = vm.getTotalHours();
-      return totalHours % 24;
     };
     
     // Book a car
@@ -357,25 +244,23 @@ angular.module('motofyApp')
       if (!vm.selectedCar) return;
       
       // Check if user is logged in
-      var token = $window.localStorage.getItem('userToken') || $window.localStorage.getItem('adminToken');
+      var token = $window.localStorage.getItem('appToken');
       if (!token) {
         alert('Please log in to book a car');
         return;
       }
       
       // Validate booking data
-      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || 
-          !vm.bookingData.pickupTime || !vm.bookingData.dropoffTime || 
-          !vm.bookingData.pickupLocation) {
-        alert('Please fill in all booking details including pickup and dropoff times');
+      if (!vm.bookingData.pickupDate || !vm.bookingData.dropoffDate || !vm.bookingData.pickupLocation) {
+        alert('Please fill in all booking details');
         return;
       }
       
-      var pickup = new Date(vm.bookingData.pickupDate + 'T' + vm.bookingData.pickupTime);
-      var dropoff = new Date(vm.bookingData.dropoffDate + 'T' + vm.bookingData.dropoffTime);
+      var pickup = new Date(vm.bookingData.pickupDate);
+      var dropoff = new Date(vm.bookingData.dropoffDate);
       
       if (pickup >= dropoff) {
-        alert('Dropoff date and time must be after pickup date and time');
+        alert('Dropoff date must be after pickup date');
         return;
       }
       
@@ -384,8 +269,6 @@ angular.module('motofyApp')
         car: vm.selectedCar._id,
         pickupDate: vm.bookingData.pickupDate,
         dropoffDate: vm.bookingData.dropoffDate,
-        pickupTime: vm.bookingData.pickupTime,
-        dropoffTime: vm.bookingData.dropoffTime,
         pickupLocation: vm.bookingData.pickupLocation,
         totalAmount: vm.bookingData.totalAmount
       };
@@ -424,36 +307,6 @@ angular.module('motofyApp')
     // Go back to previous page
     vm.goBack = function() {
       $window.history.back();
-    };
-    
-    // Update pickup time from components
-    vm.updatePickupTime = function() {
-      if (vm.bookingData.pickupHour && vm.bookingData.pickupMinute && vm.bookingData.pickupAmPm) {
-        var hour = parseInt(vm.bookingData.pickupHour);
-        if (vm.bookingData.pickupAmPm === 'PM' && hour !== 12) {
-          hour += 12;
-        } else if (vm.bookingData.pickupAmPm === 'AM' && hour === 12) {
-          hour = 0;
-        }
-        var timeString = (hour < 10 ? '0' : '') + hour + ':' + vm.bookingData.pickupMinute + ':00';
-        vm.bookingData.pickupTime = timeString;
-        vm.calculateTotal();
-      }
-    };
-    
-    // Update dropoff time from components
-    vm.updateDropoffTime = function() {
-      if (vm.bookingData.dropoffHour && vm.bookingData.dropoffMinute && vm.bookingData.dropoffAmPm) {
-        var hour = parseInt(vm.bookingData.dropoffHour);
-        if (vm.bookingData.dropoffAmPm === 'PM' && hour !== 12) {
-          hour += 12;
-        } else if (vm.bookingData.dropoffAmPm === 'AM' && hour === 12) {
-          hour = 0;
-        }
-        var timeString = (hour < 10 ? '0' : '') + hour + ':' + vm.bookingData.dropoffMinute + ':00';
-        vm.bookingData.dropoffTime = timeString;
-        vm.calculateTotal();
-      }
     };
     
     // Initialize
