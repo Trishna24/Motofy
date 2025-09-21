@@ -121,8 +121,32 @@ const updateBookingStatus = async (req, res) => {
       return res.status(404).json({ message: 'Booking not found' });
     }
     
+    const oldStatus = booking.status;
     booking.status = status;
     await booking.save();
+    
+    // Update car availability based on booking status
+    const car = await Car.findById(booking.car);
+    if (car) {
+      if (status === 'Confirmed' && oldStatus !== 'Confirmed') {
+        // When booking is confirmed, make car unavailable
+        car.availability = false;
+        await car.save();
+      } else if ((status === 'Cancelled' || status === 'Pending') && oldStatus === 'Confirmed') {
+        // When confirmed booking is cancelled or changed to pending, make car available
+        // But first check if there are other confirmed bookings for this car
+        const otherConfirmedBookings = await Booking.countDocuments({
+          car: booking.car,
+          status: 'Confirmed',
+          _id: { $ne: booking._id }
+        });
+        
+        if (otherConfirmedBookings === 0) {
+          car.availability = true;
+          await car.save();
+        }
+      }
+    }
     
     res.json({ message: 'Booking status updated', booking });
   } catch (error) {

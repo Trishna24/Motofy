@@ -7,65 +7,32 @@ const Car = require('../models/Car');
 // @desc Get all cars
 const getAllCars = async (req, res) => {
   try {
-    const Booking = require('../models/Booking');
     const jwt = require('jsonwebtoken');
-    
-    let cars = await Car.find();
     
     // Check if user is authenticated
     const token = req.headers.authorization?.split(' ')[1];
-    let currentUserId = null;
     let isAdmin = false;
     
     if (token) {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        currentUserId = decoded.userId;
         isAdmin = decoded.isAdmin || false;
       } catch (err) {
         // Token invalid, continue as guest
       }
     }
     
-    // If user is admin, return all cars without filtering
+    let cars;
+    
+    // If user is admin, return all cars (including unavailable ones)
     if (isAdmin) {
-      return res.json(cars);
+      cars = await Car.find();
+    } else {
+      // For regular users, only show available cars
+      cars = await Car.find({ availability: true });
     }
     
-    // Get all active bookings (not cancelled)
-    const activeBookings = await Booking.find({
-      status: { $ne: 'Cancelled' }
-    }).populate('car user');
-    
-    // Create a map of booked car IDs and their booking users
-    const bookedCarsMap = new Map();
-    activeBookings.forEach(booking => {
-      if (booking.car && booking.car._id) {
-        bookedCarsMap.set(booking.car._id.toString(), booking.user._id.toString());
-      }
-    });
-    
-    // Filter cars based on booking status
-    const filteredCars = cars.filter(car => {
-      const carId = car._id.toString();
-      const bookedByUserId = bookedCarsMap.get(carId);
-      
-      // If car is not booked, show it
-      if (!bookedByUserId) {
-        return true;
-      }
-      
-      // If car is booked by current user, show it with booking status
-      if (currentUserId && bookedByUserId === currentUserId) {
-        car.userBookedThis = true;
-        return true;
-      }
-      
-      // If car is booked by someone else, hide it
-      return false;
-    });
-    
-    res.json(filteredCars);
+    res.json(cars);
   } catch (error) {
     console.error('Error fetching cars:', error);
     res.status(500).json({ success: false, message: 'Error fetching cars from database. Please try again later.' });

@@ -1,35 +1,338 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow-lg">
-        <div class="card-body text-center p-5">
-          <div class="mb-4">
-            <i class="fas fa-times-circle text-warning" style="font-size: 4rem;"></i>
+<div class="payment-failed-container">
+  <div class="payment-failed-card">
+    <div class="payment-state failed-state">
+      <div class="failed-animation">
+        <div class="failed-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="#ef4444" stroke-width="2"/>
+            <path d="m15 9-6 6" stroke="#ef4444" stroke-width="2"/>
+            <path d="m9 9 6 6" stroke="#ef4444" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="failed-particles">
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+        </div>
+      </div>
+      
+      <h2 class="state-title failed-title">❌ Payment Cancelled</h2>
+      <p class="state-message">Your payment was cancelled or failed to process. Don't worry, no charges have been made to your account.</p>
+      
+      <div class="failure-reasons-card">
+        <div class="reasons-header">
+          <h3>💡 Common Reasons for Payment Failure</h3>
+        </div>
+        <div class="reasons-list">
+          <div class="reason-item">
+            <span class="reason-icon">🔒</span>
+            <span class="reason-text">Payment was cancelled by user</span>
           </div>
-          <h2 class="text-warning mb-3">Payment Cancelled</h2>
-          <p class="lead mb-4">Your payment was cancelled. No charges have been made to your account.</p>
-          
-          <div class="alert alert-info">
-            <h5>What happened?</h5>
-            <p class="mb-0">You cancelled the payment process before completing your booking. Your car reservation has not been confirmed.</p>
+          <div class="reason-item">
+            <span class="reason-icon">💳</span>
+            <span class="reason-text">Insufficient funds or card declined</span>
           </div>
-          
-          <div class="d-flex justify-content-center gap-3">
-            <a href="#!/cars" class="btn btn-primary btn-lg">
-              <i class="fas fa-car mr-2"></i>Browse Cars
-            </a>
-            <a href="#!/home" class="btn btn-outline-secondary btn-lg">
-              <i class="fas fa-home mr-2"></i>Back to Home
-            </a>
+          <div class="reason-item">
+            <span class="reason-icon">🌐</span>
+            <span class="reason-text">Network connection issues</span>
           </div>
-          
-          <div class="mt-4">
-            <p class="text-muted">
-              <small>If you experienced any issues during the payment process, please contact our support team.</small>
-            </p>
+          <div class="reason-item">
+            <span class="reason-icon">⏰</span>
+            <span class="reason-text">Payment session expired</span>
           </div>
         </div>
+      </div>
+      
+      <div class="next-steps-card">
+        <div class="steps-header">
+          <h3>🚀 What's Next?</h3>
+        </div>
+        <div class="steps-list">
+          <div class="step-item">
+            <span class="step-number">1</span>
+            <span class="step-text">Check your payment method and try again</span>
+          </div>
+          <div class="step-item">
+            <span class="step-number">2</span>
+            <span class="step-text">Contact your bank if the issue persists</span>
+          </div>
+          <div class="step-item">
+            <span class="step-number">3</span>
+            <span class="step-text">Reach out to our support team for assistance</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <a href="#!/cars" class="btn btn-primary">
+          <span class="btn-icon">🚗</span>
+          Try Booking Again
+        </a>
+        <a href="#!/home" class="btn btn-secondary">
+          <span class="btn-icon">🏠</span>
+          Back to Home
+        </a>
+        <a href="mailto:support@motofy.com" class="btn btn-outline">
+          <span class="btn-icon">📞</span>
+          Contact Support
+        </a>
+      </div>
+      
+      <div class="reassurance-note">
+        <p>🛡️ Your booking attempt has been saved. You can try again anytime without losing your preferences.</p>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+.payment-failed-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.payment-failed-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.payment-state {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.failed-animation {
+  position: relative;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120px;
+}
+
+.failed-icon {
+  width: 80px;
+  height: 80px;
+  animation: shake 0.8s ease-in-out;
+}
+
+.failed-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ef4444;
+  border-radius: 50%;
+  animation: particleFloat 2s ease-out infinite;
+}
+
+.particle:nth-child(1) { left: 20%; animation-delay: 0s; }
+.particle:nth-child(2) { left: 40%; animation-delay: 0.4s; }
+.particle:nth-child(3) { left: 60%; animation-delay: 0.8s; }
+.particle:nth-child(4) { left: 80%; animation-delay: 1.2s; }
+.particle:nth-child(5) { left: 50%; animation-delay: 1.6s; }
+
+.state-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.failed-title {
+  color: #ef4444;
+}
+
+.state-message {
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.failure-reasons-card, .next-steps-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.reasons-header, .steps-header {
+  margin-bottom: 1rem;
+}
+
+.reasons-header h3, .steps-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.reasons-list, .steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reason-item, .step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.reason-icon {
+  font-size: 1.2rem;
+  width: 24px;
+  text-align: center;
+}
+
+.reason-text, .step-text {
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.step-number {
+  background: #3b82f6;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #6b7280;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #4b5563;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+}
+
+.btn-outline:hover {
+  background: #3b82f6;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+.reassurance-note {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.reassurance-note p {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes particleFloat {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  50% { transform: translateY(-20px) scale(0.8); opacity: 0.7; }
+  100% { transform: translateY(-40px) scale(0.5); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .payment-failed-container {
+    padding: 1rem;
+  }
+  
+  .payment-state {
+    padding: 2rem 1.5rem;
+  }
+  
+  .state-title {
+    font-size: 1.5rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .failure-reasons-card, .next-steps-card {
+    padding: 1rem;
+  }
+}
+</style>

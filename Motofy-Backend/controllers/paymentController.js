@@ -62,11 +62,20 @@ const handlePaymentSuccess = async (req, res) => {
       ...bookingData,
       paymentStatus: 'completed',
       stripeSessionId: sessionId,
-      bookingDate: new Date()
+      bookingDate: new Date(),
+      status: 'Confirmed' // Set status to Confirmed when payment is successful
     });
 
     await booking.save();
     await booking.populate('car user');
+
+    // Update car availability when booking is confirmed through payment
+    const Car = require('../models/Car');
+    const car = await Car.findById(bookingData.car);
+    if (car) {
+      car.availability = false;
+      await car.save();
+    }
 
     res.status(200).json({ 
       success: true, 
@@ -194,13 +203,18 @@ const verifyPaymentSession = async (req, res) => {
             totalAmount: bookingData.totalAmount,
             paymentStatus: 'paid',
             stripeSessionId: sessionId,
-            bookingDate: new Date()
+            bookingDate: new Date(),
+            status: 'Confirmed' // Set status to Confirmed when payment is successful
           });
 
           await booking.save();
           await booking.populate('car user');
           debugInfo.bookingCreated = true;
           debugInfo.bookingId = booking._id;
+
+          // Update car availability to false when booked
+          await Car.findByIdAndUpdate(bookingData.car, { availability: false });
+          debugInfo.carAvailabilityUpdated = true;
 
           return res.json({
             success: true,

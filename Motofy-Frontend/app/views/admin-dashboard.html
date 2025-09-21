@@ -180,6 +180,7 @@
                 <th>Image</th>
                 <th>Name</th>
                 <th>Brand</th>
+                <th>Car Number</th>
                 <th>Fuel</th>
                 <th>Seats</th>
                 <th>Transmission</th>
@@ -196,6 +197,7 @@
                 </td>
                 <td>{{car.name}}</td>
                 <td>{{car.brand}}</td>
+                <td>{{car.carNumber || 'N/A'}}</td>
                 <td>{{car.fuelType}}</td>
                 <td>{{car.seats}}</td>
                 <td>{{car.transmission}}</td>
@@ -235,6 +237,10 @@
               <label>
                 <span>Brand</span>
                 <input type="text" ng-model="adminCar.formData.brand" required placeholder="Enter car brand">
+              </label>
+              <label>
+                <span>Car Number</span>
+                <input type="text" ng-model="adminCar.formData.carNumber" required placeholder="Enter car number/license plate">
               </label>
               <label>
                 <span>Price (₹)</span>
@@ -685,6 +691,7 @@
                   <th ng-click="adminBooking.setSortBy('_id')">Booking ID</th>
                   <th ng-click="adminBooking.setSortBy('user.username')">User</th>
                   <th ng-click="adminBooking.setSortBy('car.name')">Car</th>
+                  <th>Car Number</th>
                   <th ng-click="adminBooking.setSortBy('pickupDate')">Pickup Date</th>
                   <th ng-click="adminBooking.setSortBy('dropoffDate')">Return Date</th>
                   <th ng-click="adminBooking.setSortBy('totalAmount')">Price</th>
@@ -698,6 +705,7 @@
                   <td>{{booking._id.substr(-5)}}</td>
                   <td>{{booking.user.username || 'Unknown'}}</td>
                   <td>{{(booking.car.name + ' ' + booking.car.brand) || 'Unknown'}}</td>
+                  <td>{{booking.car.carNumber || 'N/A'}}</td>
                   <td>{{adminBooking.formatDate(booking.pickupDate)}}</td>
                   <td>{{adminBooking.formatDate(booking.dropoffDate)}}</td>
                   <td>₹{{booking.totalAmount}}</td>
@@ -780,6 +788,10 @@
                 <div class="detail-row">
                   <span class="detail-label">Brand:</span>
                   <span class="detail-value">{{adminBooking.selectedBooking.car.brand}}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Car Number:</span>
+                  <span class="detail-value">{{adminBooking.selectedBooking.car.carNumber || 'N/A'}}</span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Fuel Type:</span>
