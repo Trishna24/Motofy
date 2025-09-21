@@ -35,7 +35,22 @@ angular.module('motofyApp')
             // Check if response.data exists and has the expected structure
             if (response.data && response.data.success) {
               console.log('✅ Payment verification successful');
-              $scope.paymentSuccess.bookingDetails = response.data.bookingDetails;
+              
+              // Check if we have booking details (successful payment with booking created)
+              if (response.data.bookingDetails) {
+                console.log('🎉 Booking details found:', response.data.bookingDetails);
+                $scope.paymentSuccess.bookingDetails = response.data.bookingDetails;
+              } else {
+                console.log('⚠️ Payment successful but no booking details found');
+                console.log('🔍 Session payment status:', response.data.session ? response.data.session.payment_status : 'N/A');
+                
+                // If payment is successful but no booking details, show appropriate message
+                if (response.data.session && response.data.session.payment_status === 'paid') {
+                  $scope.paymentSuccess.error = 'Payment was successful, but there was an issue creating your booking. Please contact support with your session ID: ' + sessionId;
+                } else {
+                  $scope.paymentSuccess.error = 'Payment verification completed, but payment status is: ' + (response.data.session ? response.data.session.payment_status : 'unknown');
+                }
+              }
             } else {
               console.log('❌ Payment verification failed');
               console.log('🔍 Response.data exists:', !!response.data);

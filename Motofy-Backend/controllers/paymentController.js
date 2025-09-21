@@ -136,7 +136,105 @@ const verifyPaymentSession = async (req, res) => {
     debugInfo.stripeApiCallSuccessful = true;
     debugInfo.sessionRetrieved = !!session;
     
-    // Return session details with debug info for troubleshooting
+    debugInfo.paymentStatus = session.payment_status;
+    debugInfo.sessionMetadata = session.metadata;
+
+    // Check if payment was successful
+    if (session.payment_status === 'paid') {
+      debugInfo.paymentSuccessful = true;
+      
+      // Check if booking already exists for this session
+      const existingBooking = await Booking.findOne({ stripeSessionId: sessionId });
+      debugInfo.existingBookingFound = !!existingBooking;
+      
+      if (existingBooking) {
+        // Return existing booking details
+        await existingBooking.populate('car user');
+        debugInfo.bookingReturned = 'existing';
+        
+        return res.json({
+          success: true,
+          bookingDetails: {
+            bookingId: existingBooking._id,
+            carName: existingBooking.car.name,
+            totalAmount: existingBooking.totalAmount,
+            pickupDate: existingBooking.pickupDate,
+            dropoffDate: existingBooking.dropoffDate,
+            location: existingBooking.pickupLocation,
+            paymentStatus: existingBooking.paymentStatus
+          },
+          session: {
+            id: session.id,
+            payment_status: session.payment_status,
+            customer_email: session.customer_details?.email,
+            amount_total: session.amount_total,
+            currency: session.currency,
+            metadata: session.metadata
+          },
+          debug: debugInfo
+        });
+      }
+
+      // Create new booking if payment is successful and no existing booking
+      if (session.metadata && session.metadata.bookingData) {
+        debugInfo.bookingDataFound = true;
+        
+        try {
+          const bookingData = JSON.parse(session.metadata.bookingData);
+          debugInfo.bookingDataParsed = true;
+          debugInfo.parsedBookingData = bookingData;
+          
+          // Create the booking
+          const booking = new Booking({
+            car: bookingData.car,
+            user: bookingData.user,
+            pickupDate: new Date(bookingData.pickupDate),
+            dropoffDate: new Date(bookingData.dropoffDate),
+            pickupLocation: bookingData.pickupLocation,
+            totalAmount: bookingData.totalAmount,
+            paymentStatus: 'completed',
+            stripeSessionId: sessionId,
+            bookingDate: new Date()
+          });
+
+          await booking.save();
+          await booking.populate('car user');
+          debugInfo.bookingCreated = true;
+          debugInfo.bookingId = booking._id;
+
+          return res.json({
+            success: true,
+            bookingDetails: {
+              bookingId: booking._id,
+              carName: booking.car.name,
+              totalAmount: booking.totalAmount,
+              pickupDate: booking.pickupDate,
+              dropoffDate: booking.dropoffDate,
+              location: booking.pickupLocation,
+              paymentStatus: booking.paymentStatus
+            },
+            session: {
+              id: session.id,
+              payment_status: session.payment_status,
+              customer_email: session.customer_details?.email,
+              amount_total: session.amount_total,
+              currency: session.currency,
+              metadata: session.metadata
+            },
+            debug: debugInfo
+          });
+        } catch (parseError) {
+          debugInfo.bookingDataParseError = parseError.message;
+          debugInfo.bookingCreated = false;
+        }
+      } else {
+        debugInfo.bookingDataFound = false;
+      }
+    } else {
+      debugInfo.paymentSuccessful = false;
+    }
+    
+    // Return session details without booking creation if payment not successful or booking data missing
     res.json({
       success: true,
       session: {
