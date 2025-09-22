@@ -1464,7 +1464,6 @@ nav a:hover {
   color: #000; /* black text */
   background: #e1f5fe;
 }
-
 .ai-bot-msg {
   color: #000; /* black text */
   background: #f1f1f1;
@@ -2071,7 +2070,7 @@ user-select: none;
   background: linear-gradient(135deg, #667eea, #764ba2);
   background-clip: text; /* ✅ Standard property */
   -webkit-background-clip: text; /* ✅ Vendor prefix for Safari/Chrome */
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: rgb(236, 224, 224);
 }
 
 
@@ -5228,13 +5227,13 @@ footer {
   font-weight: 500;
 }
 
-/* ===== MODERN PAYMENT SUCCESS PAGE UI ===== */
+/* ===== PAYMENT SUCCESS PAGE PROFESSIONAL STYLING ===== */
 
-/* Main Container - Modern Centered Design */
+/* Main Container Enhancement */
 .container.mt-5 {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
-  padding: 0 !important;
+  padding: 1rem !important;
   margin: 0 !important;
   max-width: 100% !important;
   display: flex;
@@ -5242,126 +5241,122 @@ footer {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  animation: fadeIn 0.6s ease-out !important;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+/* Remove unwanted background elements */
+.container.mt-5::before,
+.container.mt-5::after {
+  display: none !important;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes cardAppear {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Remove all pseudo-elements */
+/* Hide ALL pseudo-elements in payment success container */
 .container.mt-5 *::before,
 .container.mt-5 *::after {
   display: none !important;
 }
 
-/* Modern Card Container */
+/* Card Container Redesign */
 .container.mt-5 .row {
   width: 100%;
-  max-width: 420px;
-  margin: 0;
-  padding: 1rem;
-  animation: slideUp 0.8s ease-out 0.2s both !important;
+  max-width: 450px;
+  margin: 0 auto;
 }
 
 .container.mt-5 .card {
-  background: #ffffff !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
   border: none !important;
-  border-radius: 20px !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 
+              0 0 0 1px rgba(255, 255, 255, 0.1) !important;
   overflow: hidden !important;
   position: relative !important;
-  animation: cardAppear 1s ease-out 0.4s both !important;
+  animation: slideInUp 0.8s ease-out !important;
+}
+
+.container.mt-5 .card::before {
+  display: none !important;
 }
 
 .container.mt-5 .card-body {
-  padding: 2rem 1.5rem 1.5rem 1.5rem !important;
-  text-align: center !important;
+  padding: 1.5rem !important;
+  position: relative;
+  z-index: 2;
 }
 
-/* Modern Success Header */
+/* Success State Styling */
 .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] {
-  margin-bottom: 1.5rem !important;
+  animation: fadeInScale 0.6s ease-out 0.3s both !important;
+  position: relative;
+  z-index: 10;
 }
 
 .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] .fas.fa-check-circle {
-  font-size: 3.5rem !important;
-  color: #10b981 !important;
+  font-size: 3rem !important;
+  color: #28a745 !important;
+  text-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+  animation: bounceIn 0.8s ease-out 0.5s both !important;
+  position: relative;
+  z-index: 10;
   margin-bottom: 1rem !important;
-  animation: checkPulse 0.6s ease-out !important;
 }
 
 .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] h2 {
-  color: #065f46 !important;
-  font-weight: 600 !important;
-  font-size: 1.75rem !important;
-  margin: 0 0 0.5rem 0 !important;
-  line-height: 1.3 !important;
+  color: #1e7e34 !important;
+  font-weight: 700 !important;
+  font-size: 1.8rem !important;
+  margin: 0.5rem 0 1rem 0 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  position: relative;
+  z-index: 10;
+  line-height: 1.2 !important;
+  letter-spacing: -0.5px !important;
 }
 
 .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] .lead {
-  color: #6b7280 !important;
-  font-size: 0.95rem !important;
+  color: #495057 !important;
+  font-size: 1.3rem !important;
   font-weight: 400 !important;
-  margin-bottom: 1.5rem !important;
-  line-height: 1.4 !important;
+  margin-bottom: 2rem !important;
+  line-height: 1.6 !important;
 }
 
-/* Modern Booking Details */
+/* Booking Details Card Enhancement */
 .container.mt-5 .alert-info {
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f8f9ff 100%) !important;
+  border: 2px solid #90caf9 !important;
   border-radius: 12px !important;
-  padding: 1.25rem !important;
-  margin: 0 0 1.5rem 0 !important;
-  box-shadow: none !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.1) !important;
   position: relative !important;
+  overflow: hidden !important;
+}
+
+.container.mt-5 .alert-info::before {
+  display: none !important;
 }
 
 .container.mt-5 .alert-info h5 {
-  color: #1e293b !important;
-  font-weight: 600 !important;
-  font-size: 1.1rem !important;
+  color: #1565c0 !important;
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
   margin-bottom: 1rem !important;
   text-align: center !important;
-  padding-bottom: 0.75rem !important;
-  border-bottom: 2px solid #e2e8f0 !important;
+  position: relative !important;
+}
+
+.container.mt-5 .alert-info h5::after {
+  display: none !important;
 }
 
 .container.mt-5 .alert-info p {
-  color: #475569 !important;
-  font-weight: 400 !important;
-  font-size: 0.875rem !important;
-  margin: 0.5rem 0 !important;
-  padding: 0.5rem 0 !important;
-  border-bottom: 1px solid #f1f5f9 !important;
+  color: #1565c0 !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  margin: 0.4rem 0 !important;
+  padding: 0.3rem 0 !important;
+  border-bottom: 1px solid rgba(33, 150, 243, 0.1) !important;
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
@@ -5369,59 +5364,68 @@ footer {
 
 .container.mt-5 .alert-info p:last-child {
   border-bottom: none !important;
-  margin-bottom: 0 !important;
 }
 
 .container.mt-5 .alert-info p strong {
-  color: #334155 !important;
-  font-weight: 500 !important;
-  min-width: 100px !important;
+  color: #0d47a1 !important;
+  font-weight: 600 !important;
+  min-width: 140px !important;
   text-align: left !important;
 }
 
-/* Modern Action Buttons */
+/* Action Buttons Enhancement */
 .container.mt-5 .d-flex.justify-content-center {
-  gap: 0.75rem !important;
-  margin: 0 !important;
+  gap: 1rem !important;
+  margin: 1.5rem 0 !important;
   flex-wrap: wrap !important;
 }
 
 .container.mt-5 .btn-primary {
-  background: #3b82f6 !important;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
   border: none !important;
-  border-radius: 8px !important;
-  padding: 0.75rem 1.5rem !important;
-  font-weight: 500 !important;
-  font-size: 0.875rem !important;
-  color: white !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 12px !important;
+  padding: 1rem 2rem !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.container.mt-5 .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.container.mt-5 .btn-primary:hover::before {
+  left: 100%;
 }
 
 .container.mt-5 .btn-primary:hover {
-  background: #2563eb !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4) !important;
 }
 
 .container.mt-5 .btn-outline-secondary {
-  background: white !important;
-  border: 1px solid #d1d5db !important;
-  border-radius: 8px !important;
-  padding: 0.75rem 1.5rem !important;
-  font-weight: 500 !important;
-  font-size: 0.875rem !important;
-  color: #6b7280 !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
-}
-
-.container.mt-5 .btn-outline-secondary:hover {
-  background: #f9fafb !important;
-  border-color: #9ca3af !important;
-  color: #374151 !important;
-  transform: translateY(-1px) !important;
-}
+  background: transparent !important;
+  border: 2px solid #6c757d !important;
+  border-radius: 12px !important;
+  padding: 1rem 2rem !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  color: #495057 !important;
+  transition: all 0.3s ease !important;
   position: relative !important;
   overflow: hidden !important;
 }
@@ -5433,75 +5437,61 @@ footer {
   box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3) !important;
 }
 
+/* Loading State Enhancement */
+.container.mt-5 [ng-if*="paymentSuccess.loading"] {
+  animation: fadeInScale 0.6s ease-out !important;
 }
 
+.container.mt-5 [ng-if*="paymentSuccess.loading"] .fas.fa-spinner {
+  color: #007bff !important;
+  animation: spin 1s linear infinite, pulse 2s ease-in-out infinite alternate !important;
+  text-shadow: 0 4px 15px rgba(0, 123, 255, 0.3) !important;
 }
 
-/* Overall Container Spacing Optimization */
-.container.mt-5 {
-  margin-top: 0 !important;
-  padding: 1rem !important;
-  max-height: 100vh !important;
-  overflow: hidden !important;
+.container.mt-5 [ng-if*="paymentSuccess.loading"] h3 {
+  color: #0056b3 !important;
+  font-weight: 600 !important;
+  margin: 1.5rem 0 1rem 0 !important;
 }
 
-/* Remove extra margins and padding to prevent scrolling */
-.container.mt-5 > * {
-  margin-bottom: 0.5rem !important;
+.container.mt-5 [ng-if*="paymentSuccess.loading"] p {
+  color: #6c757d !important;
+  font-size: 1.1rem !important;
 }
 
-.container.mt-5 > *:last-child {
-  margin-bottom: 0 !important;
+/* Error State Enhancement */
+.container.mt-5 [ng-if*="paymentSuccess.error"] {
+  animation: fadeInScale 0.6s ease-out !important;
 }
 
-/* Responsive Design Enhancements */
-@media (max-width: 768px) {
-  .container.mt-5 {
-    padding: 0.75rem !important;
-  }
-  
-  .container.mt-5 .row {
-    max-width: 100% !important;
-    padding: 0.75rem !important;
-  }
-  
-  .container.mt-5 .card {
-    margin: 0 !important;
-  }
-  
-  .container.mt-5 .btn-primary,
-  .container.mt-5 .btn-outline-secondary {
-    padding: 0.625rem 1.25rem !important;
-    font-size: 0.8rem !important;
-  }
+.container.mt-5 [ng-if*="paymentSuccess.error"] .fas.fa-exclamation-triangle {
+  color: #ffc107 !important;
+  text-shadow: 0 4px 15px rgba(255, 193, 7, 0.3) !important;
+  animation: shake 0.8s ease-out !important;
 }
 
-@media (max-width: 480px) {
-  .container.mt-5 {
-    padding: 0.5rem !important;
-  }
-  
-  .container.mt-5 .row {
-    padding: 0.5rem !important;
-  }
-  
-  .container.mt-5 .d-flex.justify-content-center {
-    flex-direction: column !important;
-    gap: 0.5rem !important;
-  }
+.container.mt-5 [ng-if*="paymentSuccess.error"] h2 {
+  color: #e67e22 !important;
+  font-weight: 700 !important;
+  font-size: 2.2rem !important;
+  margin: 1.5rem 0 !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.error"] .lead {
+  color: #dc3545 !important;
+  font-weight: 500 !important;
 }
 
 /* Footer Text Enhancement */
 .container.mt-5 .text-muted small {
-  color: #9ca3af !important;
-  font-size: 0.75rem !important;
-  margin-top: 1rem !important;
-  text-align: center !important;
+  color: #6c757d !important;
+  font-size: 0.95rem !important;
   font-style: italic !important;
   background: rgba(108, 117, 125, 0.1) !important;
   padding: 0.8rem 1.5rem !important;
   border-radius: 25px !important;
   display: inline-block !important;
+  margin-top: 1rem !important;
 }
 
 /* Animations */
