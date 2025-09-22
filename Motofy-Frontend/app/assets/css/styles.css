@@ -5239,12 +5239,20 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Remove unwanted background elements */
+.container.mt-5::before,
+.container.mt-5::after {
+  display: none !important;
 }
 
 /* Card Container Redesign */
 .container.mt-5 .row {
   width: 100%;
-  max-width: 900px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
@@ -5280,6 +5288,8 @@ footer {
 /* Success State Styling */
 .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] {
   animation: fadeInScale 0.6s ease-out 0.3s both !important;
+  position: relative;
+  z-index: 10;
 }
 
 .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] .fas.fa-check-circle {
@@ -5287,6 +5297,8 @@ footer {
   color: #28a745 !important;
   text-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
   animation: bounceIn 0.8s ease-out 0.5s both !important;
+  position: relative;
+  z-index: 10;
 }
 
 .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] h2 {
@@ -5295,6 +5307,10 @@ footer {
   font-size: 2.5rem !important;
   margin: 1.5rem 0 !important;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  position: relative;
+  z-index: 10;
+  line-height: 1.2 !important;
+  letter-spacing: -0.5px !important;
 }
 
 .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] .lead {
@@ -5624,8 +5640,7 @@ footer {
 .text-success::before,
 .alert-success::before,
 .success-message::before,
-.success-state::before,
-[ng-if*="paymentSuccess.bookingDetails"]::before {
+.success-state::before {
   content: "✓" !important;
   position: absolute !important;
   left: 1rem !important;
@@ -5642,6 +5657,11 @@ footer {
   align-items: center !important;
   justify-content: center !important;
   box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3) !important;
+}
+
+/* Remove checkmark from payment success page container */
+.container.mt-5 [ng-if*="paymentSuccess.bookingDetails"]::before {
+  display: none !important;
 }
 
 .text-success h2,
