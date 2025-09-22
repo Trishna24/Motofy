@@ -5227,6 +5227,315 @@ footer {
   font-weight: 500;
 }
 
+/* ===== PAYMENT STATUS MESSAGE STYLES ===== */
+
+/* Payment Success Messages */
+.text-success,
+.alert-success,
+.success-message,
+.success-state,
+[ng-if*="paymentSuccess.bookingDetails"] {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 50%, #b8dcc6 100%) !important;
+  color: #155724 !important;
+  font-weight: 600 !important;
+  font-size: 1.1em !important;
+  border: 2px solid #c3e6cb !important;
+  border-radius: 12px !important;
+  padding: 1.5rem 2rem !important;
+  margin: 1rem 0 !important;
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.15) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  animation: fadeInSlide 0.6s ease-out !important;
+  transition: all 0.3s ease !important;
+}
+
+.text-success::before,
+.alert-success::before,
+.success-message::before,
+.success-state::before,
+[ng-if*="paymentSuccess.bookingDetails"]::before {
+  content: "✓" !important;
+  position: absolute !important;
+  left: 1rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 1.5em !important;
+  font-weight: bold !important;
+  color: #28a745 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3) !important;
+}
+
+.text-success h2,
+.alert-success h2,
+.success-message h2,
+.success-state h2,
+[ng-if*="paymentSuccess.bookingDetails"] h2 {
+  color: #155724 !important;
+  margin-left: 3rem !important;
+  font-weight: 700 !important;
+}
+
+.text-success p,
+.alert-success p,
+.success-message p,
+.success-state p,
+[ng-if*="paymentSuccess.bookingDetails"] p {
+  color: #155724 !important;
+  margin-left: 3rem !important;
+  opacity: 0.9 !important;
+}
+
+/* Payment Error/Failure Messages */
+.text-warning,
+.text-danger,
+.alert-danger,
+.error-message,
+.error-state,
+[ng-if*="paymentSuccess.error"] {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 50%, #f1b0b7 100%) !important;
+  color: #721c24 !important;
+  font-weight: 600 !important;
+  font-size: 1.1em !important;
+  border: 2px solid #f5c6cb !important;
+  border-radius: 12px !important;
+  padding: 1.5rem 2rem !important;
+  margin: 1rem 0 !important;
+  box-shadow: 0 8px 25px rgba(220, 53, 69, 0.15) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  animation: fadeInSlide 0.6s ease-out !important;
+  transition: all 0.3s ease !important;
+}
+
+.text-warning::before,
+.text-danger::before,
+.alert-danger::before,
+.error-message::before,
+.error-state::before,
+[ng-if*="paymentSuccess.error"]::before {
+  content: "✕" !important;
+  position: absolute !important;
+  left: 1rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 1.5em !important;
+  font-weight: bold !important;
+  color: #dc3545 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3) !important;
+}
+
+.text-warning h2,
+.text-danger h2,
+.alert-danger h2,
+.error-message h2,
+.error-state h2,
+[ng-if*="paymentSuccess.error"] h2 {
+  color: #721c24 !important;
+  margin-left: 3rem !important;
+  font-weight: 700 !important;
+}
+
+.text-warning p,
+.text-danger p,
+.alert-danger p,
+.error-message p,
+.error-state p,
+[ng-if*="paymentSuccess.error"] p {
+  color: #721c24 !important;
+  margin-left: 3rem !important;
+  opacity: 0.9 !important;
+}
+
+/* Payment Cancel Messages - Orange/Warning Theme */
+.payment-cancel-message,
+.cancel-state,
+.text-warning {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 50%, #fdcb6e 100%) !important;
+  color: #856404 !important;
+  font-weight: 600 !important;
+  font-size: 1.1em !important;
+  border: 2px solid #ffeaa7 !important;
+  border-radius: 12px !important;
+  padding: 1.5rem 2rem !important;
+  margin: 1rem 0 !important;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.15) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  animation: fadeInSlide 0.6s ease-out !important;
+  transition: all 0.3s ease !important;
+}
+
+.payment-cancel-message::before,
+.cancel-state::before {
+  content: "⚠" !important;
+  position: absolute !important;
+  left: 1rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 1.5em !important;
+  font-weight: bold !important;
+  color: #ffc107 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3) !important;
+}
+
+.payment-cancel-message h2,
+.cancel-state h2 {
+  color: #856404 !important;
+  margin-left: 3rem !important;
+  font-weight: 700 !important;
+}
+
+.payment-cancel-message p,
+.cancel-state p {
+  color: #856404 !important;
+  margin-left: 3rem !important;
+  opacity: 0.9 !important;
+}
+
+/* Animations */
+@keyframes fadeInSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Hover Effects */
+.text-success:hover,
+.alert-success:hover,
+.success-message:hover,
+.text-warning:hover,
+.text-danger:hover,
+.alert-danger:hover,
+.error-message:hover,
+.payment-cancel-message:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Loading State Enhancements */
+[ng-if*="paymentSuccess.loading"] {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%) !important;
+  color: #0d47a1 !important;
+  font-weight: 600 !important;
+  border: 2px solid #bbdefb !important;
+  border-radius: 12px !important;
+  padding: 1.5rem 2rem !important;
+  margin: 1rem 0 !important;
+  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15) !important;
+  animation: pulse 2s infinite !important;
+}
+
+/* Mobile Responsive for Payment Messages */
+@media (max-width: 768px) {
+  .text-success,
+  .alert-success,
+  .success-message,
+  .text-warning,
+  .text-danger,
+  .alert-danger,
+  .error-message,
+  .payment-cancel-message,
+  [ng-if*="paymentSuccess.bookingDetails"],
+  [ng-if*="paymentSuccess.error"],
+  [ng-if*="paymentSuccess.loading"] {
+    padding: 1rem 1.5rem !important;
+    font-size: 1em !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  .text-success::before,
+  .alert-success::before,
+  .success-message::before,
+  .text-warning::before,
+  .text-danger::before,
+  .alert-danger::before,
+  .error-message::before,
+  .payment-cancel-message::before,
+  .cancel-state::before {
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 1.2em !important;
+  }
+  
+  .text-success h2,
+  .alert-success h2,
+  .success-message h2,
+  .text-warning h2,
+  .text-danger h2,
+  .alert-danger h2,
+  .error-message h2,
+  .payment-cancel-message h2 {
+    margin-left: 2.5rem !important;
+    font-size: 1.3em !important;
+  }
+  
+  .text-success p,
+  .alert-success p,
+  .success-message p,
+  .text-warning p,
+  .text-danger p,
+  .alert-danger p,
+  .error-message p,
+  .payment-cancel-message p {
+    margin-left: 2.5rem !important;
+    font-size: 0.95em !important;
+  }
+}
+
+/* Tablet Responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .text-success,
+  .alert-success,
+  .success-message,
+  .text-warning,
+  .text-danger,
+  .alert-danger,
+  .error-message,
+  .payment-cancel-message,
+  [ng-if*="paymentSuccess.bookingDetails"],
+  [ng-if*="paymentSuccess.error"],
+  [ng-if*="paymentSuccess.loading"] {
+    padding: 1.25rem 1.75rem !important;
+    font-size: 1.05em !important;
+  }
+}
+
 /* Mobile Responsive for Fullscreen */
 @media (max-width: 768px) {
   .fullscreen-chart .chart-header {
