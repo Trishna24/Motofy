@@ -148,7 +148,7 @@ const updateBookingStatus = async (req, res) => {
   try {
     const { status } = req.body;
     
-    if (!['Pending', 'Confirmed', 'Cancelled'].includes(status)) {
+    if (!['Pending', 'Confirmed', 'Cancelled', 'Completed'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status value' });
     }
     
@@ -158,8 +158,18 @@ const updateBookingStatus = async (req, res) => {
       return res.status(404).json({ message: 'Booking not found' });
     }
     
+    const oldStatus = booking.status;
     booking.status = status;
     await booking.save();
+    
+    // Update car status based on booking status changes
+    if (status === 'Confirmed' && oldStatus !== 'Confirmed') {
+      // Set car to booked when booking is confirmed
+      await Car.findByIdAndUpdate(booking.car, { status: 'booked' });
+    } else if ((status === 'Cancelled' && oldStatus !== 'Cancelled') || (status === 'Completed' && oldStatus !== 'Completed')) {
+      // Set car back to available when booking is cancelled or completed
+      await Car.findByIdAndUpdate(booking.car, { status: 'available' });
+    }
     
     res.json({ message: 'Booking status updated', booking });
   } catch (error) {
@@ -183,7 +193,21 @@ const updateBooking = async (req, res) => {
     if (pickupLocation) booking.pickupLocation = pickupLocation;
     if (dropoffLocation) booking.dropoffLocation = dropoffLocation;
     if (totalAmount) booking.totalAmount = totalAmount;
-    if (status && ['Pending', 'Confirmed', 'Cancelled'].includes(status)) booking.status = status;
+    
+    // Handle status changes and update car status accordingly
+    if (status && ['Pending', 'Confirmed', 'Cancelled', 'Completed'].includes(status)) {
+      const oldStatus = booking.status;
+      booking.status = status;
+      
+      // Update car status based on booking status changes
+      if (status === 'Confirmed' && oldStatus !== 'Confirmed') {
+        // Set car to booked when booking is confirmed
+        await Car.findByIdAndUpdate(booking.car, { status: 'booked' });
+      } else if ((status === 'Cancelled' && oldStatus !== 'Cancelled') || (status === 'Completed' && oldStatus !== 'Completed')) {
+        // Set car back to available when booking is cancelled or completed
+        await Car.findByIdAndUpdate(booking.car, { status: 'available' });
+      }
+    }
 
     await booking.save();
     res.json({ message: 'Booking updated successfully', booking });
@@ -229,6 +253,7 @@ const getBookingStats = async (req, res) => {
     const pendingBookings = await Booking.countDocuments({ ...dateFilter, status: 'Pending' });
     const confirmedBookings = await Booking.countDocuments({ ...dateFilter, status: 'Confirmed' });
     const cancelledBookings = await Booking.countDocuments({ ...dateFilter, status: 'Cancelled' });
+    const completedBookings = await Booking.countDocuments({ ...dateFilter, status: 'Completed' });
     
     // Calculate total revenue from non-cancelled bookings
     const revenueBookings = await Booking.find({ ...dateFilter, status: { $ne: 'Cancelled' } });
@@ -274,7 +299,8 @@ const getBookingStats = async (req, res) => {
     const statusDistribution = [
       { status: 'Confirmed', count: confirmedBookings, color: '#28a745' },
       { status: 'Pending', count: pendingBookings, color: '#ffc107' },
-      { status: 'Cancelled', count: cancelledBookings, color: '#dc3545' }
+      { status: 'Cancelled', count: cancelledBookings, color: '#dc3545' },
+      { status: 'Completed', count: completedBookings, color: '#17a2b8' }
     ];
       
     const stats = {
@@ -282,6 +308,7 @@ const getBookingStats = async (req, res) => {
       pendingBookings,
       confirmedBookings,
       cancelledBookings,
+      completedBookings,
       totalRevenue,
       recentBookings,
       bookingTrends,
@@ -325,13 +352,13 @@ const getRevenueAnalytics = async (req, res) => {
         break;
     }
     
-    // Get revenue data from confirmed bookings only
-    const revenueBookings = await Booking.find({ ...dateFilter, status: { $ne: 'Cancelled' } });
+    // Get revenue data from confirmed and completed bookings only
+    const revenueBookings = await Booking.find({ ...dateFilter, status: { $in: ['Confirmed', 'Completed'] } });
     
     // Calculate total revenue
     const totalRevenue = revenueBookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
     const confirmedRevenue = revenueBookings.filter(b => b.status === 'Confirmed').reduce((sum, booking) => sum + booking.totalAmount, 0);
-    const pendingRevenue = revenueBookings.filter(b => b.status === 'Pending').reduce((sum, booking) => sum + booking.totalAmount, 0);
+    const completedRevenue = revenueBookings.filter(b => b.status === 'Completed').reduce((sum, booking) => sum + booking.totalAmount, 0);
     
     // Calculate average booking value
     const avgBookingValue = revenueBookings.length > 0 ? totalRevenue / revenueBookings.length : 0;
@@ -342,7 +369,7 @@ const getRevenueAnalytics = async (req, res) => {
       {
         $match: {
           createdAt: { $gte: twelveMonthsAgo },
-          status: { $ne: 'Cancelled' }
+          status: { $in: ['Confirmed', 'Completed'] }
         }
       },
       {
@@ -373,7 +400,7 @@ const getRevenueAnalytics = async (req, res) => {
       {
         $match: {
           createdAt: { $gte: thirtyDaysAgo },
-          status: { $ne: 'Cancelled' }
+          status: { $in: ['Confirmed', 'Completed'] }
         }
       },
       {
@@ -404,7 +431,7 @@ const getRevenueAnalytics = async (req, res) => {
       {
         $match: {
           ...dateFilter,
-          status: { $ne: 'Cancelled' }
+          status: { $in: ['Confirmed', 'Completed'] }
         }
       },
       {
@@ -437,7 +464,7 @@ const getRevenueAnalytics = async (req, res) => {
     const revenueAnalytics = {
       totalRevenue,
       confirmedRevenue,
-      pendingRevenue,
+      completedRevenue,
       avgBookingValue,
       revenueByMonth,
       revenueByDay,

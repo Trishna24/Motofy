@@ -3,6 +3,7 @@
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const Booking = require('../models/Booking');
+const Car = require('../models/Car');
 
 // @desc    Handle Stripe webhook events
 const handleStripeWebhook = async (req, res) => {
@@ -60,6 +61,10 @@ const handleStripeWebhook = async (req, res) => {
         console.log('💾 Saving booking via webhook...');
         await booking.save();
         await booking.populate('car user');
+
+        // Update car status to 'booked' when booking is confirmed via payment
+        await Car.findByIdAndUpdate(bookingData.car, { status: 'booked' });
+        console.log('🚗 Car status updated to booked for car:', bookingData.car);
 
         console.log('✅ Booking created successfully via webhook:', booking._id);
       } catch (error) {

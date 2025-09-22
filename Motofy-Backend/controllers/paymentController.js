@@ -2,6 +2,7 @@
 
 const { createStripeSession } = require('../utils/stripe');
 const Booking = require('../models/Booking');
+const Car = require('../models/Car');
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -67,6 +68,9 @@ const handlePaymentSuccess = async (req, res) => {
 
     await booking.save();
     await booking.populate('car user');
+
+    // Update car status to 'booked' when booking is confirmed via payment
+    await Car.findByIdAndUpdate(bookingData.car, { status: 'booked' });
 
     res.status(200).json({ 
       success: true, 
@@ -201,6 +205,10 @@ const verifyPaymentSession = async (req, res) => {
           await booking.populate('car user');
           debugInfo.bookingCreated = true;
           debugInfo.bookingId = booking._id;
+
+          // Update car status to 'booked' when booking is confirmed via payment
+          await Car.findByIdAndUpdate(bookingData.car, { status: 'booked' });
+          debugInfo.carStatusUpdated = true;
 
           return res.json({
             success: true,
