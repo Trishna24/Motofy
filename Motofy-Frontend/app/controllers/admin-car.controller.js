@@ -136,30 +136,12 @@ angular.module('motofyApp')
         
         ApiService.updateCarStatus(car._id, newStatus)
             .then(function(response) {
-                if (typeof toastr !== 'undefined') {
-                    toastr.success('Car status updated successfully!');
-                } else {
-                    vm.success = 'Car status updated successfully!';
-                    $timeout(function() { vm.success = ''; }, 3000);
-                }
-                // Refresh analytics if parent controller exists
-                if ($scope.$parent.adminDashboard && $scope.$parent.adminDashboard.loadCarAnalytics) {
-                    $scope.$parent.adminDashboard.loadCarAnalytics();
-                }
+                toastr.success('Car status updated successfully!');
+                vm.refreshStats();
             })
             .catch(function(error) {
                 car.status = originalStatus; // Revert on error
-                var errorMessage = 'Failed to update car status';
-                if (error.data && error.data.message) {
-                    errorMessage += ': ' + error.data.message;
-                }
-                
-                if (typeof toastr !== 'undefined') {
-                    toastr.error(errorMessage);
-                } else {
-                    vm.error = errorMessage;
-                    $timeout(function() { vm.error = ''; }, 5000);
-                }
+                toastr.error('Failed to update car status: ' + (error.data?.message || 'Unknown error'));
                 console.error('Error updating car status:', error);
             });
     };
