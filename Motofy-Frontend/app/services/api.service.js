@@ -50,6 +50,12 @@ angular.module('motofyApp')
         }
         return $http.get(BASE_URL + '/cars', { headers: headers });
       },
+      getAllCarsForAdmin: function() {
+        var adminToken = window.localStorage.getItem('adminToken');
+        return $http.get(BASE_URL + '/admin/cars', {
+          headers: { 'Authorization': 'Bearer ' + adminToken }
+        });
+      },
       addCar: function(formData) {
         var adminToken = window.localStorage.getItem('adminToken');
         return $http.post(BASE_URL + '/cars', formData, {

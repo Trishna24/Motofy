@@ -30,7 +30,7 @@ angular.module('motofyApp')
 
     vm.loadCars = function() {
       vm.resetAlerts();
-      ApiService.getAllCars()
+      ApiService.getAllCarsForAdmin()
         .then(function(res) { vm.cars = res.data || []; })
         .catch(function() { vm.error = 'Failed to load cars.'; });
     };
