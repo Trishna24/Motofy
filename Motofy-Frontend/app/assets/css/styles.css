@@ -5227,6 +5227,377 @@ footer {
   font-weight: 500;
 }
 
+/* ===== PAYMENT SUCCESS PAGE PROFESSIONAL STYLING ===== */
+
+/* Main Container Enhancement */
+.container.mt-5 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 2rem 1rem !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card Container Redesign */
+.container.mt-5 .row {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.container.mt-5 .card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border: none !important;
+  border-radius: 24px !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 
+              0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  animation: slideInUp 0.8s ease-out !important;
+}
+
+.container.mt-5 .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+  z-index: 1;
+}
+
+.container.mt-5 .card-body {
+  padding: 3rem 2.5rem !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Success State Styling */
+.container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] {
+  animation: fadeInScale 0.6s ease-out 0.3s both !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] .fas.fa-check-circle {
+  font-size: 5rem !important;
+  color: #28a745 !important;
+  text-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+  animation: bounceIn 0.8s ease-out 0.5s both !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] h2 {
+  color: #1e7e34 !important;
+  font-weight: 700 !important;
+  font-size: 2.5rem !important;
+  margin: 1.5rem 0 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] .lead {
+  color: #495057 !important;
+  font-size: 1.3rem !important;
+  font-weight: 400 !important;
+  margin-bottom: 2rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Booking Details Card Enhancement */
+.container.mt-5 .alert-info {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f8f9ff 100%) !important;
+  border: 2px solid #90caf9 !important;
+  border-radius: 16px !important;
+  padding: 2rem !important;
+  margin: 2rem 0 !important;
+  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.container.mt-5 .alert-info::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #2196f3, #03a9f4);
+}
+
+.container.mt-5 .alert-info h5 {
+  color: #1565c0 !important;
+  font-weight: 700 !important;
+  font-size: 1.4rem !important;
+  margin-bottom: 1.5rem !important;
+  text-align: center !important;
+  position: relative !important;
+}
+
+.container.mt-5 .alert-info h5::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #2196f3, #03a9f4);
+  border-radius: 2px;
+}
+
+.container.mt-5 .alert-info p {
+  color: #1565c0 !important;
+  font-weight: 500 !important;
+  font-size: 1.1rem !important;
+  margin: 0.8rem 0 !important;
+  padding: 0.5rem 0 !important;
+  border-bottom: 1px solid rgba(33, 150, 243, 0.1) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.container.mt-5 .alert-info p:last-child {
+  border-bottom: none !important;
+}
+
+.container.mt-5 .alert-info p strong {
+  color: #0d47a1 !important;
+  font-weight: 600 !important;
+  min-width: 140px !important;
+  text-align: left !important;
+}
+
+/* Action Buttons Enhancement */
+.container.mt-5 .d-flex.justify-content-center {
+  gap: 1.5rem !important;
+  margin: 2.5rem 0 !important;
+  flex-wrap: wrap !important;
+}
+
+.container.mt-5 .btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 1rem 2rem !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.container.mt-5 .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.container.mt-5 .btn-primary:hover::before {
+  left: 100%;
+}
+
+.container.mt-5 .btn-primary:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 35px rgba(0, 123, 255, 0.4) !important;
+}
+
+.container.mt-5 .btn-outline-secondary {
+  background: transparent !important;
+  border: 2px solid #6c757d !important;
+  border-radius: 12px !important;
+  padding: 1rem 2rem !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  color: #495057 !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.container.mt-5 .btn-outline-secondary:hover {
+  background: #6c757d !important;
+  color: white !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3) !important;
+}
+
+/* Loading State Enhancement */
+.container.mt-5 [ng-if*="paymentSuccess.loading"] {
+  animation: fadeInScale 0.6s ease-out !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.loading"] .fas.fa-spinner {
+  color: #007bff !important;
+  animation: spin 1s linear infinite, pulse 2s ease-in-out infinite alternate !important;
+  text-shadow: 0 4px 15px rgba(0, 123, 255, 0.3) !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.loading"] h3 {
+  color: #0056b3 !important;
+  font-weight: 600 !important;
+  margin: 1.5rem 0 1rem 0 !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.loading"] p {
+  color: #6c757d !important;
+  font-size: 1.1rem !important;
+}
+
+/* Error State Enhancement */
+.container.mt-5 [ng-if*="paymentSuccess.error"] {
+  animation: fadeInScale 0.6s ease-out !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.error"] .fas.fa-exclamation-triangle {
+  color: #ffc107 !important;
+  text-shadow: 0 4px 15px rgba(255, 193, 7, 0.3) !important;
+  animation: shake 0.8s ease-out !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.error"] h2 {
+  color: #e67e22 !important;
+  font-weight: 700 !important;
+  font-size: 2.2rem !important;
+  margin: 1.5rem 0 !important;
+}
+
+.container.mt-5 [ng-if*="paymentSuccess.error"] .lead {
+  color: #dc3545 !important;
+  font-weight: 500 !important;
+}
+
+/* Footer Text Enhancement */
+.container.mt-5 .text-muted small {
+  color: #6c757d !important;
+  font-size: 0.95rem !important;
+  font-style: italic !important;
+  background: rgba(108, 117, 125, 0.1) !important;
+  padding: 0.8rem 1.5rem !important;
+  border-radius: 25px !important;
+  display: inline-block !important;
+  margin-top: 1rem !important;
+}
+
+/* Animations */
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive for Payment Success Page */
+@media (max-width: 768px) {
+  .container.mt-5 {
+    padding: 1rem 0.5rem !important;
+  }
+  
+  .container.mt-5 .card-body {
+    padding: 2rem 1.5rem !important;
+  }
+  
+  .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] h2 {
+    font-size: 2rem !important;
+  }
+  
+  .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] .lead {
+    font-size: 1.1rem !important;
+  }
+  
+  .container.mt-5 .alert-info {
+    padding: 1.5rem !important;
+  }
+  
+  .container.mt-5 .alert-info p {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+  
+  .container.mt-5 .alert-info p strong {
+    min-width: auto !important;
+    margin-bottom: 0.3rem !important;
+  }
+  
+  .container.mt-5 .d-flex.justify-content-center {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  
+  .container.mt-5 .btn-primary,
+  .container.mt-5 .btn-outline-secondary {
+    width: 100% !important;
+    max-width: 280px !important;
+    margin: 0.5rem 0 !important;
+  }
+}
+
+/* Tablet Responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container.mt-5 .card-body {
+    padding: 2.5rem 2rem !important;
+  }
+  
+  .container.mt-5 [ng-if*="paymentSuccess.bookingDetails"] h2 {
+    font-size: 2.2rem !important;
+  }
+}
+
 /* ===== PAYMENT STATUS MESSAGE STYLES ===== */
 
 /* Payment Success Messages */
