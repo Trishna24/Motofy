@@ -5627,7 +5627,6 @@ footer {
 .alert-success::before,
 .success-message::before,
 .success-state::before {
-  content: "✓" !important;
   position: absolute !important;
   left: 1rem !important;
   top: 50% !important;
