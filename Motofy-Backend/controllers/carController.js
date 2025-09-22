@@ -4,38 +4,12 @@ const path = require('path');
 const Car = require('../models/Car');
 
 
-// @desc Get all cars
+// @desc Get all cars for users (only available cars)
 const getAllCars = async (req, res) => {
   try {
-    const Booking = require('../models/Booking');
-    const jwt = require('jsonwebtoken');
-    
-    // Check if user is authenticated
-    const token = req.headers.authorization?.split(' ')[1];
-    let currentUserId = null;
-    let isAdmin = false;
-    
-    if (token) {
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        currentUserId = decoded.userId;
-        isAdmin = decoded.isAdmin || false;
-      } catch (err) {
-        // Token invalid, continue as guest
-      }
-    }
-    
-    let cars;
-    
-    // If user is admin, return all cars with their current status
-    if (isAdmin) {
-      cars = await Car.find();
-      return res.json(cars);
-    }
-    
     // For regular users and guests, only return cars with status "available"
     // Also handle cars that don't have status field (legacy data)
-    cars = await Car.find({ 
+    const cars = await Car.find({ 
       $or: [
         { status: "available" },
         { status: { $exists: false } },
@@ -46,6 +20,18 @@ const getAllCars = async (req, res) => {
     res.json(cars);
   } catch (error) {
     console.error('Error fetching cars:', error);
+    res.status(500).json({ success: false, message: 'Error fetching cars from database. Please try again later.' });
+  }
+};
+
+// @desc Get all cars for admin (all cars regardless of status)
+const getAllCarsForAdmin = async (req, res) => {
+  try {
+    // Return all cars with their current status for admin
+    const cars = await Car.find();
+    res.json(cars);
+  } catch (error) {
+    console.error('Error fetching cars for admin:', error);
     res.status(500).json({ success: false, message: 'Error fetching cars from database. Please try again later.' });
   }
 };
@@ -459,6 +445,7 @@ const updateCarStatus = async (req, res) => {
 
 module.exports = {
   getAllCars,
+  getAllCarsForAdmin,
   getCarById,
   addCar,
   updateCar,
