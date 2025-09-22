@@ -125,6 +125,22 @@ angular.module('motofyApp')
         });
     };
 
+    vm.updateCarStatus = function(car) {
+      vm.resetAlerts();
+      ApiService.updateCarStatus(car._id, { status: car.status })
+        .then(function(response) {
+          vm.success = response.data.message;
+          // Refresh analytics if parent controller exists
+          if ($scope.$parent.adminDashboard && $scope.$parent.adminDashboard.loadCarAnalytics) {
+            $scope.$parent.adminDashboard.loadCarAnalytics();
+          }
+        })
+        .catch(function() { 
+          vm.error = 'Failed to update car status.'; 
+          vm.loadCars(); // Reload to reset the dropdown
+        });
+    };
+
     // Refresh whenever admin switches to Cars tab
     $scope.$watch(
       function() {

@@ -31,6 +31,7 @@ const carSchema = new mongoose.Schema(
     carNumber: {
       type: String,
       required: true,
+      unique: true,
     },
     image: {
       type: String, // Stores filename of the uploaded image
@@ -39,10 +40,10 @@ const carSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    carNumber: {
+    status: {
       type: String,
-      required: true,
-      unique: true,
+      enum: ["available", "booked", "maintenance"],
+      default: "available"
     },
     availability: {
       type: Boolean,

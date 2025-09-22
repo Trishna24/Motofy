@@ -7,7 +7,8 @@ const {
   updateCar,
   deleteCar,
   getCarAnalytics,
-  toggleCarAvailability
+  toggleCarAvailability,
+  updateCarStatus
 } = require('../controllers/carController');
 const upload = require('../middleware/upload');
 const { body, validationResult } = require('express-validator');
@@ -40,5 +41,6 @@ router.post('/',adminProtect, upload.single('image'), carValidation, addCar);   
 router.put('/:id',adminProtect, upload.single('image'), carValidation, updateCar);    // PUT update car with optional new image
 router.delete('/:id',adminProtect, deleteCar);                         // DELETE car by ID
 router.patch('/:id/toggle-availability', adminProtect, toggleCarAvailability);        // PATCH toggle car availability
+router.patch('/:id/status', adminProtect, updateCarStatus);                           // PATCH update car status
 
 module.exports = router;

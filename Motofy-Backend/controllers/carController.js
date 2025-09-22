@@ -10,8 +10,6 @@ const getAllCars = async (req, res) => {
     const Booking = require('../models/Booking');
     const jwt = require('jsonwebtoken');
     
-    let cars = await Car.find();
-    
     // Check if user is authenticated
     const token = req.headers.authorization?.split(' ')[1];
     let currentUserId = null;
@@ -27,61 +25,18 @@ const getAllCars = async (req, res) => {
       }
     }
     
-    // Get all active bookings (not cancelled)
-    const activeBookings = await Booking.find({
-      status: { $ne: 'Cancelled' }
-    }).populate('car user');
+    let cars;
     
-    // Create a map of booked car IDs and their booking users
-    const bookedCarsMap = new Map();
-    activeBookings.forEach(booking => {
-      if (booking.car && booking.car._id) {
-        bookedCarsMap.set(booking.car._id.toString(), booking.user._id.toString());
-      }
-    });
-    
-    // If user is admin, return all cars but mark booked ones as unavailable
+    // If user is admin, return all cars with their current status
     if (isAdmin) {
-      const adminCars = cars.map(car => {
-        const carId = car._id.toString();
-        const bookedByUserId = bookedCarsMap.get(carId);
-        
-        // Create a plain object copy of the car
-        const carObj = car.toObject();
-        
-        if (bookedByUserId) {
-          // Mark car as unavailable for admin view
-          carObj.availability = false;
-          carObj.bookedByUser = true;
-        }
-        
-        return carObj;
-      });
-      
-      return res.json(adminCars);
+      cars = await Car.find();
+      return res.json(cars);
     }
     
-    // Filter cars based on booking status for regular users
-    const filteredCars = cars.filter(car => {
-      const carId = car._id.toString();
-      const bookedByUserId = bookedCarsMap.get(carId);
-      
-      // If car is not booked, show it
-      if (!bookedByUserId) {
-        return true;
-      }
-      
-      // If car is booked by current user, show it with booking status
-      if (currentUserId && bookedByUserId === currentUserId) {
-        car.userBookedThis = true;
-        return true;
-      }
-      
-      // If car is booked by someone else, hide it
-      return false;
-    });
+    // For regular users, only return cars with status "available"
+    cars = await Car.find({ status: "available" });
     
-    res.json(filteredCars);
+    res.json(cars);
   } catch (error) {
     console.error('Error fetching cars:', error);
     res.status(500).json({ success: false, message: 'Error fetching cars from database. Please try again later.' });
@@ -462,6 +417,39 @@ const toggleCarAvailability = async (req, res) => {
   }
 };
 
+// @desc Update car status (Admin only)
+const updateCarStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const carId = req.params.id;
+
+    // Validate status
+    const validStatuses = ['available', 'booked', 'maintenance'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ 
+        message: 'Invalid status. Valid statuses are: available, booked, maintenance' 
+      });
+    }
+
+    const car = await Car.findById(carId);
+    if (!car) {
+      return res.status(404).json({ message: 'Car not found' });
+    }
+
+    // Update car status
+    car.status = status;
+    await car.save();
+
+    res.json({ 
+      message: `Car status updated to ${status} successfully`,
+      car: car
+    });
+  } catch (error) {
+    console.error('Error updating car status:', error);
+    res.status(500).json({ success: false, message: 'Error updating car status. Please try again later.' });
+  }
+};
+
 module.exports = {
   getAllCars,
   getCarById,
@@ -469,5 +457,6 @@ module.exports = {
   updateCar,
   deleteCar,
   getCarAnalytics,
-  toggleCarAvailability
+  toggleCarAvailability,
+  updateCarStatus
 };

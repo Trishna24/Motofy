@@ -82,6 +82,13 @@ angular.module('motofyApp')
         });
       },
       
+      updateCarStatus: function(id, statusData) {
+        var adminToken = window.localStorage.getItem('adminToken');
+        return $http.patch(BASE_URL + '/cars/' + id + '/status', statusData, {
+          headers: { 'Authorization': 'Bearer ' + adminToken }
+        });
+      },
+      
 
       // Admin booking management
       getBookingById: function(bookingId) {

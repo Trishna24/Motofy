@@ -11,6 +11,16 @@ const createBooking = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
+    // Check if car exists and is available
+    const carDoc = await Car.findById(car);
+    if (!carDoc) {
+      return res.status(404).json({ success: false, message: 'Car not found.' });
+    }
+    
+    if (carDoc.status !== 'available') {
+      return res.status(400).json({ success: false, message: 'Car is not available for booking.' });
+    }
+
     // Check for overlapping bookings for the same car
     const overlappingBooking = await Booking.findOne({
       car,
@@ -36,6 +46,9 @@ const createBooking = async (req, res) => {
     });
 
     await booking.save();
+
+    // Update car status to 'booked'
+    await Car.findByIdAndUpdate(car, { status: 'booked' });
 
     res.status(201).json({ message: 'Booking created successfully', booking });
   } catch (error) {
@@ -85,6 +98,9 @@ const cancelBooking = async (req, res) => {
 
     booking.status = 'Cancelled';
     await booking.save();
+
+    // Update car status back to 'available' when booking is cancelled
+    await Car.findByIdAndUpdate(booking.car, { status: 'available' });
 
     res.json({ message: 'Booking cancelled' });
   } catch (error) {

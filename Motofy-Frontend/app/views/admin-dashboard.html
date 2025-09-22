@@ -201,18 +201,19 @@
                 <td>{{car.transmission}}</td>
                 <td>₹{{car.price | number}}</td>
                 <td>
-                  <span class="status-badge" ng-class="{'status-available': car.availability && !car.bookedByUser, 'status-booked': car.bookedByUser, 'status-unavailable': !car.availability && !car.bookedByUser}">
-                    {{car.bookedByUser ? 'Booked by User' : (car.availability ? 'Available' : 'Unavailable')}}
+                  <span class="status-badge" ng-class="{'status-available': car.status === 'available', 'status-booked': car.status === 'booked', 'status-unavailable': car.status === 'maintenance'}">
+                    {{car.status === 'available' ? 'Available' : (car.status === 'booked' ? 'Booked' : 'Maintenance')}}
                   </span>
                 </td>
                 <td>
-                  <button class="btn btn-sm btn-toggle" 
-                          ng-class="{'btn-success': !car.availability && !car.bookedByUser, 'btn-warning': car.availability && !car.bookedByUser}"
-                          ng-click="adminCar.toggleAvailability(car)"
-                          ng-disabled="car.bookedByUser"
-                          title="{{car.bookedByUser ? 'Cannot modify - Car is booked by user' : (car.availability ? 'Make Unavailable' : 'Make Available')}}">
-                    {{car.bookedByUser ? 'User Booked' : (car.availability ? 'Make Unavailable' : 'Make Available')}}
-                  </button>
+                  <select class="form-control status-select" 
+                          ng-model="car.status" 
+                          ng-change="adminCar.updateCarStatus(car)"
+                          style="width: 120px; display: inline-block; margin-right: 5px;">
+                    <option value="available">Available</option>
+                    <option value="booked">Booked</option>
+                    <option value="maintenance">Maintenance</option>
+                  </select>
                   <button class="btn btn-sm" ng-click="adminCar.showEditForm(car)">Edit</button>
                   <button class="btn btn-sm btn-danger" ng-click="adminCar.deleteCar(car._id)">Delete</button>
                 </td>
