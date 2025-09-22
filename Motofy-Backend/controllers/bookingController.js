@@ -165,10 +165,10 @@ const updateBookingStatus = async (req, res) => {
     // Update car status based on booking status changes
     if (status === 'Confirmed' && oldStatus !== 'Confirmed') {
       // Set car to booked when booking is confirmed
-      await Car.findByIdAndUpdate(booking.car, { status: 'booked' });
+      await Car.findByIdAndUpdate(booking.car, { status: 'Booked' });
     } else if ((status === 'Cancelled' && oldStatus !== 'Cancelled') || (status === 'Completed' && oldStatus !== 'Completed')) {
       // Set car back to available when booking is cancelled or completed
-      await Car.findByIdAndUpdate(booking.car, { status: 'available' });
+      await Car.findByIdAndUpdate(booking.car, { status: 'Available' });
     }
     
     res.json({ message: 'Booking status updated', booking });
@@ -202,10 +202,10 @@ const updateBooking = async (req, res) => {
       // Update car status based on booking status changes
       if (status === 'Confirmed' && oldStatus !== 'Confirmed') {
         // Set car to booked when booking is confirmed
-        await Car.findByIdAndUpdate(booking.car, { status: 'booked' });
+        await Car.findByIdAndUpdate(booking.car, { status: 'Booked' });
       } else if ((status === 'Cancelled' && oldStatus !== 'Cancelled') || (status === 'Completed' && oldStatus !== 'Completed')) {
         // Set car back to available when booking is cancelled or completed
-        await Car.findByIdAndUpdate(booking.car, { status: 'available' });
+        await Car.findByIdAndUpdate(booking.car, { status: 'Available' });
       }
     }
 

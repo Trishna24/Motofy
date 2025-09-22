@@ -9,11 +9,11 @@ const getAllCars = async (req, res) => {
   try {
     const Booking = require('../models/Booking');
     
-    // For regular users and guests, only return cars with status "available"
+    // For regular users and guests, only return cars with status "Available"
     // Also handle cars that don't have status field (legacy data)
     let cars = await Car.find({ 
       $or: [
-        { status: "available" },
+        { status: "Available" },
         { status: { $exists: false } },
         { status: null }
       ]
@@ -467,10 +467,10 @@ const updateCarStatus = async (req, res) => {
     const carId = req.params.id;
 
     // Validate status
-    const validStatuses = ['available', 'booked', 'maintenance'];
+    const validStatuses = ['Available', 'Booked', 'Maintenance'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ 
-        message: 'Invalid status. Valid statuses are: available, booked, maintenance' 
+        message: 'Invalid status. Valid statuses are: Available, Booked, Maintenance' 
       });
     }
 

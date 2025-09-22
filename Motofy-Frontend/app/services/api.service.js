@@ -88,10 +88,13 @@ angular.module('motofyApp')
         });
       },
       
-      updateCarStatus: function(id, statusData) {
+      updateCarStatus: function(id, status) {
         var adminToken = window.localStorage.getItem('adminToken');
-        return $http.patch(BASE_URL + '/cars/' + id + '/status', statusData, {
-          headers: { 'Authorization': 'Bearer ' + adminToken }
+        return $http.patch(BASE_URL + '/cars/' + id + '/status', { status: status }, {
+          headers: { 
+            'Authorization': 'Bearer ' + adminToken,
+            'Content-Type': 'application/json'
+          }
         });
       },
       
