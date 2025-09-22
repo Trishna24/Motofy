@@ -180,6 +180,7 @@
                 <th>Image</th>
                 <th>Name</th>
                 <th>Brand</th>
+                <th>Car Number</th>
                 <th>Fuel</th>
                 <th>Seats</th>
                 <th>Transmission</th>
@@ -196,6 +197,7 @@
                 </td>
                 <td>{{car.name}}</td>
                 <td>{{car.brand}}</td>
+                <td>{{car.carNumber}}</td>
                 <td>{{car.fuelType}}</td>
                 <td>{{car.seats}}</td>
                 <td>{{car.transmission}}</td>
@@ -237,6 +239,10 @@
               <label>
                 <span>Brand</span>
                 <input type="text" ng-model="adminCar.formData.brand" required placeholder="Enter car brand">
+              </label>
+              <label>
+                <span>Car Number</span>
+                <input type="text" ng-model="adminCar.formData.carNumber" required placeholder="Enter car number">
               </label>
               <label>
                 <span>Price (₹)</span>

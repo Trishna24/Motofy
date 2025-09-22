@@ -7,15 +7,43 @@ const Car = require('../models/Car');
 // @desc Get all cars for users (only available cars)
 const getAllCars = async (req, res) => {
   try {
+    const Booking = require('../models/Booking');
+    
     // For regular users and guests, only return cars with status "available"
     // Also handle cars that don't have status field (legacy data)
-    const cars = await Car.find({ 
+    let cars = await Car.find({ 
       $or: [
         { status: "available" },
         { status: { $exists: false } },
         { status: null }
       ]
     });
+    
+    // If user is authenticated, check for confirmed bookings to conditionally include carNumber
+    if (req.user) {
+      const userConfirmedBookings = await Booking.find({
+        user: req.user._id,
+        status: 'Confirmed'
+      }).select('car');
+      
+      const confirmedCarIds = userConfirmedBookings.map(booking => booking.car.toString());
+      
+      // Transform cars to conditionally include carNumber
+      cars = cars.map(car => {
+        const carObj = car.toObject();
+        if (!confirmedCarIds.includes(car._id.toString())) {
+          delete carObj.carNumber;
+        }
+        return carObj;
+      });
+    } else {
+      // For non-authenticated users, remove carNumber from all cars
+      cars = cars.map(car => {
+        const carObj = car.toObject();
+        delete carObj.carNumber;
+        return carObj;
+      });
+    }
     
     res.json(cars);
   } catch (error) {
@@ -39,9 +67,31 @@ const getAllCarsForAdmin = async (req, res) => {
 // @desc Get single car by ID
 const getCarById = async (req, res) => {
   try {
+    const Booking = require('../models/Booking');
+    
     const car = await Car.findById(req.params.id);
     if (!car) return res.status(404).json({ message: 'Car not found' });
-    res.json(car);
+    
+    let carObj = car.toObject();
+    
+    // If user is authenticated, check for confirmed bookings to conditionally include carNumber
+    if (req.user) {
+      const userConfirmedBooking = await Booking.findOne({
+        user: req.user._id,
+        car: req.params.id,
+        status: 'Confirmed'
+      });
+      
+      // If user doesn't have a confirmed booking for this car, remove carNumber
+      if (!userConfirmedBooking) {
+        delete carObj.carNumber;
+      }
+    } else {
+      // For non-authenticated users, remove carNumber
+      delete carObj.carNumber;
+    }
+    
+    res.json(carObj);
   } catch (error) {
     console.error('Error fetching car by ID:', error);
     res.status(500).json({ success: false, message: 'Error fetching car details. Please try again later.' });

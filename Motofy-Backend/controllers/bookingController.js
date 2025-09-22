@@ -63,7 +63,20 @@ const getUserBookings = async (req, res) => {
     const bookings = await Booking.find({ user: req.user._id })
       .populate('car', 'name brand make model year dailyRate image carNumber')
       .sort({ createdAt: -1 });
-    res.json(bookings);
+    
+    // Transform bookings to conditionally include carNumber based on booking status
+    const transformedBookings = bookings.map(booking => {
+      const bookingObj = booking.toObject();
+      
+      // Only include carNumber if booking is confirmed
+      if (booking.status !== 'Confirmed' && bookingObj.car && bookingObj.car.carNumber) {
+        delete bookingObj.car.carNumber;
+      }
+      
+      return bookingObj;
+    });
+    
+    res.json(transformedBookings);
   } catch (error) {
     console.error('Error fetching user bookings:', error);
     res.status(500).json({ success: false, message: 'Error fetching your bookings. Please try again later.' });
@@ -76,7 +89,15 @@ const getBookingById = async (req, res) => {
     if (!booking) {
       return res.status(404).json({ message: 'Booking not found' });
     }
-    res.json(booking);
+    
+    const bookingObj = booking.toObject();
+    
+    // Only include carNumber if booking is confirmed
+    if (booking.status !== 'Confirmed' && bookingObj.car && bookingObj.car.carNumber) {
+      delete bookingObj.car.carNumber;
+    }
+    
+    res.json(bookingObj);
   } catch (error) {
     console.error('Error fetching booking:', error);
     res.status(500).json({ message: 'Error fetching booking. Please try again later.' });
