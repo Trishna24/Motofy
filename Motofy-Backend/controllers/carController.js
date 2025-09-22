@@ -33,8 +33,15 @@ const getAllCars = async (req, res) => {
       return res.json(cars);
     }
     
-    // For regular users, only return cars with status "available"
-    cars = await Car.find({ status: "available" });
+    // For regular users and guests, only return cars with status "available"
+    // Also handle cars that don't have status field (legacy data)
+    cars = await Car.find({ 
+      $or: [
+        { status: "available" },
+        { status: { $exists: false } },
+        { status: null }
+      ]
+    });
     
     res.json(cars);
   } catch (error) {
