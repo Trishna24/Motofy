@@ -125,6 +125,28 @@ angular.module('motofyApp')
         });
     };
 
+    // New method for improved status selector
+    vm.changeCarStatus = function(car, newStatus) {
+        if (car.status === newStatus) {
+            return; // No change needed
+        }
+        
+        var originalStatus = car.status;
+        car.status = newStatus; // Optimistic update
+        
+        ApiService.updateCarStatus(car._id, newStatus)
+            .then(function(response) {
+                toastr.success('Car status updated successfully!');
+                vm.refreshStats();
+            })
+            .catch(function(error) {
+                car.status = originalStatus; // Revert on error
+                toastr.error('Failed to update car status: ' + (error.data?.message || 'Unknown error'));
+                console.error('Error updating car status:', error);
+            });
+    };
+
+    // Existing updateCarStatus method (keeping for backward compatibility)
     vm.updateCarStatus = function(car) {
       vm.resetAlerts();
       ApiService.updateCarStatus(car._id, { status: car.status })

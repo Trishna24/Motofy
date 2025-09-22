@@ -203,17 +203,29 @@ angular.module('motofyApp')
           return false;
         }
         
-        // Apply date range filter
+        // Apply date range filter - Fixed logic
         if (vm.startDate) {
+          var startDateObj = new Date(vm.startDate);
           var pickupDate = new Date(booking.pickupDate);
-          if (pickupDate < vm.startDate) {
+          
+          // Set time to start of day for proper comparison
+          startDateObj.setHours(0, 0, 0, 0);
+          pickupDate.setHours(0, 0, 0, 0);
+          
+          if (pickupDate < startDateObj) {
             return false;
           }
         }
         
         if (vm.endDate) {
+          var endDateObj = new Date(vm.endDate);
           var dropoffDate = new Date(booking.dropoffDate);
-          if (dropoffDate > vm.endDate) {
+          
+          // Set time to end of day for proper comparison
+          endDateObj.setHours(23, 59, 59, 999);
+          dropoffDate.setHours(23, 59, 59, 999);
+          
+          if (dropoffDate > endDateObj) {
             return false;
           }
         }
@@ -313,7 +325,19 @@ angular.module('motofyApp')
     vm.resetFilters = function() {
       vm.searchTerm = '';
       vm.statusFilter = '';
-      vm.applyFilters();
+      vm.paymentStatusFilter = '';
+      vm.startDate = null;
+      vm.endDate = null;
+      
+      // Clear the date input fields in the DOM
+      var startDateInput = document.querySelector('input[ng-model="adminBooking.startDate"]');
+      var endDateInput = document.querySelector('input[ng-model="adminBooking.endDate"]');
+      
+      if (startDateInput) startDateInput.value = '';
+      if (endDateInput) endDateInput.value = '';
+      
+      // Reload all bookings to ensure fresh data
+      vm.loadBookings();
     };
     
     // Watch for filter changes
@@ -322,6 +346,18 @@ angular.module('motofyApp')
     });
     
     $scope.$watch('adminBooking.statusFilter', function() {
+      vm.applyFilters();
+    });
+    
+    $scope.$watch('adminBooking.paymentStatusFilter', function() {
+      vm.applyFilters();
+    });
+    
+    $scope.$watch('adminBooking.startDate', function() {
+      vm.applyFilters();
+    });
+    
+    $scope.$watch('adminBooking.endDate', function() {
       vm.applyFilters();
     });
     

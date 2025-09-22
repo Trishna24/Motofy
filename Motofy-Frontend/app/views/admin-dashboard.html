@@ -208,16 +208,42 @@
                   </span>
                 </td>
                 <td>
-                  <select class="form-control status-select" 
-                          ng-model="car.status" 
-                          ng-change="adminCar.updateCarStatus(car)"
-                          style="width: 120px; display: inline-block; margin-right: 5px;">
-                    <option value="available">Available</option>
-                    <option value="booked">Booked</option>
-                    <option value="maintenance">Maintenance</option>
-                  </select>
-                  <button class="btn btn-sm" ng-click="adminCar.showEditForm(car)">Edit</button>
-                  <button class="btn btn-sm btn-danger" ng-click="adminCar.deleteCar(car._id)">Delete</button>
+                  <!-- Improved Status Selector -->
+                  <div class="status-selector-container">
+                    <div class="status-toggle-group">
+                      <button class="status-toggle-btn" 
+                              ng-class="{'active': car.status === 'available'}"
+                              ng-click="adminCar.changeCarStatus(car, 'available')"
+                              title="Set as Available">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Available</span>
+                      </button>
+                      <button class="status-toggle-btn" 
+                              ng-class="{'active': car.status === 'booked'}"
+                              ng-click="adminCar.changeCarStatus(car, 'booked')"
+                              title="Set as Booked">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Booked</span>
+                      </button>
+                      <button class="status-toggle-btn" 
+                              ng-class="{'active': car.status === 'maintenance'}"
+                              ng-click="adminCar.changeCarStatus(car, 'maintenance')"
+                              title="Set as Maintenance">
+                        <i class="fas fa-tools"></i>
+                        <span>Maintenance</span>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <!-- Action Buttons -->
+                  <div class="action-buttons-group">
+                    <button class="btn btn-sm btn-edit" ng-click="adminCar.showEditForm(car)" title="Edit Car">
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-danger" ng-click="adminCar.deleteCar(car._id)" title="Delete Car">
+                      <i class="fas fa-trash"></i> Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -674,8 +700,8 @@
             </div>
             <div class="filter-group">
               <label class="filter-label">Date Range</label>
-              <input type="date" ng-model="adminBooking.dateFrom" placeholder="From">
-              <input type="date" ng-model="adminBooking.dateTo" placeholder="To">
+              <input type="date" ng-model="adminBooking.startDate" placeholder="From">
+              <input type="date" ng-model="adminBooking.endDate" placeholder="To">
             </div>
             <div class="filter-actions">
               <button class="btn" ng-click="adminBooking.resetFilters()">Reset</button>

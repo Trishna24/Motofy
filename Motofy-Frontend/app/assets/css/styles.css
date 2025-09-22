@@ -2984,6 +2984,110 @@ footer {
   min-width: 80px;
 }
 
+/* Car availability status badges */
+.status-available {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #7ed957;
+}
+
+.status-unavailable {
+  background-color: #ffebee;
+  color: #b71c1c;
+  border: 1px solid #ef9a9a;
+}
+
+/* Status for cars booked by users */
+.status-booked {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+}
+
+/* Improved Status Selector Styles */
+.status-selector-container {
+  margin-bottom: 10px;
+}
+
+.status-toggle-group {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.status-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  background: #f8f9fa;
+  color: #6c757d;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 70px;
+  justify-content: center;
+}
+
+.status-toggle-btn:hover {
+  border-color: #007bff;
+  background: #e3f2fd;
+  color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.status-toggle-btn.active {
+  font-weight: 600;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Available status active state */
+.status-toggle-btn.active:nth-child(1) {
+  background: linear-gradient(135deg, #7ed957, #5bbf3a);
+  color: white;
+  border-color: #5bbf3a;
+}
+
+/* Booked status active state */
+.status-toggle-btn.active:nth-child(2) {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  color: #856404;
+  border-color: #e0a800;
+}
+
+/* Maintenance status active state */
+.status-toggle-btn.active:nth-child(3) {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+  border-color: #c82333;
+}
+
+.status-toggle-btn i {
+  font-size: 12px;
+}
+
+.action-buttons-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: white;
+  border: none;
+}
+
+.btn-edit:hover {
+  background: linear-gradient(135deg, #357abd, #2968a3);
+  transform: translateY(-1px);
+}
+
 /* Table Action Buttons */
 .booking-table .btn {
   padding: 8px 16px;
