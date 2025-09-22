@@ -1000,8 +1000,8 @@ nav a:hover {
 .dropdown a, .dropdown button {
   display: flex;
   align-items: center;
-  width: 100%;
-  padding: 12px 16px;
+  width: 80%;
+  padding: 17px 16px;
   background: none;
   border: none;
   text-align: left;
