@@ -27,11 +27,6 @@ const getAllCars = async (req, res) => {
       }
     }
     
-    // If user is admin, return all cars without filtering
-    if (isAdmin) {
-      return res.json(cars);
-    }
-    
     // Get all active bookings (not cancelled)
     const activeBookings = await Booking.find({
       status: { $ne: 'Cancelled' }
@@ -45,7 +40,28 @@ const getAllCars = async (req, res) => {
       }
     });
     
-    // Filter cars based on booking status
+    // If user is admin, return all cars but mark booked ones as unavailable
+    if (isAdmin) {
+      const adminCars = cars.map(car => {
+        const carId = car._id.toString();
+        const bookedByUserId = bookedCarsMap.get(carId);
+        
+        // Create a plain object copy of the car
+        const carObj = car.toObject();
+        
+        if (bookedByUserId) {
+          // Mark car as unavailable for admin view
+          carObj.availability = false;
+          carObj.bookedByUser = true;
+        }
+        
+        return carObj;
+      });
+      
+      return res.json(adminCars);
+    }
+    
+    // Filter cars based on booking status for regular users
     const filteredCars = cars.filter(car => {
       const carId = car._id.toString();
       const bookedByUserId = bookedCarsMap.get(carId);

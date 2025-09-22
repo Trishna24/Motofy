@@ -201,16 +201,17 @@
                 <td>{{car.transmission}}</td>
                 <td>₹{{car.price | number}}</td>
                 <td>
-                  <span class="status-badge" ng-class="{'status-available': car.availability, 'status-unavailable': !car.availability}">
-                    {{car.availability ? 'Available' : 'Unavailable'}}
+                  <span class="status-badge" ng-class="{'status-available': car.availability && !car.bookedByUser, 'status-booked': car.bookedByUser, 'status-unavailable': !car.availability && !car.bookedByUser}">
+                    {{car.bookedByUser ? 'Booked by User' : (car.availability ? 'Available' : 'Unavailable')}}
                   </span>
                 </td>
                 <td>
                   <button class="btn btn-sm btn-toggle" 
-                          ng-class="{'btn-success': !car.availability, 'btn-warning': car.availability}"
+                          ng-class="{'btn-success': !car.availability && !car.bookedByUser, 'btn-warning': car.availability && !car.bookedByUser}"
                           ng-click="adminCar.toggleAvailability(car)"
-                          title="{{car.availability ? 'Make Unavailable' : 'Make Available'}}">
-                    {{car.availability ? 'Make Unavailable' : 'Make Available'}}
+                          ng-disabled="car.bookedByUser"
+                          title="{{car.bookedByUser ? 'Cannot modify - Car is booked by user' : (car.availability ? 'Make Unavailable' : 'Make Available')}}">
+                    {{car.bookedByUser ? 'User Booked' : (car.availability ? 'Make Unavailable' : 'Make Available')}}
                   </button>
                   <button class="btn btn-sm" ng-click="adminCar.showEditForm(car)">Edit</button>
                   <button class="btn btn-sm btn-danger" ng-click="adminCar.deleteCar(car._id)">Delete</button>

@@ -3901,6 +3901,13 @@ footer {
   border: 1px solid #ef9a9a;
 }
 
+/* Status for cars booked by users */
+.status-booked {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
+}
+
 /* Toggle availability button */
 .btn-toggle {
   padding: 6px 12px;
