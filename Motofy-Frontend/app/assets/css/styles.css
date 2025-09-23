@@ -2325,7 +2325,7 @@ user-select: none;
   background: linear-gradient(135deg, #667eea, #764ba2);
   background-clip: text; /* ✅ Standard property */
   -webkit-background-clip: text; /* ✅ Vendor prefix for Safari/Chrome */
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: #f3f3f3;
 }
 
 
