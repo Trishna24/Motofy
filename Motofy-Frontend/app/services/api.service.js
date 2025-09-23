@@ -47,7 +47,7 @@ angular.module('motofyApp')
       },
       // cars crud
       getAllCars: function() {
-        var token = window.localStorage.getItem('userToken') || window.localStorage.getItem('adminToken');
+        var token = window.localStorage.getItem('appToken') || window.localStorage.getItem('adminToken');
         var headers = {};
         if (token) {
           headers['Authorization'] = 'Bearer ' + token;
