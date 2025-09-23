@@ -1,38 +1,231 @@
-<div class="container-fluid mt-3">
-  <div class="row justify-content-center">
-    <div class="col-12 col-xl-10">
-      <div class="card shadow-lg payment-success-card">
-        <div class="card-body p-4">
+<style>
+/* Payment Success Page Scoped Styles */
+.payment-success-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.payment-success-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  padding: 40px 30px;
+  text-align: center;
+  border: none;
+}
+
+.payment-success-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+.payment-success-icon i {
+  color: white;
+  font-size: 36px;
+}
+
+@keyframes successPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.payment-success-title {
+  color: #10b981;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.booking-details-title {
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.detail-box {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.detail-box.total-amount {
+  background: #e8f5e8;
+  border-color: #4CAF50;
+  grid-column: span 2;
+}
+
+.detail-label {
+  color: #666;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.detail-value.amount {
+  color: #4CAF50;
+  font-size: 18px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.btn-primary-custom {
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary-custom {
+  background: transparent;
+  color: #2196F3;
+  border: 2px solid #2196F3;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+  background: #1976D2;
+  transform: translateY(-2px);
+  color: white;
+  text-decoration: none;
+}
+
+.btn-secondary-custom:hover {
+  background: #2196F3;
+  color: white;
+  text-decoration: none;
+}
+
+.email-confirmation {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.email-icon {
+  color: #666;
+  font-size: 18px;
+}
+
+.email-text {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.loading-state, .error-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading-state i {
+  color: #2196F3;
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.error-state i {
+  color: #ff9800;
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.loading-title, .error-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.loading-title {
+  color: #2196F3;
+}
+
+.error-title {
+  color: #ff9800;
+}
+
+.loading-text, .error-text {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+</style>
+
+<div class="payment-success-container">
+  <div class="payment-success-card">
+    <div class="card-body p-0">
           
           <!-- Loading State -->
-          <div ng-if="paymentSuccess.loading" class="text-center">
-            <div class="row align-items-center">
-              <div class="col-md-4">
-                <i class="fas fa-spinner fa-spin text-primary" style="font-size: 3rem;"></i>
-              </div>
-              <div class="col-md-8">
-                <h3 class="mb-2">Verifying Payment...</h3>
-                <p class="mb-0">Please wait while we confirm your payment.</p>
-              </div>
-            </div>
+          <div ng-if="paymentSuccess.loading" class="loading-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <h3 class="loading-title">Verifying Payment...</h3>
+            <p class="loading-text">Please wait while we confirm your payment.</p>
           </div>
 
           <!-- Error State -->
-          <div ng-if="paymentSuccess.error && !paymentSuccess.loading" class="text-center">
-            <div class="row align-items-center mb-4">
-              <div class="col-md-4">
-                <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
-              </div>
-              <div class="col-md-8 text-md-start">
-                <h2 class="text-warning mb-2">Payment Verification Failed</h2>
-                <p class="lead mb-0">{{paymentSuccess.error}}</p>
-              </div>
-            </div>
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-              <a href="#!/bookings" class="btn btn-primary btn-lg">
+          <div ng-if="paymentSuccess.error && !paymentSuccess.loading" class="error-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2 class="error-title">Payment Verification Failed</h2>
+            <p class="error-text">{{paymentSuccess.error}}</p>
+            <div class="action-buttons">
+              <a href="#!/bookings" class="btn-primary-custom">
                 <i class="fas fa-list mr-2"></i>Check My Bookings
               </a>
-              <a href="#!/home" class="btn btn-outline-secondary btn-lg">
+              <a href="#!/home" class="btn-secondary-custom">
                 <i class="fas fa-home mr-2"></i>Back to Home
               </a>
             </div>
@@ -40,83 +233,47 @@
 
           <!-- Success State -->
           <div ng-if="paymentSuccess.bookingDetails && !paymentSuccess.loading">
-            <!-- Header Section -->
-            <div class="row align-items-center mb-4">
-              <div class="col-md-12 text-center">
-                <h2 class="text-success mb-2">🤑Payment Successful!🤑</h2>
-                <p class="lead mb-0">Thank you for your booking. Your payment has been processed successfully.</p>
+            <!-- Success Icon and Title -->
+            <div class="payment-success-icon">
+              <i class="fas fa-check"></i>
+            </div>
+            <h2 class="payment-success-title">Payment Successful!</h2>
+            
+            <!-- Booking Details Section -->
+            <h5 class="booking-details-title">Booking Details</h5>
+            <div class="details-grid">
+              <div class="detail-box">
+                <div class="detail-label">Booking ID</div>
+                <div class="detail-value">{{paymentSuccess.bookingDetails.bookingId}}</div>
+              </div>
+              <div class="detail-box">
+                <div class="detail-label">Car Model</div>
+                <div class="detail-value">{{paymentSuccess.bookingDetails.carName}}</div>
+              </div>
+              <div class="detail-box">
+                <div class="detail-label">Pickup Date</div>
+                <div class="detail-value">{{paymentSuccess.bookingDetails.pickupDate | date:'dd MMM yyyy'}}</div>
+              </div>
+              <div class="detail-box">
+                <div class="detail-label">Return Date</div>
+                <div class="detail-value">{{paymentSuccess.bookingDetails.dropoffDate | date:'dd MMM yyyy'}}</div>
+              </div>
+              <div class="detail-box total-amount">
+                <div class="detail-label">Total Amount</div>
+                <div class="detail-value amount">₹{{paymentSuccess.bookingDetails.totalAmount}}</div>
               </div>
             </div>
             
-            <!-- Booking Details Section -->
-            <div class="row">
-              <div class="col-lg-8">
-                <div class="booking-details-landscape">
-                  <h5 class="mb-3 text-primary">
-                    <i class="fas fa-info-circle mr-2"></i>Booking Details
-                  </h5>
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <div class="detail-item">
-                        <strong class="text-muted">Booking ID:</strong>
-                        <span class="detail-value">{{paymentSuccess.bookingDetails.bookingId}}</span>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <div class="detail-item">
-                        <strong class="text-muted">Car:</strong>
-                        <span class="detail-value">{{paymentSuccess.bookingDetails.carName}}</span>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <div class="detail-item">
-                        <strong class="text-muted">Total Amount:</strong>
-                        <span class="detail-value text-success font-weight-bold">₹{{paymentSuccess.bookingDetails.totalAmount}}</span>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <div class="detail-item">
-                        <strong class="text-muted">Location:</strong>
-                        <span class="detail-value">{{paymentSuccess.bookingDetails.location}}</span>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <div class="detail-item">
-                        <strong class="text-muted">Pickup Date:</strong>
-                        <span class="detail-value">{{paymentSuccess.bookingDetails.pickupDate | date:'medium'}}</span>
-                      </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <div class="detail-item">
-                        <strong class="text-muted">Dropoff Date:</strong>
-                        <span class="detail-value">{{paymentSuccess.bookingDetails.dropoffDate | date:'medium'}}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Action Buttons Section -->
-              <div class="col-lg-4">
-                <div class="action-section">
-                  <h6 class="mb-3 text-muted">Quick Actions</h6>
-                  <div class="d-grid gap-2">
-                    <a href="#!/bookings" class="btn btn-primary btn-lg">
-                      <i class="fas fa-list mr-2"></i>View My Bookings
-                    </a>
-                    <a href="#!/home" class="btn btn-outline-secondary btn-lg">
-                      <i class="fas fa-home mr-2"></i>Back to Home
-                    </a>
-                  </div>
-                  
-                  <div class="mt-4 p-3 bg-light rounded">
-                    <p class="text-muted mb-0 small">
-                      <i class="fas fa-envelope mr-2"></i>
-                      A confirmation email has been sent to your registered email address.
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <a href="#!/bookings" class="btn-primary-custom">View Bookings</a>
+              <a href="#!/home" class="btn-secondary-custom">Back to Home</a>
+            </div>
+            
+            <!-- Email Confirmation -->
+            <div class="email-confirmation">
+              <i class="fas fa-envelope email-icon"></i>
+              <p class="email-text">An email confirmation has been sent to your registered email address.</p>
             </div>
           </div>
         </div>
