@@ -42,6 +42,7 @@ angular.module('motofyApp')
       pickupDate: '',
       dropoffDate: '',
       pickupLocation: '',
+      dropoffLocation: '',
       totalAmount: 0,
       creating: false
     };
@@ -270,6 +271,7 @@ angular.module('motofyApp')
         pickupDate: vm.bookingData.pickupDate,
         dropoffDate: vm.bookingData.dropoffDate,
         pickupLocation: vm.bookingData.pickupLocation,
+        dropoffLocation: vm.bookingData.dropoffLocation,
         totalAmount: vm.bookingData.totalAmount
       };
       

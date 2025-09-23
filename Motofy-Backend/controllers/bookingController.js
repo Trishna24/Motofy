@@ -5,7 +5,7 @@ const Car = require('../models/Car');
 // @desc   Create a new booking
 const createBooking = async (req, res) => {
   try {
-    const { car, pickupDate, dropoffDate, pickupLocation, totalAmount } = req.body;
+    const { car, pickupDate, dropoffDate, pickupLocation, dropoffLocation, totalAmount } = req.body;
 
     if (!car || !pickupDate || !dropoffDate || !pickupLocation || !totalAmount) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -42,6 +42,7 @@ const createBooking = async (req, res) => {
       pickupDate,
       dropoffDate,
       pickupLocation,
+      dropoffLocation,
       totalAmount,
     });
 

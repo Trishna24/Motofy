@@ -626,6 +626,7 @@
                     <th>Pickup Date</th>
                     <th>Return Date</th>
                     <th>Pickup Location</th>
+                    <th>Return Location</th>
                     <th>Duration</th>
                     <th>Amount</th>
                     <th>Status</th>
@@ -638,6 +639,7 @@
                     <td>{{booking.pickupDate | date:'dd MMM yyyy, h:mm a'}}</td>
                     <td>{{booking.dropoffDate | date:'dd MMM yyyy, h:mm a'}}</td>
                     <td>{{booking.pickupLocation}}</td>
+                    <td>{{booking.dropoffLocation || 'Same as pickup'}}</td>
                     <td>{{adminUser.calculateDuration(booking.pickupDate, booking.dropoffDate)}} days</td>
                     <td>₹{{booking.totalAmount}}</td>
                     <td>
