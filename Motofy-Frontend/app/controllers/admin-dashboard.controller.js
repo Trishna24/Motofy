@@ -479,8 +479,8 @@ angular.module('motofyApp')
       var labels = [];
       var revenueData = [];
       
-      if (data.monthlyRevenue) {
-        data.monthlyRevenue.forEach(function(item) {
+      if (data.revenueByMonth) {
+        data.revenueByMonth.forEach(function(item) {
           labels.push(item.month);
           revenueData.push(item.revenue);
         });
@@ -523,9 +523,9 @@ angular.module('motofyApp')
       var labels = [];
       var revenueData = [];
       
-      if (data.topRevenueCars) {
-        data.topRevenueCars.forEach(function(car) {
-          labels.push(car.name);
+      if (data.topCars) {
+        data.topCars.forEach(function(car) {
+          labels.push(car.carName);
           revenueData.push(car.totalRevenue);
         });
       }

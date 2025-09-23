@@ -466,6 +466,7 @@ const getRevenueAnalytics = async (req, res) => {
       totalRevenue,
       confirmedRevenue,
       completedRevenue,
+      pendingRevenue: totalRevenue - confirmedRevenue - completedRevenue,
       avgBookingValue,
       revenueByMonth,
       revenueByDay,
