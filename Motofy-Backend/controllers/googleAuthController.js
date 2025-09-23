@@ -54,7 +54,7 @@ const googleLogin = async (req, res) => {
 
     res.json({
       message: 'Google login successful',
-      token: appToken,
+      appToken: appToken,
       user: {
         id: user._id,
         email: user.email,
