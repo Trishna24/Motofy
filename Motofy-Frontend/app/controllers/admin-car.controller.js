@@ -137,10 +137,7 @@ angular.module('motofyApp')
         ApiService.updateCarStatus(car._id, newStatus)
             .then(function(response) {
                 toastr.success('Car status updated successfully!');
-                // Refresh analytics if parent controller exists
-                if ($scope.$parent.adminDashboard && $scope.$parent.adminDashboard.loadCarAnalytics) {
-                    $scope.$parent.adminDashboard.loadCarAnalytics();
-                }
+                vm.refreshStats();
             })
             .catch(function(error) {
                 car.status = originalStatus; // Revert on error

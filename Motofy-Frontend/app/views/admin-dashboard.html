@@ -203,8 +203,8 @@
                 <td>{{car.transmission}}</td>
                 <td>₹{{car.price | number}}</td>
                 <td>
-                  <span class="status-badge" ng-class="{'status-available': car.status === 'Available', 'status-booked': car.status === 'Booked', 'status-unavailable': car.status === 'Maintenance'}">
-                    {{car.status === 'Available' ? 'Available' : (car.status === 'Booked' ? 'Booked' : 'Maintenance')}}
+                  <span class="status-badge" ng-class="{'status-available': car.status === 'available', 'status-booked': car.status === 'booked', 'status-unavailable': car.status === 'maintenance'}">
+                    {{car.status === 'available' ? 'Available' : (car.status === 'booked' ? 'Booked' : 'Maintenance')}}
                   </span>
                 </td>
                 <td>
@@ -212,22 +212,22 @@
                   <div class="status-selector-container">
                     <div class="status-toggle-group">
                       <button class="status-toggle-btn" 
-                              ng-class="{'active': car.status === 'Available'}"
-                              ng-click="adminCar.changeCarStatus(car, 'Available')"
+                              ng-class="{'active': car.status === 'available'}"
+                              ng-click="adminCar.changeCarStatus(car, 'available')"
                               title="Set as Available">
                         <i class="fas fa-check-circle"></i>
                         <span>Available</span>
                       </button>
                       <button class="status-toggle-btn" 
-                              ng-class="{'active': car.status === 'Booked'}"
-                              ng-click="adminCar.changeCarStatus(car, 'Booked')"
+                              ng-class="{'active': car.status === 'booked'}"
+                              ng-click="adminCar.changeCarStatus(car, 'booked')"
                               title="Set as Booked">
                         <i class="fas fa-calendar-check"></i>
                         <span>Booked</span>
                       </button>
                       <button class="status-toggle-btn" 
-                              ng-class="{'active': car.status === 'Maintenance'}"
-                              ng-click="adminCar.changeCarStatus(car, 'Maintenance')"
+                              ng-class="{'active': car.status === 'maintenance'}"
+                              ng-click="adminCar.changeCarStatus(car, 'maintenance')"
                               title="Set as Maintenance">
                         <i class="fas fa-tools"></i>
                         <span>Maintenance</span>

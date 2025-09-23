@@ -15,6 +15,10 @@ angular.module('motofyApp')
       signup: function(data) {
         return $http.post(BASE_URL + '/auth/signup', data);
       },
+      // Google login
+      googleLogin: function(data) {
+        return $http.post(BASE_URL + '/auth/google-login', data);
+      },
       // Admin login
       adminLogin: function(data) {
         return $http.post(BASE_URL + '/admin/login', data);

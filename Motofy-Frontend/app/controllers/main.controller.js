@@ -36,6 +36,7 @@ angular.module('motofyApp')
     vm.openSignupModal = function() {
       vm.showSignupModal = true;
       vm.showLoginModal = false;
+      vm.initializeGoogleSignIn(); // Initialize Google Sign-In when signup modal opens
     };
     vm.closeModal = function() {
       vm.showRoleModal = false;
@@ -47,10 +48,27 @@ angular.module('motofyApp')
       if (role === 'user') {
         vm.showRoleModal = false;
         vm.showLoginModal = true;  // open existing user login modal
+        vm.initializeGoogleSignIn(); // Initialize Google Sign-In when login modal opens
       } else if (role === 'admin') {
         vm.showRoleModal = false;
         $location.path('/admin/login'); // redirect to admin login page
       }
+    };
+
+    // Initialize Google Sign-In
+    vm.initializeGoogleSignIn = function() {
+      // Wait for Google SDK to load
+      $timeout(function() {
+        if (typeof google !== 'undefined' && google.accounts) {
+          google.accounts.id.initialize({
+            client_id: '619418411211-1odoqr4cfnkmpu7i1iaq3r03jiccgm6t.apps.googleusercontent.com',
+            callback: function(response) {
+              // This callback will be handled by AuthController
+              console.log('Google Sign-In initialized');
+            }
+          });
+        }
+      }, 500); // Small delay to ensure SDK is loaded
     };
 
 

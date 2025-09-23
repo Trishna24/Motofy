@@ -75,4 +75,52 @@ angular.module('motofyApp')
           vm.error = (err.data && err.data.message) ? err.data.message : 'Signup failed. Please try again.';
         });
     };
+
+    // Google Sign-In
+    vm.googleSignIn = function() {
+      vm.error = '';
+      vm.success = '';
+      
+      // Check if Google Sign-In is loaded
+      if (typeof google === 'undefined' || !google.accounts) {
+        vm.error = 'Google Sign-In is not loaded. Please refresh the page and try again.';
+        return;
+      }
+
+      // Initialize Google Sign-In if not already done
+      if (!vm.googleInitialized) {
+        google.accounts.id.initialize({
+          client_id: '619418411211-1odoqr4cfnkmpu7i1iaq3r03jiccgm6t.apps.googleusercontent.com',
+          callback: vm.handleGoogleResponse
+        });
+        vm.googleInitialized = true;
+      }
+
+      // Prompt for Google Sign-In
+      google.accounts.id.prompt();
+    };
+
+    // Handle Google Sign-In response
+    vm.handleGoogleResponse = function(response) {
+      if (response.credential) {
+        // Send the credential token to backend
+        ApiService.googleLogin({ token: response.credential })
+          .then(function(backendResponse) {
+            // Store token and update UI
+            $window.localStorage.setItem('appToken', backendResponse.data.appToken);
+            vm.success = 'Google Sign-In successful!';
+            if ($window.location && $window.location.reload) {
+              $window.location.reload();
+            }
+            if (typeof main !== 'undefined' && main.closeModal) {
+              main.closeModal();
+            }
+          })
+          .catch(function(err) {
+            vm.error = (err.data && err.data.message) ? err.data.message : 'Google Sign-In failed. Please try again.';
+          });
+      } else {
+        vm.error = 'Google Sign-In was cancelled or failed.';
+      }
+    };
   }]);
