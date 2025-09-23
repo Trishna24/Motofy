@@ -1,5 +1,5 @@
 angular.module('motofyApp')
-  .controller('AdminCarController', ['ApiService', '$timeout', '$scope', function(ApiService, $timeout, $scope) {
+  .controller('AdminCarController', ['$scope', '$http', '$location', 'ApiService', 'CONFIG', function($scope, $http, $location, ApiService, CONFIG) {
     var vm = this;
 
     vm.viewMode = 'list';     // 'list' | 'form'
@@ -15,8 +15,8 @@ angular.module('motofyApp')
     };
 
 
-    vm.imageUrl = function(filename) {
-      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + filename;
+   $scope.getCarImageUrl = function(filename) {
+        return CONFIG.UPLOADS_BASE_URL + '/cars/' + filename;
     };
     vm.toggleView = function() {
       if (vm.viewMode === 'list') {

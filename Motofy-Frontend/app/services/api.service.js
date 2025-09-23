@@ -2,9 +2,9 @@
 // Shared AngularJS service for backend API calls
 
 angular.module('motofyApp')
-  .factory('ApiService', ['$http', function($http) {
+  .factory('ApiService', ['$http', 'CONFIG', function($http, CONFIG) {
     // Change this to your backend URL if needed
-    var BASE_URL = 'https://motofy-l5gq.onrender.com/api';
+    var BASE_URL = CONFIG.API_BASE_URL;
 
     return {
       // Example: User login

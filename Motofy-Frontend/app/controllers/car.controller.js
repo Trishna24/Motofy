@@ -2,7 +2,7 @@
 // CarController: Handles car listing, details, and booking
 
 angular.module('motofyApp')
-  .controller('CarController', ['ApiService', '$window', '$location', '$routeParams', '$timeout', '$scope', function(ApiService, $window, $location, $routeParams, $timeout, $scope) {
+  .controller('CarController', ['ApiService', '$window', '$location', '$routeParams', '$timeout', '$scope', 'CONFIG', function(ApiService, $window, $location, $routeParams, $timeout, $scope, CONFIG) {
     var vm = this;
     
     // Make $location available in template
@@ -15,7 +15,7 @@ angular.module('motofyApp')
       if (filename.startsWith('http')) {
         return filename; // Already a full URL
       }
-      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + filename;
+      return CONFIG.UPLOADS_BASE_URL + '/cars/' + filename;
     };
     
     // Car listing data

@@ -40,7 +40,9 @@ app.use(cors({
     "https://motofy-tau.vercel.app",
     "https://motofy-q4sttdxby-trishnas-projects-5abdc8ba.vercel.app",
     "https://motofy-da5w68hnp-trishnas-projects-5abdc8ba.vercel.app",
-    "https://motofy-nvup49oa2-trishnas-projects-5abdc8ba.vercel.app"
+    "https://motofy-nvup49oa2-trishnas-projects-5abdc8ba.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5000"
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

@@ -1,5 +1,5 @@
 angular.module('motofyApp')
-  .controller('AdminUserController', ['$scope', 'ApiService', '$timeout', function($scope, ApiService, $timeout) {
+  .controller('AdminUserController', ['$scope', 'ApiService', '$timeout', 'CONFIG', function($scope, ApiService, $timeout, CONFIG) {
     var vm = this;
     
     // Initialize properties
@@ -263,7 +263,7 @@ angular.module('motofyApp')
     // License handling methods for admin
     vm.getLicenseUrl = function(licenseFileName) {
       if (!licenseFileName) return '';
-      return 'https://motofy-l5gq.onrender.com/uploads/driving-licenses/' + licenseFileName;
+      return CONFIG.UPLOADS_BASE_URL + '/driving-licenses/' + licenseFileName;
     };
     
     vm.getLicenseFileName = function(licenseFileName) {
@@ -281,7 +281,7 @@ angular.module('motofyApp')
     // Profile picture handling method for admin
     vm.getProfilePictureUrl = function(profilePicture) {
       if (!profilePicture) return 'assets/images/default-avatar.svg';
-      return 'https://motofy-l5gq.onrender.com/uploads/profile-pictures/' + profilePicture;
+      return CONFIG.UPLOADS_BASE_URL + '/profile-pictures/' + profilePicture;
     };
     
     vm.downloadLicense = function(user) {

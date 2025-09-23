@@ -1,5 +1,5 @@
 // app/controllers/profile.controller.js
-angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', '$location', '$timeout', function($scope, $http, $location, $timeout) {
+angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', '$location', '$timeout', 'CONFIG', function($scope, $http, $location, $timeout, CONFIG) {
     
     // Initialize profile object
     $scope.profile = {
@@ -41,7 +41,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'GET',
-            url: 'https://motofy-l5gq.onrender.com/api/profile',
+            url: CONFIG.API_BASE_URL + '/profile',
             headers: {
                 'Authorization': 'Bearer ' + token
             }
@@ -144,7 +144,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
 
         $http({
             method: 'PUT',
-            url: 'https://motofy-l5gq.onrender.com/api/profile',
+            url: CONFIG.API_BASE_URL + '/profile',
             data: formData,
             headers: {
                 'Authorization': 'Bearer ' + token,
@@ -285,7 +285,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             return $scope.profile.profilePicturePreview;
         }
         if (profilePicture) {
-            return 'https://motofy-l5gq.onrender.com/uploads/profile-pictures/' + profilePicture;
+            return CONFIG.UPLOADS_BASE_URL + '/profile-pictures/' + profilePicture;
         }
         return '/assets/images/default-avatar.svg';
     };
@@ -293,7 +293,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
     // Get driving license URL
     $scope.profile.getDrivingLicenseUrl = function(drivingLicense) {
         if (drivingLicense) {
-            return 'https://motofy-l5gq.onrender.com/uploads/driving-licenses/' + drivingLicense;
+            return CONFIG.UPLOADS_BASE_URL + '/driving-licenses/' + drivingLicense;
         }
         return null;
     };
@@ -344,7 +344,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'PUT',
-            url: 'https://motofy-l5gq.onrender.com/api/profile/change-password',
+            url: CONFIG.API_BASE_URL + '/profile/change-password',
             data: {
                 currentPassword: $scope.profile.passwordData.currentPassword,
                 newPassword: $scope.profile.passwordData.newPassword
@@ -388,7 +388,7 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
         
         $http({
             method: 'PUT',
-            url: 'https://motofy-l5gq.onrender.com/api/profile/deactivate',
+            url: CONFIG.API_BASE_URL + '/profile/deactivate',
             headers: {
                 'Authorization': 'Bearer ' + token
             }

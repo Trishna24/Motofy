@@ -2,7 +2,7 @@
 // BookingController: Fetches and displays current user's bookings
 
 angular.module('motofyApp')
-  .controller('BookingController', ['ApiService', '$window', '$scope', function(ApiService, $window, $scope) {
+  .controller('BookingController', ['ApiService', '$window', '$scope', 'CONFIG', function(ApiService, $window, $scope, CONFIG) {
     var vm = this;
     vm.bookings = [];
     vm.loading = true;
@@ -20,7 +20,7 @@ angular.module('motofyApp')
       if (imagePath.startsWith('http')) {
         return imagePath;
       }
-      return 'https://motofy-l5gq.onrender.com/uploads/cars/' + imagePath;
+      return CONFIG.UPLOADS_BASE_URL + '/cars/' + imagePath;
     };
 
     // Fetch user bookings on load
