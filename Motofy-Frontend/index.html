@@ -143,8 +143,8 @@
     </div>
     <div class="container main-content" ng-class="{'blur-bg': main.isModalOpen()}">
       <main ng-view></main>
-      <!-- Floating AI Chat Button and Popup -->
-      <div ng-controller="AIController as ai" style="z-index:9999;">
+      <!-- Floating AI Chat Button and Popup (Hidden on Admin Pages) -->
+      <div ng-controller="AIController as ai" ng-hide="main.isAdminRoute()" style="z-index:9999;">
           <!-- Floating Button -->
           <button ng-click="ai.toggleChat()" class="ai-float-btn" title="Chat with AI">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -156,16 +156,32 @@
           <!-- Chat Popup -->
           <div class="ai-chat-popup" ng-show="ai.chatOpen">
             <div class="ai-chat-header">
-              <span>AI Chat</span>
+              <span>🤖 Motofy Assistant</span>
               <button class="ai-chat-close" ng-click="ai.toggleChat()">&times;</button>
             </div>
 
             <div class="ai-chat-messages" id="aiChatMessages">
               <div ng-repeat="msg in ai.messages track by $index"
-                  ng-class="{'ai-user-msg': msg.sender === 'user', 'ai-bot-msg': msg.sender === 'bot', 'typing': msg.isTyping}">
+                  ng-class="{'ai-user-msg': msg.sender === 'user', 'ai-bot-msg': msg.sender === 'bot', 'typing': msg.isTyping, 'button-click': msg.isButtonClick}">
                 <strong ng-if="msg.sender === 'user'">You:</strong>
-                <strong ng-if="msg.sender === 'bot'">AI:</strong>
-                <span>{{msg.text}}</span>
+                <strong ng-if="msg.sender === 'bot'">🤖 Motofy Assistant:</strong>
+                <div class="message-content">
+                  <span ng-bind-html="msg.content || (msg.text | nl2br)"></span>
+                  <!-- Navigation Buttons -->
+                  <div class="chat-buttons" ng-if="msg.buttons && msg.buttons.length > 0">
+                    <button ng-repeat="btn in msg.buttons" 
+                            class="chat-nav-btn" 
+                            ng-click="ai.handleButtonClick(btn.action)"
+                            title="{{btn.text}}">
+                      {{btn.text}}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Loading indicator -->
+              <div ng-if="ai.loading" class="ai-bot-msg typing">
+                <strong>🤖 Motofy Assistant:</strong>
+                <span>Typing...</span>
               </div>
             </div>
 

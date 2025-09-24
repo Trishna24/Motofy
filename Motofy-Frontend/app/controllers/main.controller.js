@@ -8,6 +8,12 @@ angular.module('motofyApp')
     // Dropdown state
     vm.dropdownOpen = false;
 
+    // Check if current route is admin route
+    vm.isAdminRoute = function() {
+      var currentPath = $location.path();
+      return currentPath.startsWith('/admin');
+    };
+
     // Toggle dropdown menu
     vm.toggleDropdown = function($event) {
       $event.stopPropagation();
@@ -18,6 +24,15 @@ angular.module('motofyApp')
     vm.closeDropdown = function() {
       vm.dropdownOpen = false;
     };
+
+    // Listen for broadcast events from AI controller
+    $rootScope.$on('openLoginModal', function() {
+      vm.openLoginModal();
+    });
+
+    $rootScope.$on('openSignupModal', function() {
+      vm.openSignupModal();
+    });
 
     // Role selection modal state
     vm.showRoleModal = false;
@@ -64,7 +79,7 @@ angular.module('motofyApp')
             client_id: '619418411211-1odoqr4cfnkmpu7i1iaq3r03jiccgm6t.apps.googleusercontent.com',
             callback: function(response) {
               // This callback will be handled by AuthController
-              console.log('Google Sign-In initialized');
+              // Google Sign-In initialized
             }
           });
         }
@@ -119,7 +134,6 @@ angular.module('motofyApp')
           vm.filteredCars = vm.cars;
         })
         .catch(function(error) {
-          console.error('Error loading cars:', error);
           // Fallback to empty array if API fails
           vm.cars = [];
           vm.filteredCars = [];
@@ -251,9 +265,8 @@ angular.module('motofyApp')
             vm.userBookings = response.data || [];
           })
           .catch(function(error) {
-            console.error('Error loading user bookings:', error);
-            vm.userBookings = [];
-          });
+          $scope.userBookings = [];
+        });
       }
     };
 

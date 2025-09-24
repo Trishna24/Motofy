@@ -1,7 +1,6 @@
 // app/controllers/admin-booking.controller.js
 angular.module('motofyApp')
-  .controller('AdminBookingController', ['ApiService', '$window', '$scope', function(ApiService, $window, $scope) {
-    console.log('📋 AdminBookingController loaded successfully!');
+  .controller('AdminBookingController', ['$scope', 'ApiService', '$window', function($scope, ApiService, $window) {
     var vm = this;
     
     // Booking data
@@ -44,7 +43,6 @@ angular.module('motofyApp')
           vm.loading = false;
         })
         .catch(function(error) {
-          console.error('Error loading bookings:', error);
           vm.error = 'Failed to load bookings';
           vm.loading = false;
         });
@@ -64,28 +62,21 @@ angular.module('motofyApp')
 
     // Show detail view for a specific booking
     vm.showDetailView = function(booking) {
-        console.log('📋 ShowDetailView called with:', booking);
         vm.loading = true;
         vm.error = '';
         
         if (!booking || !booking._id) {
-            console.error('❌ Invalid booking object:', booking);
             vm.error = 'Invalid booking data';
             vm.loading = false;
             return;
         }
-        
-        console.log('🔍 Fetching booking details for ID:', booking._id);
         ApiService.getBookingById(booking._id)
           .then(function(response) {
-            console.log('✅ Booking details received:', response.data);
             vm.selectedBooking = response.data;
-            vm.viewMode = 'detail';
+            vm.currentView = 'detail';
             vm.loading = false;
           })
           .catch(function(error) {
-            console.error('❌ Error fetching booking:', error);
-            vm.error = 'Failed to load booking details: ' + (error.data?.message || error.message || 'Unknown error');
             vm.loading = false;
           });
     };
@@ -129,10 +120,9 @@ angular.module('motofyApp')
                 }, 3000);
             })
             .catch(function(error) {
-                console.error('Error updating booking:', error);
-                vm.error = 'Failed to update booking';
-                vm.loading = false;
-            });
+          vm.error = 'Failed to update booking';
+          vm.loading = false;
+        });
     };
 
     
@@ -155,7 +145,6 @@ angular.module('motofyApp')
           }, 3000);
         })
         .catch(function(error) {
-          console.error('Error confirming booking:', error);
           vm.error = 'Failed to confirm booking';
           vm.loading = false;
         });

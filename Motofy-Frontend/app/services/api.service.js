@@ -60,6 +60,19 @@ angular.module('motofyApp')
           headers: { 'Authorization': 'Bearer ' + adminToken }
         });
       },
+      
+      // Revenue Analytics API calls
+      getRevenueAnalytics: function(timeFilter) {
+        var adminToken = window.localStorage.getItem('adminToken');
+        var params = {};
+        if (timeFilter) {
+          params.timeFilter = timeFilter;
+        }
+        return $http.get(BASE_URL + '/bookings/admin/revenue', {
+          headers: { 'Authorization': 'Bearer ' + adminToken },
+          params: params
+        });
+      },
       addCar: function(formData) {
         var adminToken = window.localStorage.getItem('adminToken');
         return $http.post(BASE_URL + '/cars', formData, {
@@ -183,19 +196,6 @@ angular.module('motofyApp')
         var adminToken = window.localStorage.getItem('adminToken');
         return $http.get(BASE_URL + '/admin/users/stats', {
           headers: { 'Authorization': 'Bearer ' + adminToken }
-        });
-      },
-      
-      // Revenue Analytics API calls
-      getRevenueAnalytics: function(timeFilter) {
-        var adminToken = window.localStorage.getItem('adminToken');
-        var params = {};
-        if (timeFilter) {
-          params.timeFilter = timeFilter;
-        }
-        return $http.get(BASE_URL + '/bookings/admin/revenue', {
-          headers: { 'Authorization': 'Bearer ' + adminToken },
-          params: params
         });
       },
       

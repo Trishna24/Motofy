@@ -1184,6 +1184,113 @@ nav a:hover {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Chat Navigation Buttons */
+.chat-buttons {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chat-nav-btn {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+  white-space: nowrap;
+}
+
+.chat-nav-btn:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+}
+
+.chat-nav-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+}
+
+/* Message content styling */
+.message-content {
+  display: block;
+  width: 100%;
+}
+
+/* Enhanced message styling */
+.ai-user-msg {
+  text-align: right;
+  margin-bottom: 0.8em;
+}
+
+.ai-user-msg .message-content {
+  background: #3498db;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 18px 18px 4px 18px;
+  display: inline-block;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.ai-bot-msg {
+  text-align: left;
+  margin-bottom: 0.8em;
+}
+
+.ai-bot-msg .message-content {
+  background: white;
+  color: #2c3e50;
+  padding: 10px 14px;
+  border-radius: 18px 18px 18px 4px;
+  display: inline-block;
+  max-width: 85%;
+  word-wrap: break-word;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Button click message styling */
+.ai-user-msg.button-click .message-content {
+  background: #27ae60;
+  font-style: italic;
+}
+
+/* Improved chat messages container */
+.ai-chat-messages {
+  padding: 1em;
+  height: 280px;
+  overflow-y: auto;
+  background: #f8f9fa;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Custom scrollbar for chat */
+.ai-chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.ai-chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
 .search-bar-section {
   width: 100%;
   display: flex;

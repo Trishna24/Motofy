@@ -33,11 +33,6 @@ const getProfile = async (req, res) => {
 // @access  Private
 const updateProfile = async (req, res) => {
   try {
-    // console.log('🚀 Profile update request received');
-    // console.log('👤 User ID:', req.user?.id);
-    // console.log('📝 Request body:', req.body);
-    // console.log('📁 Files:', req.files);
-    
     const userId = req.user.id;
     const {
       username,
@@ -49,14 +44,11 @@ const updateProfile = async (req, res) => {
     // Find the user
     const user = await User.findById(userId);
     if (!user) {
-      // console.log('❌ User not found for ID:', userId);
       return res.status(404).json({
         success: false,
         message: 'User not found'
       });
     }
-
-    // console.log('✅ User found:', user.email);
 
     // Prepare update data
     const updateData = {};
@@ -137,29 +129,19 @@ const updateProfile = async (req, res) => {
       }
     }
 
-    // console.log('📊 Update data prepared:', updateData);
-
-    // Update user in database
-    // console.log('🔄 Attempting to update user with ID:', userId);
-    // console.log('📊 Final update data:', JSON.stringify(updateData, null, 2));
-    
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      updateData,
-      { new: true, runValidators: true }
-    ).select('-password');
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { 
+      new: true, 
+      runValidators: true 
+    }).select('-password');
 
     if (!updatedUser) {
-      // console.log('❌ User update failed - no user returned');
       return res.status(404).json({
         success: false,
-        message: 'User not found after update'
+        message: 'Failed to update user'
       });
     }
 
-    // console.log('✅ User updated successfully:', updatedUser.email);
-
-    res.status(200).json({
+    res.json({
       success: true,
       message: 'Profile updated successfully',
       user: updatedUser

@@ -163,7 +163,7 @@ angular.module('motofyApp')
             .catch(function(error) {
                 car.status = originalStatus; // Revert on error
                 toastr.error('Failed to update car status: ' + (error.data?.message || 'Unknown error'));
-                console.error('Error updating car status:', error);
+                // Error updating car status
             });
     };
 

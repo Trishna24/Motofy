@@ -461,12 +461,16 @@ const getRevenueAnalytics = async (req, res) => {
         $limit: 5
       }
     ]);
-    
+
+    // Get pending bookings for pending revenue calculation
+    const pendingBookings = await Booking.find({ ...dateFilter, status: 'Pending' });
+    const pendingRevenue = pendingBookings.reduce((sum, booking) => sum + booking.totalAmount, 0);
+
     const revenueAnalytics = {
       totalRevenue,
       confirmedRevenue,
       completedRevenue,
-      pendingRevenue: totalRevenue - confirmedRevenue - completedRevenue,
+      pendingRevenue,
       avgBookingValue,
       revenueByMonth,
       revenueByDay,
@@ -480,6 +484,7 @@ const getRevenueAnalytics = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error fetching revenue analytics. Please try again later.' });
   }
 };
+
 
 module.exports = {
   createBooking,

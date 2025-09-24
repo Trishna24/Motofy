@@ -101,7 +101,6 @@ angular.module('motofyApp')
           }
         })
         .catch(function(error) {
-          console.error('Error loading cars:', error);
           vm.error = 'Failed to load cars. Please try again.';
           vm.cars = [];
           vm.filteredCars = [];
@@ -137,10 +136,9 @@ angular.module('motofyApp')
             vm.loading = false;
           })
           .catch(function(error) {
-            console.error('Error loading car details:', error);
-            vm.error = 'Failed to load car details. Please try again.';
-            vm.loading = false;
-          });
+          vm.error = 'Failed to load car details. Please try again.';
+          vm.loading = false;
+        });
       }
     };
     
@@ -296,7 +294,6 @@ angular.module('motofyApp')
         })
         .catch(function(error) {
           vm.bookingData.creating = false;
-          console.error('Payment session error:', error);
           alert('Error creating payment session. Please try again.');
         });
     };

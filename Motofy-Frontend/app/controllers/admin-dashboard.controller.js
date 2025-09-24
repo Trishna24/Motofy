@@ -1,7 +1,6 @@
 // app/controllers/admin-dashboard.controller.js
 angular.module('motofyApp')
   .controller('AdminDashboardController', ['$scope', 'ApiService', '$window', '$location', function($scope, ApiService, $window, $location) {
-    console.log('📊 AdminDashboardController loaded successfully!');
     var vm = this;
 
     // Admin data
@@ -42,10 +41,23 @@ angular.module('motofyApp')
 
     // Function to change section
     vm.showSection = function(section) {
-      console.log('🔄 Switching to section:', section);
       vm.activeSection = section;
-      
-      // Auto-refresh data based on section
+         
+    // Load revenue analytics
+    vm.loadRevenueAnalytics = function() {
+      ApiService.getRevenueAnalytics(vm.selectedTimeFilter)
+        .then(function(response) {
+          vm.revenueAnalytics = response.data;
+          setTimeout(function() {
+            vm.initRevenueCharts();
+          }, 100);
+        })
+        .catch(function(error) {
+          vm.revenueAnalytics = null;
+        });
+    };  
+    
+    // Auto-refresh data based on section
       switch(section) {
         case 'dashboard':
           vm.loadDashboardData();
@@ -151,7 +163,6 @@ angular.module('motofyApp')
           vm.loading = false;
         })
         .catch(function(error) {
-          console.error('Error loading dashboard data:', error);
           vm.error = 'Failed to load dashboard data';
           vm.loading = false;
         });
@@ -226,7 +237,7 @@ angular.module('motofyApp')
             }
           }, 100);
         }).catch(function(err) {
-          console.error('Error entering fullscreen:', err);
+          // Fallback for older browsers
         });
       } else {
         document.exitFullscreen().then(function() {
@@ -246,9 +257,8 @@ angular.module('motofyApp')
     vm.downloadChart = function(chartId) {
       var chart = vm.getChartInstance(chartId);
       if (!chart) {
-        console.error('Chart not found:', chartId);
-        return;
-      }
+          return;
+        }
       
       try {
         var canvas = chart.canvas;
@@ -260,8 +270,8 @@ angular.module('motofyApp')
         link.click();
         document.body.removeChild(link);
       } catch (error) {
-        console.error('Error downloading chart:', error);
-      }
+          // Error downloading chart
+        }
     };
     
     // Refresh chart functionality
@@ -326,7 +336,7 @@ angular.module('motofyApp')
           }, 100);
         })
         .catch(function(error) {
-          console.error('Error loading booking analytics:', error);
+          vm.bookingAnalytics = null;
         });
     };
     
@@ -340,7 +350,7 @@ angular.module('motofyApp')
           }, 100);
         })
         .catch(function(error) {
-          console.error('Error loading revenue analytics:', error);
+          vm.revenueAnalytics = null;
         });
     };
     
@@ -354,7 +364,7 @@ angular.module('motofyApp')
           }, 100);
         })
         .catch(function(error) {
-          console.error('Error loading user analytics:', error);
+          vm.userAnalytics = null;
         });
     };
     
@@ -368,7 +378,7 @@ angular.module('motofyApp')
           }, 100);
         })
         .catch(function(error) {
-          console.error('Error loading car analytics:', error);
+          vm.carAnalytics = null;
         });
     };
     

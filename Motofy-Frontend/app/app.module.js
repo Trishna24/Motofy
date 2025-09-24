@@ -2,6 +2,12 @@
 // Main AngularJS module for Motofy
  
 angular.module('motofyApp', ['ngRoute', 'ngFileUpload'])
+  .filter('nl2br', function() {
+    return function(text) {
+      if (!text) return text;
+      return text.replace(/\n/g, '<br>');
+    };
+  })
   .run(['$rootScope', function($rootScope) {
     console.log('🚀 MotofyApp module loaded successfully!');
     
