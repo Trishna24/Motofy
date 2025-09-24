@@ -1,5 +1,5 @@
 angular.module('motofyApp')
-  .controller('AdminCarController', ['$scope', '$http', '$location', 'ApiService', 'CONFIG', function($scope, $http, $location, ApiService, CONFIG) {
+  .controller('AdminCarController', ['$scope', '$http', '$location', '$timeout', 'ApiService', 'CONFIG', function($scope, $http, $location, $timeout, ApiService, CONFIG) {
     var vm = this;
 
     vm.viewMode = 'list';     // 'list' | 'form'
@@ -18,6 +18,16 @@ angular.module('motofyApp')
    $scope.getCarImageUrl = function(filename) {
         return CONFIG.UPLOADS_BASE_URL + '/cars/' + filename;
     };
+
+    // Image URL helper function for the controller
+    vm.imageUrl = function(filename) {
+      if (!filename) return 'app/assets/images/car-placeholder.jpg';
+      // Ensure we're using the correct backend URL
+      if (filename.startsWith('http')) {
+        return filename; // Already a full URL
+      }
+      return CONFIG.UPLOADS_BASE_URL + '/cars/' + filename;
+    };
     vm.toggleView = function() {
       if (vm.viewMode === 'list') {
         vm.showAddForm();
@@ -28,11 +38,17 @@ angular.module('motofyApp')
 
     vm.resetAlerts = function() { vm.error=''; vm.success=''; };
 
-    vm.loadCars = function() {
-      vm.resetAlerts();
+    vm.loadCars = function(preserveAlerts) {
+      if (!preserveAlerts) {
+        vm.resetAlerts();
+      }
       ApiService.getAllCarsForAdmin()
         .then(function(res) { vm.cars = res.data || []; })
-        .catch(function() { vm.error = 'Failed to load cars.'; });
+        .catch(function() { 
+          if (!preserveAlerts) {
+            vm.error = 'Failed to load cars.'; 
+          }
+        });
     };
 
     vm.showAddForm = function() {
@@ -89,7 +105,9 @@ angular.module('motofyApp')
       p.then(function() {
           vm.success = vm.editingId ? 'Car updated successfully' : 'Car added successfully';
           vm.cancelForm();
-          $timeout(vm.loadCars, 150);
+          $timeout(function() {
+            vm.loadCars(true); // Preserve alerts to keep success message visible
+          }, 150);
         })
         .catch(function(err) {
           vm.error = (err && err.data && (err.data.message || err.data.errors && err.data.errors[0] && err.data.errors[0].msg))
@@ -194,11 +212,19 @@ angular.module('motofyApp')
             if (file && /^image\//.test(file.type)) {
               var reader = new FileReader();
               reader.onload = function(e) {
-                if (scope.adminCar) scope.$apply(function(){ scope.adminCar.previewUrl = e.target.result; });
+                if (scope.adminCar) {
+                  scope.$evalAsync(function(){ 
+                    scope.adminCar.previewUrl = e.target.result; 
+                  });
+                }
               };
               reader.readAsDataURL(file);
             } else {
-              if (scope.adminCar) scope.$apply(function(){ scope.adminCar.previewUrl = ''; });
+              if (scope.adminCar) {
+                scope.$evalAsync(function(){ 
+                  scope.adminCar.previewUrl = ''; 
+                });
+              }
             }
           });
         });

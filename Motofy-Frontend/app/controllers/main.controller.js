@@ -208,13 +208,13 @@ angular.module('motofyApp')
           params.fuel = 'Electric';
           break;
         case 'budget':
-          params.maxPrice = '50';
+          params.maxPrice = '1000';
           break;
         case 'luxury':
           params.brand = 'BMW,Mercedes,Audi';
           break;
         case 'family':
-          params.seats = '5';
+          params.seats = '6';
           params.transmission = 'Automatic';
           break;
       }
