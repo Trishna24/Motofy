@@ -62,21 +62,28 @@ angular.module('motofyApp')
 
     // Show detail view for a specific booking
     vm.showDetailView = function(booking) {
+        console.log('🔍 Admin: showDetailView called with booking:', booking);
         vm.loading = true;
         vm.error = '';
         
         if (!booking || !booking._id) {
+            console.log('❌ Admin: Invalid booking data');
             vm.error = 'Invalid booking data';
             vm.loading = false;
             return;
         }
+        
+        console.log('📡 Admin: Fetching booking details for ID:', booking._id);
         ApiService.getBookingById(booking._id)
           .then(function(response) {
+            console.log('✅ Admin: Successfully loaded booking details:', response.data);
             vm.selectedBooking = response.data;
-            vm.currentView = 'detail';
+            vm.viewMode = 'detail'; // Fix: should be viewMode, not currentView
             vm.loading = false;
           })
           .catch(function(error) {
+            console.log('❌ Admin: Error loading booking details:', error);
+            vm.error = 'Failed to load booking details';
             vm.loading = false;
           });
     };

@@ -12,7 +12,7 @@ angular.module('motofyApp')
       var sessionId = $routeParams.session_id;
       
       if (sessionId) {
-        ApiService.verifyPayment(sessionId)
+        ApiService.verifyPaymentSession(sessionId)
           .then(function(response) {
             if (response.data && response.data.success) {
               
