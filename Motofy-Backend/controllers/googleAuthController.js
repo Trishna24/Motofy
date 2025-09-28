@@ -31,7 +31,7 @@ const googleLogin = async (req, res) => {
         googleId: sub,
         email,
         username: name.replace(/\s+/g, '').toLowerCase(),
-        profilePic: picture,
+        profilePicture: picture,
       });
 
       await user.save();
@@ -59,7 +59,7 @@ const googleLogin = async (req, res) => {
         id: user._id,
         email: user.email,
         username: user.username,
-        profilePic: user.profilePic,
+        profilePicture: user.profilePicture,
       },
     });
 
