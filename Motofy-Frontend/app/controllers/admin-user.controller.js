@@ -280,7 +280,16 @@ angular.module('motofyApp')
     
     // Profile picture handling method for admin
     vm.getProfilePictureUrl = function(profilePicture) {
-      if (!profilePicture) return 'assets/images/default-avatar.svg';
+      if (!profilePicture) {
+        return '/assets/images/default-avatar.svg';
+      }
+      
+      // Check if it's already a full URL (Google profile picture)
+      if (profilePicture.startsWith('http://') || profilePicture.startsWith('https://')) {
+        return profilePicture;
+      }
+      
+      // Local uploaded file
       return CONFIG.UPLOADS_BASE_URL + '/profile-pictures/' + profilePicture;
     };
     

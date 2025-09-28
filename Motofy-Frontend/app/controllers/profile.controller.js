@@ -285,6 +285,11 @@ angular.module('motofyApp').controller('ProfileController', ['$scope', '$http', 
             return $scope.profile.profilePicturePreview;
         }
         if (profilePicture) {
+            // Check if it's already a full URL (Google profile picture)
+            if (profilePicture.startsWith('http://') || profilePicture.startsWith('https://')) {
+                return profilePicture;
+            }
+            // Local uploaded file
             return CONFIG.UPLOADS_BASE_URL + '/profile-pictures/' + profilePicture;
         }
         return '/assets/images/default-avatar.svg';
