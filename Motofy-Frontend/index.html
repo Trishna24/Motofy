@@ -37,7 +37,14 @@
           <a ng-if="main.isAdmin()" href="#/admin/dashboard" class="admin-dashboard-btn" ng-click="main.goToAdminDashboard()">Admin Dashboard</a>
           <div class="user-menu" ng-if="!main.isAdmin()" ng-click="$event.stopPropagation()">
             <div class="user-icon" ng-click="main.toggleDropdown($event)">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Show profile picture if user is logged in and has profile data -->
+              <img ng-if="main.isLoggedIn() && main.currentUser && main.currentUser.profilePicture" 
+                   ng-src="{{main.getProfilePictureUrl(main.currentUser.profilePicture)}}" 
+                   alt="Profile Picture" 
+                   class="user-profile-picture">
+              <!-- Show default SVG icon if no profile picture or not logged in -->
+              <svg ng-if="!main.isLoggedIn() || !main.currentUser || !main.currentUser.profilePicture" 
+                   width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="8" r="4" stroke="#f3f6fa" stroke-width="2"/>
                 <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="#f3f6fa" stroke-width="2"/>
               </svg>

@@ -19,6 +19,12 @@ angular.module('motofyApp')
       googleLogin: function(data) {
         return $http.post(BASE_URL + '/auth/google-login', data);
       },
+      // Get current user profile
+      getCurrentUser: function(token) {
+        return $http.get(BASE_URL + '/profile', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+      },
       // Admin login
       adminLogin: function(data) {
         return $http.post(BASE_URL + '/admin/login', data);
