@@ -95,59 +95,38 @@ angular.module('motofyApp')
     // Get current user data
     vm.currentUser = null;
     vm.loadCurrentUser = function() {
-      console.log('🔍 DEBUG: loadCurrentUser called');
-      console.log('🔍 DEBUG: isLoggedIn:', vm.isLoggedIn());
-      
       if (vm.isLoggedIn()) {
         var token = $window.localStorage.getItem('appToken');
-        console.log('🔍 DEBUG: Token exists:', !!token);
-        console.log('🔍 DEBUG: Making API call to getCurrentUser');
         
         ApiService.getCurrentUser(token)
           .then(function(response) {
-            console.log('🔍 DEBUG: API Response received:', response);
-            console.log('🔍 DEBUG: Response data:', response.data);
-            
             // Backend returns { success: true, user: userData }
             // So we need to access response.data.user instead of response.data
             if (response.data && response.data.user) {
               vm.currentUser = response.data.user;
-              console.log('🔍 DEBUG: vm.currentUser set to:', vm.currentUser);
-              console.log('🔍 DEBUG: Profile picture:', vm.currentUser.profilePicture);
             } else {
-              console.log('🔍 DEBUG: No user data in response');
               vm.currentUser = response.data; // Fallback to original structure
             }
           })
           .catch(function(error) {
-            console.error('🔍 DEBUG: Error loading current user:', error);
-            console.error('🔍 DEBUG: Error status:', error.status);
-            console.error('🔍 DEBUG: Error data:', error.data);
+            console.error('Error loading current user:', error);
           });
-      } else {
-        console.log('🔍 DEBUG: User not logged in, skipping API call');
       }
     };
 
     // Profile picture handling method for header
     vm.getProfilePictureUrl = function(profilePicture) {
-      console.log('🔍 DEBUG: getProfilePictureUrl called with:', profilePicture);
-      
       if (!profilePicture) {
-        console.log('🔍 DEBUG: No profile picture, returning default avatar');
         return '/assets/images/default-avatar.svg';
       }
       
       // Check if it's already a full URL (Google profile picture)
       if (profilePicture.startsWith('http://') || profilePicture.startsWith('https://')) {
-        console.log('🔍 DEBUG: Google profile picture detected:', profilePicture);
         return profilePicture;
       }
       
       // Local uploaded file
-      var localUrl = CONFIG.UPLOADS_BASE_URL + '/profile-pictures/' + profilePicture;
-      console.log('🔍 DEBUG: Local profile picture URL:', localUrl);
-      return localUrl;
+      return CONFIG.UPLOADS_BASE_URL + '/profile-pictures/' + profilePicture;
     };
 
     // Logout function
