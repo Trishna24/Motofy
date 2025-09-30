@@ -1,10 +1,24 @@
 /* app/assets/css/styles.css */
+
+/* Background Video Styles */
+#background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Fallback background image if video fails to load */
 body {
-      background: #232b36;
-      margin: 0;
-      padding: 0;
-      color: #f3f6fa;
-      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  background: #232b36 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23232b36;stop-opacity:1" /><stop offset="100%" style="stop-color:%23313a49;stop-opacity:1" /></linearGradient></defs><rect width="1920" height="1080" fill="url(%23bg)"/></svg>') center/cover no-repeat;
+  margin: 0;
+  padding: 0;
+  color: #f3f6fa;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
 }
 
 
@@ -795,7 +809,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.5em;
+  padding: 1px 1.5em;
   min-height: 64px;
 }
 .brand {
@@ -869,7 +883,12 @@ nav a:hover {
 /* Hero Section */
 .hero-section {
   width: 100%;
-  background: linear-gradient(120deg, #232b36 60%, #313a49 100%);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2px);           /* blurs whatever is behind  */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3); /* subtle border */
+  border-radius: 15px; 
+  box-shadow: 0 4px 20px rgba(72, 157, 215);
   padding: 4em 0 3em 0;
   display: flex;
   flex-direction: column;
@@ -931,9 +950,12 @@ nav a:hover {
   width: 100%;
 }
 .featured-car-card {
-  background: #313a49;
+  background:  rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);           /* blurs whatever is behind  */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3); /* subtle border */
   border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  box-shadow: 0 4px 20px rgba(125 196 245);
   padding: 1.2em 1.2em 1em 1.2em;
   min-width: 220px;
   max-width: 260px;
@@ -1091,6 +1113,13 @@ nav a:hover {
   cursor: pointer;
   z-index: 9999;
 }
+
+.float-btn-avatar {
+  width: 51px;
+  height: 50px;
+  border-radius: 24%;
+  object-fit: cover;
+}
 .ai-chat-popup {
   position: fixed;
   bottom: 100px;
@@ -1152,6 +1181,31 @@ nav a:hover {
   0% { opacity: 0.6; }
   50% { opacity: 1; }
   100% { opacity: 0.6; }
+}
+
+/* Chatbot Avatar Styling */
+.bot-message-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.chatbot-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.chatbot-avatar:hover {
+  transform: scale(1.1);
+}
+
+.emoji-fallback {
+  font-size: 18px;
 }
 
 /* Enhanced bot message styling */
@@ -1375,9 +1429,11 @@ nav a:hover {
 
 /* Enhanced Recent Booking Cards */
 .recent-booking-card.enhanced {
-  background: linear-gradient(135deg, #313a49 0%, #3a4553 100%);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgba(125 196 245);
   padding: 1.8em;
   min-width: 240px;
   max-width: 250px;
@@ -1553,8 +1609,10 @@ nav a:hover {
   margin: 2.5em 0 0 0;
 }
 .ai-chat-teaser-banner {
-  background: #313a49;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);           /* blurs whatever is behind  */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
   padding: 1.2em 2em;
   font-size: 1.15em;
@@ -1562,7 +1620,7 @@ nav a:hover {
   display: flex;
   align-items: center;
   gap: 1em;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(125 196 245);
 }
 .ai-chat-teaser-btn {
   background: #7ed957;
@@ -1781,7 +1839,12 @@ user-select: none;
 }
 /* Quick Search Section Styles */
 .quick-search-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2px);           /* blurs whatever is behind  */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3); /* subtle border */
+  border-radius: 15px; 
+  box-shadow: 0 4px 20px rgba(72, 157, 215);
   padding: 3rem 2rem;
   text-align: center;
   margin: 2rem 0;
@@ -4685,6 +4748,73 @@ footer {
   font-weight: 600;
 }
 
+/* Animation Overlay Styles */
+/* Auth Modal Messages - mirroring admin login style */
+.auth-success-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #dcfce7; /* soft green */
+  color: #16a34a; /* green text */
+  padding: 14px 16px;
+  border: 1px solid #bbf7d0; /* light green border */
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+.auth-success-message::before {
+  content: '✅';
+  font-size: 1rem;
+}
+
+.auth-error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fee2e2; /* soft red */
+  color: #b91c1c; /* red text */
+  padding: 14px 16px;
+  border: 1px solid #fecaca; /* light red border */
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+.auth-error-message::before {
+  content: '⚠️';
+  font-size: 1rem;
+}
+.animation-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(35, 43, 54, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.animation-overlay .overlay-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 24px 32px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(10px);
+  animation: overlayPop 300ms ease forwards;
+  text-align: center;
+  color: #2c3e50;
+  min-width: 280px;
+}
+
+.animation-overlay .overlay-message {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+@keyframes overlayPop {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
 /* Analytics Filters */
 .analytics-filters {
   background: #232b36;

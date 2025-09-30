@@ -2,7 +2,7 @@
 // AuthController: Handles user login and signup
 
 angular.module('motofyApp')
-  .controller('AuthController', ['ApiService', '$window', '$location', function(ApiService, $window, $location) {
+  .controller('AuthController', ['ApiService', '$window', '$location', 'OverlayService', function(ApiService, $window, $location, OverlayService) {
     var vm = this;
     vm.loginData = {};
     vm.signupData = {};
@@ -29,12 +29,18 @@ angular.module('motofyApp')
           // Store token and update UI
           $window.localStorage.setItem('appToken', response.data.appToken);
           vm.success = 'Login successful!';
-          if ($window.location && $window.location.reload) {
-            $window.location.reload();
-          }
-          if (typeof main !== 'undefined' && main.closeModal) {
-            main.closeModal();
-          }
+          OverlayService.show('login', [
+            '🔑 Verifying your credentials...',
+            '🚗 Starting your Motofy engine...',
+            '✅ Welcome back!'
+          ], 2300, function() {
+            if ($window.location && $window.location.reload) {
+              $window.location.reload();
+            }
+            if (typeof main !== 'undefined' && main.closeModal) {
+              try { main.closeModal(); } catch(e) {}
+            }
+          });
         })
         .catch(function(err) {
           vm.error = (err.data && err.data.message) ? err.data.message : 'Login failed. Please try again.';
@@ -60,12 +66,18 @@ angular.module('motofyApp')
             .then(function(loginResponse) {
               $window.localStorage.setItem('appToken', loginResponse.data.appToken);
               vm.success = 'Signup and login successful!';
-              if ($window.location && $window.location.reload) {
-                $window.location.reload();
-              }
-              if (typeof main !== 'undefined' && main.closeModal) {
-                main.closeModal();
-              }
+              OverlayService.show('login', [
+                '🔐 Creating your account...',
+                '🚗 Prepping your Motofy ride...',
+                '✅ Welcome aboard!'
+              ], 2300, function() {
+                if ($window.location && $window.location.reload) {
+                  $window.location.reload();
+                }
+                if (typeof main !== 'undefined' && main.closeModal) {
+                  try { main.closeModal(); } catch(e) {}
+                }
+              });
             })
             .catch(function(loginErr) {
               vm.error = (loginErr.data && loginErr.data.message) ? loginErr.data.message : 'Signup succeeded but login failed.';
@@ -109,12 +121,18 @@ angular.module('motofyApp')
             // Store token and update UI
             $window.localStorage.setItem('appToken', backendResponse.data.appToken);
             vm.success = 'Google Sign-In successful!';
-            if ($window.location && $window.location.reload) {
-              $window.location.reload();
-            }
-            if (typeof main !== 'undefined' && main.closeModal) {
-              main.closeModal();
-            }
+            OverlayService.show('login', [
+              '🔐 Verifying your Google account...',
+              '🚗 Starting your Motofy engine...',
+              '✅ Welcome back!'
+            ], 2300, function() {
+              if ($window.location && $window.location.reload) {
+                $window.location.reload();
+              }
+              if (typeof main !== 'undefined' && main.closeModal) {
+                try { main.closeModal(); } catch(e) {}
+              }
+            });
           })
           .catch(function(err) {
             vm.error = (err.data && err.data.message) ? err.data.message : 'Google Sign-In failed. Please try again.';

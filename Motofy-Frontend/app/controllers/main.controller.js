@@ -2,7 +2,7 @@
 // MainController: Handles global app logic
 
 angular.module('motofyApp')
-  .controller('MainController', ['$window', '$location', '$timeout', '$scope', '$rootScope', 'ApiService', 'CONFIG', function($window, $location, $timeout, $scope, $rootScope, ApiService, CONFIG) {
+  .controller('MainController', ['$window', '$location', '$timeout', '$scope', '$rootScope', 'ApiService', 'CONFIG', 'OverlayService', function($window, $location, $timeout, $scope, $rootScope, ApiService, CONFIG, OverlayService) {
     var vm = this;
 
     // Dropdown state
@@ -133,7 +133,13 @@ angular.module('motofyApp')
     vm.logout = function() {
       $window.localStorage.removeItem('appToken');
       vm.currentUser = null; // Clear user data on logout
-      $location.path('/');
+      OverlayService.show('logout', [
+        '👋 Logging you out safely...',
+        '🛑 Parking your Motofy ride...',
+        '✅ Logged out'
+      ], 2300, function() {
+        $location.path('/');
+      });
     };
 
     // Admin login click handler

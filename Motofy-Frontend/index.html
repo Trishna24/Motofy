@@ -23,6 +23,12 @@
   <link rel="stylesheet" href="app/assets/css/styles.css">
 </head>
 <body>
+  <!-- Background Video -->
+  <video id="background-video" autoplay muted playsinline loop ng-if="showBgVideo">
+    <source src="assets/videos/Motofy_background.mp4" type="video/mp4">
+  </video>
+  <animation-overlay></animation-overlay>
+  
   <div ng-controller="MainController as main">
     <header ng-show="main.showNavbar">
       <div class="header-inner container">
@@ -91,8 +97,8 @@
           <label>Password:</label>
           <input type="password" ng-model="auth.loginData.password" required autocomplete="current-password">
           <button type="submit">Login</button>
-          <p style="color:red;" ng-if="auth.error">{{auth.error}}</p>
-          <p style="color:green;" ng-if="auth.success">{{auth.success}}</p>
+          <div class="auth-error-message" ng-if="auth.error">{{auth.error}}</div>
+          <div class="auth-success-message" ng-if="auth.success">{{auth.success}}</div>
         </form>
         <!-- Google Sign-In Button -->
         <div style="text-align: center; margin: 1em 0;">
@@ -127,8 +133,8 @@
           <label>Password:</label>
           <input type="password" ng-model="auth.signupData.password" required autocomplete="new-password">
           <button type="submit">Sign Up</button>
-          <p style="color:red;" ng-if="auth.error">{{auth.error}}</p>
-          <p style="color:green;" ng-if="auth.success">{{auth.success}}</p>
+          <div class="auth-error-message" ng-if="auth.error">{{auth.error}}</div>
+          <div class="auth-success-message" ng-if="auth.success">{{auth.success}}</div>
         </form>
         <!-- Google Sign-In Button -->
         <div style="text-align: center; margin: 1em 0;">
@@ -154,7 +160,8 @@
       <div ng-controller="AIController as ai" ng-hide="main.isAdminRoute()" style="z-index:9999;">
           <!-- Floating Button -->
           <button ng-click="ai.toggleChat()" class="ai-float-btn" title="Chat with AI">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <img src="assets/images/chatbot-avatar.png" alt="Chat" class="float-btn-avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style="display:none;">
               <circle cx="12" cy="12" r="10" stroke="#2c3e50" stroke-width="2"/>
               <path d="M8 15h8M8 11h8M8 7h8" stroke="#2c3e50" stroke-width="2"/>
             </svg>
@@ -171,7 +178,11 @@
               <div ng-repeat="msg in ai.messages track by $index"
                   ng-class="{'ai-user-msg': msg.sender === 'user', 'ai-bot-msg': msg.sender === 'bot', 'typing': msg.isTyping, 'button-click': msg.isButtonClick}">
                 <strong ng-if="msg.sender === 'user'">You:</strong>
-                <strong ng-if="msg.sender === 'bot'">🤖 Motofy Assistant:</strong>
+                <div ng-if="msg.sender === 'bot'" class="bot-message-header">
+                  <img src="assets/images/chatbot-avatar.png" alt="Motofy Assistant" class="chatbot-avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                  <span class="emoji-fallback" style="display:none;">🤖</span>
+                  <strong>Motofy Assistant:</strong>
+                </div>
                 <div class="message-content">
                   <span ng-bind-html="msg.content || (msg.text | nl2br)"></span>
                   <!-- Navigation Buttons -->
@@ -187,7 +198,11 @@
               </div>
               <!-- Loading indicator -->
               <div ng-if="ai.loading" class="ai-bot-msg typing">
-                <strong>🤖 Motofy Assistant:</strong>
+                <div class="bot-message-header">
+                  <img src="assets/images/chatbot-avatar.png" alt="Motofy Assistant" class="chatbot-avatar" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                  <span class="emoji-fallback" style="display:none;">🤖</span>
+                  <strong>Motofy Assistant:</strong>
+                </div>
                 <span>Typing...</span>
               </div>
             </div>
@@ -214,6 +229,9 @@
     <script src="app/controllers/admin-dashboard.controller.js"></script>
     <script src="app/controllers/admin-car.controller.js"></script>
     <script src="app/controllers/admin-booking.controller.js"></script>
+    <!-- Overlay Service & Directive -->
+    <script src="app/services/overlay.service.js"></script>
+    <script src="app/directives/animation-overlay.js"></script>
     <script src="app/controllers/admin-user.controller.js"></script>
     <script src="app/controllers/ai.controller.js"></script>
     <script src="app/controllers/profile.controller.js"></script>
@@ -226,6 +244,8 @@
            scope.$apply(function() { scope.main.dropdownOpen = false; });
          }
        });
+       
+
        
      </script>
   </div>

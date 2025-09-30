@@ -1,6 +1,6 @@
 // app/controllers/admin-dashboard.controller.js
 angular.module('motofyApp')
-  .controller('AdminDashboardController', ['$scope', 'ApiService', '$window', '$location', function($scope, ApiService, $window, $location) {
+  .controller('AdminDashboardController', ['$scope', 'ApiService', '$window', '$location', 'OverlayService', function($scope, ApiService, $window, $location, OverlayService) {
     var vm = this;
 
     // Admin data
@@ -204,7 +204,13 @@ angular.module('motofyApp')
     vm.logout = function() {
       $window.localStorage.removeItem('adminToken');
       $window.localStorage.removeItem('adminData');
-      $location.path('/');
+      OverlayService.show('logout', [
+        '👋 Logging you out safely...',
+        '🔒 Ending admin session...',
+        '✅ Logged out'
+      ], 2300, function() {
+        $location.path('/');
+      });
     };
 
     // Switch analytics module
