@@ -899,18 +899,25 @@ nav a:hover {
 .hero-title {
   font-size: 2.5em;
   font-weight: 800;
-  color: #fff;
+  color: #00f0ff;
   margin-bottom: 0.4em;
   letter-spacing: 1px;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.295), 0 0 18px rgba(0,240,255,0.32);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.hero-title:hover {
+  text-shadow: 0 0 10px rgba(0,240,255,0.75), 0 0 24px rgba(0,240,255,0.45);
 }
 .hero-tagline {
   font-size: 1.3em;
-  color: #d1d5db;
+  color: #fdec07;
   margin-bottom: 1.5em;
-  font-weight: 400;
+  font-weight: 600;
+  text-shadow: 0 0 6px rgb(253, 228, 86), 0 0 14px rgba(252, 230, 107, 0.685);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .hero-btn {
-  background: #7ed957;
+  background: #e239ffde;
   color: #232b36;
   border: none;
   border-radius: 8px;
@@ -918,7 +925,7 @@ nav a:hover {
   font-size: 1.2em;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.815);
   transition: background 0.2s, color 0.2s;
   margin-top: 0.5em;
 }
@@ -939,8 +946,10 @@ nav a:hover {
   font-size: 1.5em;
   font-weight: 600;
   margin-bottom: 1.2em;
-  color: #f3f6fa;
+  color: #8fff2c;
   letter-spacing: 0.5px;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.685), 0 0 14px rgba(220, 255, 204, 0.801);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .featured-cars-grid {
   display: flex;
@@ -951,7 +960,7 @@ nav a:hover {
 }
 .featured-car-card {
   background:  rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(4px);           /* blurs whatever is behind  */
+  backdrop-filter: blur(8px);           /* blurs whatever is behind  */
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3); /* subtle border */
   border-radius: 14px;
@@ -987,7 +996,7 @@ nav a:hover {
 .featured-car-card .car-price {
   font-size: 1em;
   font-weight: 500;
-  color: #7ed957;
+  color: #60ff00;
   margin-bottom: 0.7em;
 }
 .featured-car-card .view-details-btn {
@@ -1400,11 +1409,13 @@ nav a:hover {
   align-items: center;
 }
 .recent-bookings-title {
-  font-size: 1.3em;
-  font-weight: 600;
+  font-size: 2.1em;
+  font-weight: 700;
   margin-bottom: 1.2em;
-  color: #f3f6fa;
+  color: #ffffff;
   letter-spacing: 0.5px;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.671), 0 0 14px rgba(255, 255, 255, 0.774);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .recent-bookings-grid {
   display: flex;
@@ -1430,7 +1441,7 @@ nav a:hover {
 /* Enhanced Recent Booking Cards */
 .recent-booking-card.enhanced {
   background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 16px;
   box-shadow: 0 8px 25px rgba(125 196 245);
@@ -1509,7 +1520,7 @@ nav a:hover {
 
 .booking-car-info .car-brand {
   font-size: 0.9em;
-  color: #b0b8c1;
+  color: #f9e05c;
   font-weight: 500;
 }
 
@@ -1573,7 +1584,7 @@ nav a:hover {
 
 .amount-value {
   font-size: 1.3em;
-  color: #7ed957;
+  color: #60ff00;
   font-weight: 700;
 }
 
@@ -1853,15 +1864,22 @@ user-select: none;
 .quick-search-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #fff;
+  color: #00f0ff;
   margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 0 10px rgba(0, 0, 0, 0.63), 0 0 24px rgba(0,240,255,0.35);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.quick-search-title:hover {
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4), 0 0 12px rgba(0,240,255,0.75), 0 0 28px rgba(0,240,255,0.45);
 }
 
 .quick-search-subtitle {
   font-size: 1.1rem;
-  color: rgba(255,255,255,0.9);
+  color: #dcefff;
+  font-weight: 600;
   margin-bottom: 2rem;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.863), 0 0 14px rgba(217, 237, 255, 0.87);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 
 .quick-search-buttons {

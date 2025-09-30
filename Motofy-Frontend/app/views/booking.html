@@ -154,20 +154,20 @@
     <button class="btn-secondary" ng-click="booking.searchTerm = ''; booking.statusFilter = ''">Clear Filters</button>
   </div>
 
-  <!-- Booking Details Modal -->
-  <div class="modal-overlay" ng-if="booking.showDetailsModal" ng-click="booking.closeDetailsModal()"></div>
-  <div class="modal-container" ng-if="booking.showDetailsModal">
-    <div class="modal-content booking-details-modal" ng-click="$event.stopPropagation()">
-      <div class="modal-header">
+  <!-- Booking Details Modal (User) -->
+  <div class="user-modal-overlay" id="userBookingDetailOverlay" ng-if="booking.showDetailsModal" ng-click="booking.closeDetailsModal()"></div>
+  <div class="user-modal-container" id="userBookingDetailContainer" ng-if="booking.showDetailsModal">
+    <div class="user-modal-content user-booking-details-modal" id="userBookingDetailModal" ng-click="$event.stopPropagation()">
+      <div class="user-modal-header">
         <h3>Booking Details</h3>
         <button class="modal-close" ng-click="booking.closeDetailsModal()">&times;</button>
       </div>
       
-      <div class="booking-details-content" ng-if="booking.selectedBooking">
-        <div class="booking-detail-header">
+      <div class="user-booking-details-content" ng-if="booking.selectedBooking">
+        <div class="user-booking-detail-header">
           <div class="detail-booking-id">
-            <span class="detail-label">Booking ID:</span>
-            <span class="detail-value booking-id-value">{{booking.selectedBooking._id}}</span>
+            <span class="user-detail-label">Booking ID:</span>
+            <span class="user-detail-value booking-id-value">{{booking.selectedBooking._id}}</span>
           </div>
           <div class="detail-status">
             <span class="status-badge large" ng-class="{
@@ -180,58 +180,58 @@
         </div>
         
         <div class="booking-detail-sections">
-          <div class="detail-section">
+          <div class="user-detail-section">
             <h4>🚗 Vehicle Information</h4>
-            <div class="detail-grid">
-              <div class="booking-detail-row">
-                <span class="detail-label">Car:</span>
-                <span class="detail-value">{{booking.selectedBooking.car.name}} {{booking.selectedBooking.car.brand}}</span>
+            <div class="user-detail-grid">
+              <div class="user-booking-detail-row">
+                <span class="user-detail-label">Car:</span>
+                <span class="user-detail-value">{{booking.selectedBooking.car.name}} {{booking.selectedBooking.car.brand}}</span>
               </div>
-              <div class="booking-detail-row" ng-if="booking.selectedBooking.status === 'Confirmed' && booking.selectedBooking.car.carNumber">
-                <span class="detail-label">Car Number:</span>
-                <span class="detail-value">{{booking.selectedBooking.car.carNumber}}</span>
+              <div class="user-booking-detail-row" ng-if="booking.selectedBooking.status === 'Confirmed' && booking.selectedBooking.car.carNumber">
+                <span class="user-detail-label">Car Number:</span>
+                <span class="user-detail-value">{{booking.selectedBooking.car.carNumber}}</span>
               </div>
             </div>
           </div>
           
-          <div class="detail-section">
+          <div class="user-detail-section">
             <h4>📅 Booking Timeline</h4>
-            <div class="detail-grid">
-              <div class="booking-detail-row">
-                <span class="detail-label">Pickup:</span>
-                <span class="detail-value">{{booking.selectedBooking.pickupDate | date:'dd MMM yyyy, h:mm a'}}</span>
+            <div class="user-detail-grid">
+              <div class="user-booking-detail-row">
+                <span class="user-detail-label">Pickup:</span>
+                <span class="user-detail-value">{{booking.selectedBooking.pickupDate | date:'dd MMM yyyy, h:mm a'}}</span>
               </div>
-              <div class="booking-detail-row">
-                <span class="detail-label">Location:</span>
-                <span class="detail-value">{{booking.selectedBooking.pickupLocation}}</span>
+              <div class="user-booking-detail-row">
+                <span class="user-detail-label">Location:</span>
+                <span class="user-detail-value">{{booking.selectedBooking.pickupLocation}}</span>
               </div>
-              <div class="booking-detail-row">
-                <span class="detail-label">Return:</span>
-                <span class="detail-value">{{booking.selectedBooking.dropoffDate | date:'dd MMM yyyy, h:mm a'}}</span>
+              <div class="user-booking-detail-row">
+                <span class="user-detail-label">Return:</span>
+                <span class="user-detail-value">{{booking.selectedBooking.dropoffDate | date:'dd MMM yyyy, h:mm a'}}</span>
               </div>
-              <div class="booking-detail-row">
-                <span class="detail-label">Return Location:</span>
-                <span class="detail-value">{{booking.selectedBooking.dropoffLocation || booking.selectedBooking.pickupLocation}}</span>
+              <div class="user-booking-detail-row">
+                <span class="user-detail-label">Return Location:</span>
+                <span class="user-detail-value">{{booking.selectedBooking.dropoffLocation || booking.selectedBooking.pickupLocation}}</span>
               </div>
-              <div class="booking-detail-row">
-                <span class="detail-label">Duration:</span>
-                <span class="detail-value">{{((booking.selectedBooking.dropoffDate | date:'yyyy-MM-dd') | date) - ((booking.selectedBooking.pickupDate | date:'yyyy-MM-dd') | date) | number:0}} days</span>
+              <div class="user-booking-detail-row">
+                <span class="user-detail-label">Duration:</span>
+                <span class="user-detail-value">{{((booking.selectedBooking.dropoffDate | date:'yyyy-MM-dd') | date) - ((booking.selectedBooking.pickupDate | date:'yyyy-MM-dd') | date) | number:0}} days</span>
               </div>
             </div>
           </div>
           
-          <div class="detail-section">
+          <div class="user-detail-section">
             <h4>💰 Payment Information</h4>
-            <div class="detail-grid">
-              <div class="booking-detail-row">
-                <span class="detail-label">Total Amount:</span>
-                <span class="detail-value price-large">₹{{booking.selectedBooking.totalAmount | number:0}}</span>
+            <div class="user-detail-grid">
+              <div class="user-booking-detail-row">
+                <span class="user-detail-label">Total Amount:</span>
+                <span class="user-detail-value user-price-large">₹{{booking.selectedBooking.totalAmount | number:0}}</span>
               </div>
             </div>
           </div>
         </div>
         
-        <div class="booking-detail-actions" ng-if="booking.selectedBooking.status !== 'Cancelled'">
+        <div class="user-booking-detail-actions" ng-if="booking.selectedBooking.status !== 'Cancelled'">
           <button class="btn-danger" ng-click="booking.cancel(booking.selectedBooking); booking.closeDetailsModal()" ng-disabled="booking.selectedBooking.cancelling">
             <span class="btn-icon" ng-if="!booking.selectedBooking.cancelling">❌</span>
             <span class="btn-spinner" ng-if="booking.selectedBooking.cancelling"></span>

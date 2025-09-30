@@ -89,7 +89,7 @@
 <style>
   .car-list-container {
     background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);           /* blurs whatever is behind  */
+    backdrop-filter: blur(8px);           /* blurs whatever is behind  */
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3); /* subtle border */
     border-radius: 15px; 
@@ -107,17 +107,22 @@
   .car-list-header h1 {
     font-size: 2.5em;
     font-weight: 700;
-    color: #f3f6fa;
+    color: #00f0ff;
     margin-bottom: 0.5em;
+    text-shadow: 0 0 10px rgba(3, 3, 3, 0.74), 0 0 24px rgba(0,240,255,0.35);
+    transition: color 0.2s ease, text-shadow 0.2s ease;
   }
 
   .car-list-header p {
     font-size: 1.2em;
-    color: #b0b8c1;
+    color: #cce7ff;
+    font-weight: 600;
+    text-shadow: 0 0 6px rgba(204,231,255,0.55), 0 0 14px rgba(204,231,255,0.3);
+    transition: color 0.2s ease, text-shadow 0.2s ease;
   }
 
   .search-filters-section {
-    background: #313a49;
+    background: #41779fbd;
     border-radius: 12px;
     padding: 1.5em;
     margin-bottom: 2em;
@@ -131,7 +136,7 @@
   .search-bar input {
     width: 97%;
     padding: 0.8em 1em;
-    border: 1px solid #ccc;
+    border: 1px solid #58c3ff;
     border-radius: 8px;
     font-size: 1em;
     background: #232b36;
@@ -151,7 +156,7 @@
 
   .filters-row select {
     padding: 0.6em 1em;
-    border: 1px solid #ccc;
+    border: 1px solid #93d3ff;
     border-radius: 6px;
     background: #232b36;
     color: #f3f6fa;
@@ -171,7 +176,7 @@
   }
 
   .car-card {
-    background: #313a49;
+    background: #44717ca9;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 12px rgba(0,0,0,0.1);
@@ -219,7 +224,7 @@
   .car-price {
     font-size: 1.2em;
     font-weight: 600;
-    color: #7ed957;
+    color: #02ff00;
     margin-bottom: 1em;
   }
 
