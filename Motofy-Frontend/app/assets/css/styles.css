@@ -1036,8 +1036,8 @@ nav a:hover {
 }
 .dropdown {
   position: absolute;
-  top: 50px;
-  right: 20px;
+  top: 51px;
+  right: 40px;
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   border: 1px solid rgba(126, 217, 87, 0.3);
   border-radius: 12px;
@@ -1733,7 +1733,7 @@ background: #7ed957;
 color: #232b36;
 border: none;
 border-radius: 6px;
-padding: 0.7em 1.5em;
+padding: 0.7em 8.4em;
 font-size: 1em;
 font-weight: 600;
 display:block;
@@ -1763,7 +1763,7 @@ color: #fff;
   z-index: 2100;
 }
 .model-title{
-  font-size: 1.5em;
+  font-size: 1.3em;
   font-weight: 600;
   text-align: center;
   margin-bottom: 1.2em;
@@ -1775,12 +1775,13 @@ color: #fff;
   background: #4d5891b0;
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(188 209 255);
-  padding: 2.5em 2.5em 2em 2.5em;
-  min-width: 340px;
-  max-width: 95vw;
+  padding: 1.8em 1.8em 1.5em 1.8em;
+  min-width: 300px;
+  max-width: 90vw;
   color: #fff;
   position: relative;
   text-align: left;
+  font-size: 0.95em;
 }
 
 .modal-close {
@@ -1790,7 +1791,7 @@ color: #fff;
   background: none;
   border: none;
   color: #fff;
-  font-size: 2em;
+  font-size: 1.6em;
   cursor: pointer;
 }
 
@@ -1825,17 +1826,18 @@ color: #fff;
   background: #4b5667c4;
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(109 151 241 / 77%);
-  padding: 2.2em 2.4em 2em;
-  min-width: 340px;
-  max-width: 95vw;
+  padding: 1.6em 1.8em 1.4em;
+  min-width: 300px;
+  max-width: 90vw;
   color: #fff;
   position: relative;
   text-align: left;
+  font-size: 0.95em;
 }
 
 .role-modal-title {
   margin: 0 0 0.5em;
-  font-size: 1.6em;
+  font-size: 1.4em;
   font-weight: 700;
   text-align: center;
   color: #f3f6fa;
@@ -1848,21 +1850,21 @@ color: #fff;
   background: none;
   border: none;
   color: #ffffff;
-  font-size: 1.8em;
+  font-size: 1.6em;
   line-height: 1;
   cursor: pointer;
 }
 
 .role-modal-actions {
   display: flex;
-  gap: 1em;
+  gap: 0.8em;
   justify-content: center;
-  margin-top: 1.5em;
+  margin-top: 1.2em;
 }
 
 .role-modal-btn {
-  padding: 1em 2em;
-  font-size: 1.1em;
+  padding: 0.8em 1.6em;
+  font-size: 1em;
   border-radius: 8px;
   cursor: pointer;
   border: none;
