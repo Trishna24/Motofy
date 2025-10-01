@@ -10,7 +10,6 @@ angular.module('motofyApp', ['ngRoute', 'ngFileUpload'])
   })
   .run(['$rootScope', '$location', function($rootScope, $location) {
     console.log('🚀 MotofyApp module loaded successfully!');
-
     // Helper to decide whether background video should be visible
     function computeVideoVisibilityFromOriginalPath(originalPath) {
       // Visible on home and car list; hidden elsewhere (including car detail)
@@ -50,5 +49,5 @@ angular.module('motofyApp', ['ngRoute', 'ngFileUpload'])
 
     $rootScope.$on('$routeChangeError', function(event, current, previous, rejection) {
       console.log('❌ Route change error:', rejection);
-    });
+    });   
   }]);

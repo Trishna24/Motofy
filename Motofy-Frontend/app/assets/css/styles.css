@@ -917,21 +917,40 @@ nav a:hover {
   transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .hero-btn {
-  background: #e239ffde;
-  color: #232b36;
-  border: none;
-  border-radius: 8px;
-  padding: 0.9em 2.2em;
-  font-size: 1.2em;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.815);
-  transition: background 0.2s, color 0.2s;
-  margin-top: 0.5em;
+ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.9em 2.2em;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+.hero-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+.hero-btn:hover::after {
+  left: 100%;
 }
 .hero-btn:hover {
-  background: #5bbf3a;
-  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 /* Featured Cars */
 .featured-cars-section {
@@ -1675,6 +1694,40 @@ background: #232b36;
 color: #fff;
 font-size: 1em;
 }
+/* Password visibility toggle for auth forms */
+.auth-form .password-field {
+  position: relative;
+}
+.auth-form .password-field input {
+  padding-right: 2.5em; /* space for the toggle button */
+  width: 100%; /* ensure input fills the container so toggle sits over it */
+  box-sizing: border-box; /* include padding in total width */
+}
+.auth-form .toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 38%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  /* Prevent generic .auth-form button styles from misaligning the icon */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+.auth-form .toggle-password:focus {
+  outline: none;
+}
+.auth-form .toggle-password .fa {
+  font-size: 1rem;
+}
 .auth-form button {
 background: #7ed957;
 color: #232b36;
@@ -1719,9 +1772,9 @@ color: #fff;
 }
 
 .modal-content {
-  background: #313a49;
+  background: #4d5891b0;
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  box-shadow: 0 4px 24px rgba(188 209 255);
   padding: 2.5em 2.5em 2em 2.5em;
   min-width: 340px;
   max-width: 95vw;
@@ -1739,6 +1792,103 @@ color: #fff;
   color: #fff;
   font-size: 2em;
   cursor: pointer;
+}
+
+/* ========================================= */
+/*      Role Selection Modal (Decoupled)     */
+/* ========================================= */
+.role-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 34, 40, 0.7);
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.role-modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100;
+  padding: 10px;
+}
+
+.role-modal-content {
+  background: #4b5667c4;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(109 151 241 / 77%);
+  padding: 2.2em 2.4em 2em;
+  min-width: 340px;
+  max-width: 95vw;
+  color: #fff;
+  position: relative;
+  text-align: left;
+}
+
+.role-modal-title {
+  margin: 0 0 0.5em;
+  font-size: 1.6em;
+  font-weight: 700;
+  text-align: center;
+  color: #f3f6fa;
+}
+
+.role-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.8em;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.role-modal-actions {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+  margin-top: 1.5em;
+}
+
+.role-modal-btn {
+  padding: 1em 2em;
+  font-size: 1.1em;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, color 1.2s, box-shadow 1.2s;
+  font-weight: 700;
+}
+
+.role-modal-btn.primary {
+  background: #7ed957;
+  color: #232b36;
+}
+
+.role-modal-btn.primary:hover {
+  background: #5bbf3a;
+  color: #ffffff;
+}
+
+.role-modal-btn.secondary {
+  background: #313a49;
+  color: #ffffff;
+  border: 1px solid #7ed957;
+}
+
+.role-modal-btn.secondary:hover {
+  background: #3c4555;
+  border-color: #5bbf3a;
 }
 
 /* Booking Details Modal */
@@ -1780,7 +1930,7 @@ color: #fff;
 .modal-switch {
 margin-top: 1.5em;
 text-align: center;
-color: #b0b8c1;
+color: #ffffff;
 }
 .modal-switch a {
 color: #7ed957;

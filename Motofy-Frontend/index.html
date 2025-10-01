@@ -116,22 +116,17 @@
         </div>
       </div>
     </header>
-    <!-- Modal Overlay for Blur -->
+    <!-- Modal Overlays -->
     <div class="modal-overlay" ng-if="main.isModalOpen()" ng-click="main.closeModal()"></div>
+    <div class="role-modal-overlay" ng-if="main.showRoleModal" ng-click="main.closeModal()"></div>
     <!-- Role Selection Modal -->
-    <div class="modal-container" ng-if="main.showRoleModal">
-      <div class="modal-content" ng-click="$event.stopPropagation()">
-        <button class="modal-close" ng-click="main.closeModal()">&times;</button>
-        <h2>Select Login Type</h2>
-        <div style="display:flex; gap:1em; justify-content:center; margin-top:1.5em;">
-          <button style="padding:1em 2em; font-size:1.1em; background:#7ed957; color:#232b36; border:none; border-radius:8px; cursor:pointer;"
-                  ng-click="main.chooseRole('user')">
-            User Login
-          </button>
-          <button style="padding:1em 2em; font-size:1.1em; background:#313a49; color:#fff; border:1px solid #7ed957; border-radius:8px; cursor:pointer;"
-                  ng-click="main.chooseRole('admin')">
-            Admin Login
-          </button>
+    <div class="role-modal-container" ng-if="main.showRoleModal">
+      <div class="role-modal-content" ng-click="$event.stopPropagation()">
+        <button class="role-modal-close" ng-click="main.closeModal()">&times;</button>
+        <h2 class="role-modal-title">Select Login Type</h2>
+        <div class="role-modal-actions">
+          <button class="role-modal-btn primary" ng-click="main.chooseRole('user')">User Login</button>
+          <button class="role-modal-btn secondary" ng-click="main.chooseRole('admin')">Admin Login</button>
         </div>
       </div>
     </div>
@@ -145,14 +140,19 @@
           <label>Email or Username:</label>
           <input type="text" ng-model="auth.loginData.loginInput" required autocomplete="username">
           <label>Password:</label>
-          <input type="password" ng-model="auth.loginData.password" required autocomplete="current-password">
+          <div class="password-field">
+            <input ng-attr-type="{{auth.showLoginPassword ? 'text' : 'password'}}" ng-model="auth.loginData.password" required autocomplete="current-password">
+            <button type="button" class="toggle-password" ng-click="auth.showLoginPassword = !auth.showLoginPassword" aria-label="{{auth.showLoginPassword ? 'Hide password' : 'Show password'}}">
+              <i class="fa" ng-class="{'fa-eye-slash': auth.showLoginPassword, 'fa-eye': !auth.showLoginPassword}"></i>
+            </button>
+          </div>
           <button type="submit">Login</button>
           <div class="auth-error-message" ng-if="auth.error">{{auth.error}}</div>
           <div class="auth-success-message" ng-if="auth.success">{{auth.success}}</div>
         </form>
         <!-- Google Sign-In Button -->
         <div style="text-align: center; margin: 1em 0;">
-          <div style="margin: 0.5em 0; color: #666; font-size: 0.9em;">or</div>
+          <div style="margin: 0.5em 0; color: #ffffff; font-size: 0.9em;">or</div>
           <button type="button" ng-click="auth.googleSignIn()" class="google-signin-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right: 8px;">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -181,14 +181,19 @@
           <label>Phone Number:</label>
           <input type="tel" ng-model="auth.signupData.phone" placeholder="Enter your phone number" required>
           <label>Password:</label>
-          <input type="password" ng-model="auth.signupData.password" required autocomplete="new-password">
+          <div class="password-field">
+            <input ng-attr-type="{{auth.showSignupPassword ? 'text' : 'password'}}" ng-model="auth.signupData.password" required autocomplete="new-password">
+            <button type="button" class="toggle-password" ng-click="auth.showSignupPassword = !auth.showSignupPassword" aria-label="{{auth.showSignupPassword ? 'Hide password' : 'Show password'}}">
+              <i class="fa" ng-class="{'fa-eye-slash': auth.showSignupPassword, 'fa-eye': !auth.showSignupPassword}"></i>
+            </button>
+          </div>
           <button type="submit">Sign Up</button>
           <div class="auth-error-message" ng-if="auth.error">{{auth.error}}</div>
           <div class="auth-success-message" ng-if="auth.success">{{auth.success}}</div>
         </form>
         <!-- Google Sign-In Button -->
         <div style="text-align: center; margin: 1em 0;">
-          <div style="margin: 0.5em 0; color: #666; font-size: 0.9em;">or</div>
+          <div style="margin: 0.5em 0; color: #ffffff; font-size: 0.9em;">or</div>
           <button type="button" ng-click="auth.googleSignIn()" class="google-signin-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right: 8px;">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
