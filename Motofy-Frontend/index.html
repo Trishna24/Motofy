@@ -23,8 +23,56 @@
     <link rel="stylesheet" href="app/assets/css/styles.css">
     <!-- User booking modal decoupled styles -->
     <link rel="stylesheet" href="app/assets/css/user-booking.css">
+    <style>
+      /* Preloader Overlay */
+      .preloader-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #0e141b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 15000;
+        opacity: 1;
+        transition: opacity 0.4s ease;
+      }
+      .preloader-overlay.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .preloader-content {
+        text-align: center;
+      }
+      .preloader-content .wheel-spinner {
+        width: 64px;
+        height: 64px;
+        border: 6px solid rgba(243, 246, 250, 0.2);
+        border-top-color: #f5b301; /* golden accent */
+        border-radius: 50%;
+        animation: wheelSpin 0.9s linear infinite;
+        margin: 0 auto 12px;
+      }
+      .preloader-content .preloader-message {
+        font-family: 'Michroma', sans-serif;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        color: #f3f6fa;
+        text-shadow: 0 0 8px rgba(245, 179, 1, 0.6), 0 0 18px rgba(245, 179, 1, 0.25);
+      }
+      @keyframes wheelSpin { to { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
+  <!-- Fullscreen Preloader Overlay -->
+  <div id="preloader-overlay" class="preloader-overlay">
+    <div class="preloader-content">
+      <div class="wheel-spinner"></div>
+      <div class="preloader-message">Warming up the engines...</div>
+    </div>
+  </div>
   <!-- Background Video -->
   <video id="background-video" autoplay muted playsinline loop ng-if="showBgVideo">
     <source src="assets/videos/Motofy_background.mp4" type="video/mp4">
@@ -240,12 +288,28 @@
     <script src="app/controllers/payment.controller.js"></script>
       <script>
        // Close dropdown on outside click
-       document.body.addEventListener('click', function() {
-         var scope = angular.element(document.querySelector('[ng-controller="MainController as main"]')).scope();
-         if(scope && scope.main) {
-           scope.$apply(function() { scope.main.dropdownOpen = false; });
-         }
-       });
+      document.body.addEventListener('click', function() {
+        var scope = angular.element(document.querySelector('[ng-controller="MainController as main"]')).scope();
+        if(scope && scope.main) {
+          scope.$apply(function() { scope.main.dropdownOpen = false; });
+        }
+      });
+      // Preloader fade-out on window load
+      (function(){
+        var preloader = document.getElementById('preloader-overlay');
+        if (!preloader) { return; }
+        function hidePreloader(){
+          preloader.classList.add('fade-out');
+          preloader.addEventListener('transitionend', function(){
+            if (preloader && preloader.parentNode) {
+              preloader.parentNode.removeChild(preloader);
+            }
+          }, { once: true });
+        }
+        window.addEventListener('load', function(){
+          setTimeout(hidePreloader, 120);
+        });
+      })();
        
 
        
