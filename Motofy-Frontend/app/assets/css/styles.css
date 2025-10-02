@@ -899,10 +899,10 @@ nav a:hover {
 .hero-title {
   font-size: 2.5em;
   font-weight: 800;
-  color: #00f0ff;
+  color: #ffffff;
   margin-bottom: 0.4em;
   letter-spacing: 1px;
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.295), 0 0 18px rgba(0,240,255,0.32);
+  text-shadow: 0 0 8px rgba(11, 0, 255, 0.75), 0 0 18px rgba(2, 6, 6, 0.99);
   transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .hero-title:hover {
@@ -910,29 +910,30 @@ nav a:hover {
 }
 .hero-tagline {
   font-size: 1.3em;
-  color: #fdec07;
+  font-family: cursive;
+  color: #ffed8f;
   margin-bottom: 1.5em;
   font-weight: 600;
-  text-shadow: 0 0 6px rgb(253, 228, 86), 0 0 14px rgba(252, 230, 107, 0.685);
+  text-shadow: 0 0 6px rgb(0, 0, 0), 0 0 14px rgb(0, 0, 0);
   transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .hero-btn {
- background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 0.9em 2.2em;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.9em 2.2em;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  box-shadow: 0 4px 12px rgba(6 6 65);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
 }
 .hero-btn::after {
   content: '';
@@ -964,10 +965,12 @@ nav a:hover {
 .featured-cars-title {
   font-size: 1.5em;
   font-weight: 600;
+  font-family:'Michroma';
+  font-style:oblique;
   margin-bottom: 1.2em;
-  color: #8fff2c;
+  color: #fcff84;
   letter-spacing: 0.5px;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.685), 0 0 14px rgba(220, 255, 204, 0.801);
+  text-shadow: 0 0 6px rgb(0, 0, 0), 0 0 14px rgb(0, 0, 0);
   transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .featured-cars-grid {
@@ -2016,9 +2019,9 @@ user-select: none;
 .quick-search-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #00f0ff;
+  color: #ffffff;
   margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 0 10px rgba(0, 0, 0, 0.63), 0 0 24px rgba(0,240,255,0.35);
+  text-shadow: 0 2px 4px rgba(17 28 33 / 99%), 0 0 10px rgba(133 0 255 / 76%), 0 0 24px rgba(21 26 255 / 99%);
   transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 .quick-search-title:hover {
@@ -2027,10 +2030,10 @@ user-select: none;
 
 .quick-search-subtitle {
   font-size: 1.1rem;
-  color: #dcefff;
+  color: #ffffff;
   font-weight: 600;
   margin-bottom: 2rem;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.863), 0 0 14px rgba(217, 237, 255, 0.87);
+  text-shadow: 0 0 6px rgba(0 0 0 / 99%), 0 0 14px rgba(0 0 0 / 96%);
   transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 
@@ -2049,7 +2052,7 @@ user-select: none;
   padding: 1.5rem 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px #533fb9;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2100,7 +2103,7 @@ user-select: none;
 }
 
 .quick-search-btn.luxury:hover {
-  background: linear-gradient(135deg, #dda0dd, #c71585);
+  background: linear-gradient(135deg, #dda0dd, #4f16ff);
   color: #fff;
 }
 
