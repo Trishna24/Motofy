@@ -77,8 +77,8 @@ Motofy is a full-stack Car Rental Website developed using the MEAN stack. It all
 ## 🚙 Car Management
 ![Car Management](screenshots/Admin-Car-%20Management_Page.jpg)
 
-## 📈 Analytics Dashboard (Part 1)
-![Analytics](screenshots/Admin-Analytic-Page.jpg)
+## 📈 Admin Analytics Dashboard (Part 1)
+![Admin Analytics Part 1](screenshots/Admin-Analytic-Page.jpg)
 
 ## 📈 Admin Analytics Dashboard (Part 2)
 ![Admin Analytics Part 2](screenshots/Admin-Analytic-Page(2).jpg)
