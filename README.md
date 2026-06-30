@@ -1,31 +1,28 @@
-# 🚗 Motofy - Smart Car Rental Website
+<h1 align="center">🚗 Motofy</h1>
 
-## 📖 About the Project
+<p align="center">
+  <b>Smart Car Rental Website</b><br>
+  A Full-Stack Car Rental Platform built using the MEAN Stack.
+</p>
 
-Motofy is a full-stack Car Rental Website developed using the MEAN stack. It allows users to browse available cars, view car details, book vehicles online, and make secure payments. The project also includes an Admin Panel to manage cars, bookings, and users.
+<p align="center">
+  <a href="https://motofy-tau.vercel.app">
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Website-blue?style=for-the-badge">
+  </a>
+</p>
 
----
+<p align="center">
+  <img src="https://img.shields.io/badge/AngularJS-1.x-red?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Node.js-Backend-green?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Express.js-Framework-lightgrey?style=for-the-badge">
+  <img src="https://img.shields.io/badge/MongoDB-Database-darkgreen?style=for-the-badge">
+</p>
 
-## 🛠️ Tech Stack
-
-### Frontend
-- AngularJS
-- HTML
-- CSS
-- JavaScript
-
-### Backend
-- Node.js
-- Express.js
-
-### Database
-- MongoDB
-
-### Other Technologies
-- JWT Authentication
-- Stripe Payment Gateway
-- Gemini AI
-
+<p align="center">
+  <img src="https://img.shields.io/badge/Stripe-Payment-blue?style=for-the-badge">
+  <img src="https://img.shields.io/badge/JWT-Authentication-orange?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Gemini-AI-purple?style=for-the-badge">
+</p>
 ---
 
 ## ✨ Key Features
